@@ -1,9 +1,9 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "3Dvisions",
-  "short_name": "3Dvisions",
-  "version": "com.phonegap.helloworld",
+  "name": "3DVisions",
+  "short_name": "3DVisions",
+  "version": "com.tigadsaja.tigadvisions",
   "description": "Aplikasi jual beli pulsa.",
   "author": "COkotitip Team",
   "icons": [],

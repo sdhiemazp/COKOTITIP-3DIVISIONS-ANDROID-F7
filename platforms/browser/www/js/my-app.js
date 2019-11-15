@@ -1,6 +1,4 @@
 var $$ = Dom7;
-// var database_connect = "fuckyu";
-// var lokasifoto = "fuckyu";
 var database_connect = "https://3dsaja.com/";
 var lokasifoto = "https://3dsaja.com/image/";
 var ERRNC ="Koneksi Anda terputus!";
@@ -9,7 +7,7 @@ var PHOTO_ERR ="Foto tidak berhasil diunggah!";
 var app = new Framework7({
 	root: '#app',
 	name: '3DVISIONS',
-	id: 'com.adamcell.f7app',
+	id: 'com.phonegap.3dvisions',
 	panel: { swipe: 'left' },
 	dialog: {
 		buttonOk: 'Ya',
