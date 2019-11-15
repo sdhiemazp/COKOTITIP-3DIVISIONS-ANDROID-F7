@@ -1,0 +1,77 @@
+<div class="page" data-name="generate_pin">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left" style="margin-left: 5%;">
+          <a href="#" class="back">
+            <i class="icon icon-back"></i>
+          </a>
+        </div>
+        <div class="title">
+          <font >Pin</font>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content background-body">
+      <div class="block">
+        <form action="" method="post">
+          <div class="list">
+            <ul>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title"></div>
+                  <div class="item-input-wrap">
+                    <a href="/history_pin/" class="col button button-raised button-fill button-round">Riwayat</a>
+                  </div>
+                  <div class="item-input-wrap">
+                    <a href="/pin_pribadi/" class="col button button-raised button-fill button-round">Daftar Pin</a>
+                  </div>
+                </div>
+              </li>
+              <hr>
+              <li class="item-content item-input item-input-outline warning_select_pin" style=" margin-bottom: -5%;">
+              <div class="item-inner">
+                <div class="item-title" style="color: red;">Silahkan pilih tipe pin terlebih dahulu!</div>
+              </div>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title">Nama Bank Tujuan</div>
+                  <div class="item-input-wrap">
+                    <select id="bank_id_deposit_pin">
+
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title">Tipe Pin</div>
+                  <div class="item-input-wrap">
+                    <input type="radio" name="pin_type_deposit_pin" data-type="Basic" class="pin_type_deposit_pin" value="Basic">Basic<br>
+                    <input type="radio" name="pin_type_deposit_pin" data-type="Premium" class="pin_type_deposit_pin" value="Premium">Premium
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title">Jumlah Pin</div>
+                  <div class="item-input-wrap">
+                    <input type="number" placeholder="" id="count_pin" min="1" value="1" validate data-error-message="Harap mengisi data ini!">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title"></div>
+                  <div class="item-input-wrap">
+                    <a href="" class="col button button-raised button-fill button-round" id="btn_request_pin">Lanjut</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

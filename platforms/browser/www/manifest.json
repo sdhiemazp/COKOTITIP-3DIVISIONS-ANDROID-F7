@@ -1,0 +1,12 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "3Dvisions",
+  "short_name": "3Dvisions",
+  "version": "com.phonegap.helloworld",
+  "description": "Aplikasi jual beli pulsa.",
+  "author": "COkotitip Team",
+  "icons": [],
+  "start_url": "index.html",
+  "theme_color": "#2196f3"
+}

@@ -1,0 +1,321 @@
+:root {
+  --f7-card-content-padding-horizontal: 16px;
+  --f7-card-content-padding-vertical: 16px;
+  --f7-card-border-radius: 4px;
+  --f7-card-font-size: inherit;
+  --f7-card-header-text-color: inherit;
+  --f7-card-header-font-weight: 400;
+  --f7-card-header-padding-horizontal: 16px;
+  --f7-card-footer-font-weight: 400;
+  --f7-card-footer-font-size: inherit;
+  --f7-card-footer-padding-horizontal: 16px;
+  --f7-card-expandable-font-size: 16px;
+  --f7-card-expandable-tablet-width: 670px;
+  --f7-card-expandable-tablet-height: 670px;
+  --f7-card-bg-color: #fff;
+  --f7-card-outline-border-color: rgba(0, 0, 0, 0.12);
+  --f7-card-header-border-color: rgba(0, 0, 0, 0.1);
+  --f7-card-footer-border-color: rgba(0, 0, 0, 0.1);
+  --f7-card-expandable-bg-color: #fff;
+
+  --f7-treeview-item-padding-left: 16px;
+  --f7-treeview-item-padding-right: 16px;
+  --f7-treeview-toggle-size: 24px;
+  --f7-treeview-children-offset: 29px;
+  --f7-treeview-label-font-weight: 400;
+  --f7-treeview-label-text-color: inherit;
+  /*
+  --f7-treeview-selectable-selected-bg-color: rgba(var(--f7-theme-color-rgb), 0.2);
+  */
+  --f7-treeview-toggle-color: rgba(0, 0, 0, 0.5);
+  --f7-treeview-toggle-hover-bg-color: rgba(0, 0, 0, 0.1);
+  --f7-treeview-toggle-pressed-bg-color: rgba(0, 0, 0, 0.15);
+  --f7-treeview-icon-color: rgba(0, 0, 0, 0.5);
+  --f7-treeview-selectable-hover-bg-color: rgba(0, 0, 0, 0.1);
+  --f7-treeview-link-hover-bg-color: rgba(0, 0, 0, 0.1);
+  --f7-treeview-link-pressed-bg-color: rgba(0, 0, 0, 0.15);
+
+  --f7-swipeout-button-text-color: #fff;
+  --f7-swipeout-delete-button-bg-color: #ff3b30;
+  --f7-swipeout-button-font-size: inherit;
+  --f7-swipeout-button-font-weight: inherit;
+  --f7-swipeout-button-bg-color: rgba(0, 0, 0, 0.22);
+
+  --f7-grid-gap: 10px;
+
+  /*
+  --f7-searchbar-link-color: var(--f7-bars-link-color);
+  --f7-searchbar-inline-input-font-size: var(--f7-searchbar-input-font-size);
+  --f7-searchbar-inline-input-height: var(--f7-searchbar-input-height);
+  */
+  --f7-searchbar-input-border-width: 0px;
+  --f7-searchbar-input-border-color: transparent;
+  --f7-searchbar-input-text-color: #000;
+  --f7-searchbar-placeholder-color: rgba(0, 0, 0, 0.4);
+
+
+  --f7-autocomplete-dropdown-placeholder-color: #a9a9a9;
+  --f7-autocomplete-dropdown-preloader-size: 20px;
+  /*
+  --f7-autocomplete-dropdown-selected-bg-color: rgba(var(--f7-theme-color-rgb), 0.2);
+  */
+  --f7-autocomplete-dropdown-bg-color: #fff;
+}
+:root .theme-dark,
+:root.theme-dark {
+  --f7-card-bg-color: #1c1c1d;
+  --f7-card-expandable-bg-color: #1c1c1d;
+  --f7-card-outline-border-color: rgba(255, 255, 255, 0.15);
+  --f7-card-header-border-color: rgba(255, 255, 255, 0.15);
+  --f7-card-footer-border-color: rgba(255, 255, 255, 0.15);
+  --f7-card-footer-text-color: rgba(255, 255, 255, 0.55);
+
+  --f7-treeview-toggle-color: rgba(255, 255, 255, 0.5);
+  --f7-treeview-toggle-hover-bg-color: rgba(255, 255, 255, 0.03);
+  --f7-treeview-toggle-pressed-bg-color: rgba(255, 255, 255, 0.1);
+  --f7-treeview-icon-color: rgba(255, 255, 255, 0.75);
+  --f7-treeview-selectable-hover-bg-color: rgba(255, 255, 255, 0.03);
+  --f7-treeview-link-hover-bg-color: rgba(255, 255, 255, 0.03);
+  --f7-treeview-link-pressed-bg-color: rgba(255, 255, 255, 0.11);
+
+  --f7-swipeout-button-bg-color: rgba(255, 255, 255, 0.55);
+
+  --f7-searchbar-input-text-color: #fff;
+  --f7-searchbar-placeholder-color: rgba(255, 255, 255, 0.4);
+
+  --f7-autocomplete-dropdown-bg-color: #1c1c1d;
+}
+.ios {
+  --f7-card-margin-horizontal: 10px;
+  --f7-card-margin-vertical: 10px;
+  --f7-card-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  --f7-card-header-font-size: 17px;
+  --f7-card-header-padding-vertical: 10px;
+  --f7-card-header-min-height: 44px;
+  --f7-card-footer-text-color: rgba(0, 0, 0, 0.45);
+  --f7-card-footer-padding-vertical: 10px;
+  --f7-card-footer-min-height: 44px;
+  --f7-card-expandable-margin-horizontal: 20px;
+  --f7-card-expandable-margin-vertical: 30px;
+  --f7-card-expandable-box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+  --f7-card-expandable-border-radius: 15px;
+  --f7-card-expandable-tablet-border-radius: 5px;
+  --f7-card-expandable-header-font-size: 27px;
+  --f7-card-expandable-header-font-weight: bold;
+
+  --f7-treeview-item-height: 34px;
+  --f7-treeview-label-font-size: 17px;
+  --f7-treeview-icon-size: 24px;
+
+  --f7-swipeout-button-padding: 0 30px; 
+
+  --f7-ptr-preloader-size: 28px;
+  --f7-ptr-size: 44px;
+
+  /*
+  --f7-searchbar-bg-image: var(--f7-bars-bg-image);
+  --f7-searchbar-bg-color: var(--f7-bars-bg-color);
+  --f7-searchbar-bg-color-rgb: var(--f7-bars-bg-color-rgb);
+  --f7-searchbar-border-color: var(--f7-bars-border-color);
+  */
+  --f7-searchbar-height: 44px;
+  --f7-searchbar-inner-padding-left: 8px;
+  --f7-searchbar-inner-padding-right: 8px;
+  /*
+  --f7-searchbar-link-color: var(--f7-bars-link-color, var(--f7-theme-color));
+  */
+  --f7-searchbar-input-font-size: 17px;
+  --f7-searchbar-input-border-radius: 8px;
+  --f7-searchbar-input-height: 32px;
+  --f7-searchbar-input-padding-horizontal: 28px;
+  /*
+  --f7-searchbar-inline-input-padding-horizontal: var(--f7-searchbar-input-padding-horizontal);
+  --f7-searchbar-input-clear-button-color: var(--f7-input-clear-button-color);
+  */
+  --f7-searchbar-backdrop-bg-color: rgba(0, 0, 0, 0.4);
+  --f7-searchbar-shadow-image: none;
+  --f7-searchbar-in-page-content-margin: 0px;
+  --f7-searchbar-in-page-content-box-shadow: none;
+  --f7-searchbar-in-page-content-border-radius: 0;
+  --f7-searchbar-in-page-content-input-border-radius: 0;
+  --f7-searchbar-search-icon-color: rgba(0, 0, 0, 0.4);
+  --f7-searchbar-input-bg-color: #e4e4e4;
+
+  --f7-autocomplete-dropdown-box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
+  --f7-autocomplete-dropdown-text-matching-font-weight: 600;
+  --f7-autocomplete-dropdown-font-size: var(--f7-list-font-size);
+  --f7-autocomplete-dropdown-text-color: #000;
+  --f7-autocomplete-dropdown-text-matching-color: #000;
+}
+.md {
+  --f7-card-margin-horizontal: 8px;
+  --f7-card-margin-vertical: 8px;
+  --f7-card-box-shadow: var(--f7-elevation-1);
+  --f7-card-header-font-size: 16px;
+  --f7-card-header-padding-vertical: 4px;
+  --f7-card-header-min-height: 48px;
+  --f7-card-footer-text-color: rgba(0, 0, 0, 0.54);
+  --f7-card-footer-padding-vertical: 4px;
+  --f7-card-footer-min-height: 48px;
+  --f7-card-expandable-margin-horizontal: 12px;
+  --f7-card-expandable-margin-vertical: 24px;
+  --f7-card-expandable-box-shadow: var(--f7-elevation-10);
+  --f7-card-expandable-border-radius: 8px;
+  --f7-card-expandable-tablet-border-radius: 4px;
+  --f7-card-expandable-header-font-size: 24px;
+  --f7-card-expandable-header-font-weight: 500;
+
+  --f7-treeview-item-height: 34px;
+  --f7-treeview-label-font-size: 16px;
+  --f7-treeview-icon-size: 24px;
+
+  --f7-swipeout-button-padding: 0 24px;
+
+  --f7-ptr-preloader-size: 22px;
+  --f7-ptr-size: 40px;
+
+  --f7-searchbar-border-color: transparent;
+  --f7-searchbar-height: 48px;
+  --f7-searchbar-inner-padding-left: 0px;
+  --f7-searchbar-inner-padding-right: 0px;
+  --f7-searchbar-link-color: #737373;
+  --f7-searchbar-search-icon-color: #737373;
+  --f7-searchbar-input-font-size: 20px;
+  --f7-searchbar-input-border-radius: 0px;
+  --f7-searchbar-input-height: 100%;
+  --f7-searchbar-input-padding-horizontal: 48px;
+  --f7-searchbar-inline-input-padding-horizontal: 24px;
+  --f7-searchbar-input-clear-button-color: #737373;
+  --f7-searchbar-backdrop-bg-color: rgba(0, 0, 0, 0.25);
+  --f7-searchbar-shadow-image: var(--f7-bars-shadow-bottom-image);
+  --f7-searchbar-in-page-content-margin: 8px;
+  --f7-searchbar-in-page-content-box-shadow: var(--f7-elevation-1);
+  --f7-searchbar-in-page-content-border-radius: 4px;
+  --f7-searchbar-in-page-content-input-border-radius: 4px;
+  --f7-searchbar-bg-color: #fff;
+  --f7-searchbar-input-bg-color: #fff;
+
+  --f7-autocomplete-dropdown-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+  --f7-autocomplete-dropdown-text-matching-font-weight: 400;
+  --f7-autocomplete-dropdown-font-size: var(--f7-list-font-size);
+  --f7-autocomplete-dropdown-text-color: rgba(0, 0, 0, 0.54);
+  --f7-autocomplete-dropdown-text-matching-color: #212121;
+}
+.aurora {
+  --f7-card-margin-horizontal: 10px;
+  --f7-card-margin-vertical: 10px;
+  --f7-card-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+  --f7-card-header-font-size: 14px;
+  --f7-card-header-font-weight: bold;
+  --f7-card-header-padding-vertical: 10px;
+  --f7-card-header-min-height: 38px;
+  --f7-card-footer-text-color: rgba(0, 0, 0, 0.6);
+  --f7-card-footer-padding-vertical: 10px;
+  --f7-card-footer-min-height: 38px;
+  --f7-card-expandable-margin-horizontal: 10px;
+  --f7-card-expandable-margin-vertical: 20px;
+  --f7-card-expandable-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+  --f7-card-expandable-border-radius: 15px;
+  --f7-card-expandable-tablet-border-radius: 5px;
+  --f7-card-expandable-header-font-size: 27px;
+  --f7-card-expandable-header-font-weight: bold;
+  
+  --f7-treeview-item-height: 28px;
+  --f7-treeview-label-font-size: 14px;
+  --f7-treeview-icon-size: 20px;
+
+  --f7-swipeout-button-padding: 0 12px;
+  --f7-swipeout-button-font-weight: 500;
+
+  --f7-ptr-preloader-size: 20px;
+  --f7-ptr-size: 38px;
+
+  /*
+  --f7-searchbar-bg-image: var(--f7-bars-bg-image);
+  --f7-searchbar-bg-color: var(--f7-bars-bg-color);
+  --f7-searchbar-border-color: var(--f7-bars-border-color);
+  */
+  --f7-searchbar-height: 38px;
+  --f7-searchbar-inner-padding-left: 8px;
+  --f7-searchbar-inner-padding-right: 8px;
+  /*
+  --f7-searchbar-link-color: var(--f7-bars-link-color, var(--f7-theme-color));
+  */
+  --f7-searchbar-input-font-size: 13px;
+  --f7-searchbar-input-border-radius: 4px;
+  --f7-searchbar-input-height: 24px;
+  --f7-searchbar-input-padding-horizontal: 24px;
+  /*
+  --f7-searchbar-inline-input-padding-horizontal: var(--f7-searchbar-input-padding-horizontal;
+  --f7-searchbar-input-clear-button-color: var(--f7-input-clear-button-color);
+  */
+  --f7-searchbar-backdrop-bg-color: rgba(0, 0, 0, 0.4);
+  --f7-searchbar-shadow-image: none;
+  --f7-searchbar-in-page-content-margin: 0px;
+  --f7-searchbar-in-page-content-box-shadow: none;
+  --f7-searchbar-in-page-content-border-radius: 0;
+  /*
+  --f7-searchbar-in-page-content-input-border-radius: var(--f7-searchbar-input-border-radius);
+  */
+  --f7-searchbar-search-icon-color: rgba(0, 0, 0, 0.4);
+  --f7-searchbar-input-bg-color: #fff;
+}
+.demo-card-header-pic .card-header {
+  height: 40vw;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+.demo-card-header-pic .card-content-padding .date{
+  color: #8e8e93;
+}
+.demo-facebook-card .card-header {
+  display: block;
+  padding: 10px;
+}
+.demo-facebook-card .demo-facebook-name {
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+}
+.demo-facebook-card .demo-facebook-date {
+  font-size: 13px;
+  color: #8e8e93;
+  width: 100%;
+}
+.demo-facebook-card .demo-facebook-price {
+  font-size: 13px;
+  width: 100%;
+}
+.demo-facebook-card .card-footer {
+  background: #fafafa;
+}
+.demo-facebook-card .card-footer a {
+  font-weight: 500;
+}
+.demo-facebook-card .card-content img {
+  display: block;
+}
+.demo-facebook-card .card-content-padding {
+  padding: 15px 10px;
+}
+.demo-facebook-card .card-content-padding .likes {
+  color: #8e8e93;
+}
+.border_card {
+   --f7-card-header-border-color: white;
+}
+.clr-premium{
+  color: rgb(0, 162, 255);
+}
+.clr-basic{
+  color: rgb(43, 255, 0);
+}
+.background-body
+{
+  background-image: url('../img/icon/Background.png'); 
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-attachment: fixed;
+}
