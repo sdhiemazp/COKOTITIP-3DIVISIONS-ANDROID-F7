@@ -1,6 +1,4 @@
 var $$ = Dom7;
-// var database_connect = "fuckyu";
-// var lokasifoto = "fuckyu";
 var database_connect = "https://3dsaja.com/";
 var lokasifoto = "https://3dsaja.com/image/";
 var ERRNC ="Koneksi Anda terputus!";
