@@ -2230,7 +2230,7 @@ var app = new Framework7({
 										$$('#listtransaction').append(`
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
-												<div class="demo-facebook-name">` + x[i]['user_name'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
+												<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
 												<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b>` + sell +
 													x[i]['transaction_message'].toUpperCase() + `</div>
 												<div class="demo-facebook-price"><b>` +  x[i]['customer_number'] + `</b></div>
@@ -2256,7 +2256,7 @@ var app = new Framework7({
 										$$('#listtransaction').append(`
 											<div class="card demo-facebook-card">
 												<div class="card-header">
-													<div class="demo-facebook-name">` + x[i]['user_name'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
+													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
 													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
 														x[i]['transaction_message'].toUpperCase() + `</div>
 													<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
@@ -2493,7 +2493,7 @@ var app = new Framework7({
 											$$('#listtransaction').append(`
 												<div class="card demo-facebook-card">
 												  <div class="card-header">
-													<div class="demo-facebook-name">` + x[i]['user_name'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
+													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
 													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + sell +
 														x[i]['transaction_message'].toUpperCase() + `</div>
 													<div class="demo-facebook-price"><b>` +  x[i]['customer_number'] + `</b></div>
@@ -2519,7 +2519,7 @@ var app = new Framework7({
 											$$('#listtransaction').append(`
 												<div class="card demo-facebook-card">
 													<div class="card-header">
-														<div class="demo-facebook-name">` + x[i]['user_name'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
+														<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
 														<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
 															x[i]['transaction_message'].toUpperCase() + `</div>
 														<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
