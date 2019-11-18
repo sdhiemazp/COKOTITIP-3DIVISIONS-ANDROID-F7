@@ -3157,7 +3157,7 @@ var app = new Framework7({
 								app.dialog.close();
 
 								var sponsor = "";
-								if(x_data_sendiri[0]['username'] != "admin") {
+								if(x_data_sendiri[0]['username'] != "Arsmoch") {
 									sponsor = `<br><span>` + x_data_sendiri[0]['username_sponsor'] + `</span></p>`;
 								}
 
@@ -3367,7 +3367,7 @@ var app = new Framework7({
 								app.dialog.close();
 
 								var sponsor = "";
-								if(x_data_sendiri[0]['username'] != "admin") {
+								if(x_data_sendiri[0]['username'] != "Arsmoch") {
 									sponsor = `<br><span>` + x_data_sendiri[0]['username_sponsor'] + `</span></p>`;
 									$$('#back_2').show();
 									$$('#back_2').on('click', function() {
@@ -3583,7 +3583,7 @@ var app = new Framework7({
 								app.dialog.close();
 
 								var sponsor = "";
-								if(x_data_sendiri[0]['username'] != "admin") {
+								if(x_data_sendiri[0]['username'] != "Arsmoch") {
 									sponsor = `<br><span>` + x_data_sendiri[0]['username_sponsor'] + `</span></p>`;
 									$$('#back_3').show();
 									$$('#back_3').on('click', function() {
