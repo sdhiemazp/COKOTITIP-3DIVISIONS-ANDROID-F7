@@ -1,6 +1,8 @@
 var $$ = Dom7;
-var database_connect = "https://3dsaja.com/";
-var lokasifoto = "https://3dsaja.com/image/";
+// var database_connect = "https://3dsaja.com/";
+// var lokasifoto = "https://3dsaja.com/image/";
+var database_connect = "https://adamcell.cokotitip.com/";
+var lokasifoto = "https://adamcell.cokotitip.com/image/";
 var ERRNC ="Koneksi Anda terputus!";
 var PHOTO_ERR ="Foto tidak berhasil diunggah!";
 
@@ -423,25 +425,6 @@ var app = new Framework7({
 					});
 
 					$$('#btndeposit').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
-
 						var transaction_price = $$('#transaction_price_deposit').val();
 						var bank_id = $$('#bank_id_deposit').val();
 						if(transaction_price < 50000) {
@@ -449,37 +432,58 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah deposit adalah IDR 50.000!");
 						} else {
-							app.request({
-								method: "POST",
-								url: database_connect + "transaction/deposit/insert_deposit.php",
-									data:{
-										username : localStorage.username,
-										transaction_price : transaction_price,
-										bank_id : bank_id
-									},
-								success: function(data) {
-									var obj = JSON.parse(data);
-									if(obj['status'] == true) {
-										var x = obj['data'];
-										determinateLoading = false;
-										app.dialog.close();
-										page.router.navigate('/show_deposit/' + x);
-									} else {
-										determinateLoading = false;
-										app.dialog.close();
-										app.dialog.alert(obj['message']);
-									}
-								},
-								error: function(data) {
-									determinateLoading = false;
-									app.dialog.close();
-									var toastBottom = app.toast.create({
-										text: ERRNC,
-										closeTimeout: 2000,
-									});
-									toastBottom.open();
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi deposit sebesar " + 
+								formatRupiah(transaction_price) + " ini?",function(){
+								showDeterminate(true);
+								determinateLoading = false;
+								function showDeterminate(inline)
+								{
+								  determinateLoading = true;
+								  var progressBarEl;
+								  if (inline) {
+								    progressBarEl = app.dialog.progress();
+								  } else {
+								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								  }
+								  function simulateLoading() {
+								    setTimeout(function () {
+								      simulateLoading();
+								    }, Math.random() * 300 + 300);
+								  }
+								  simulateLoading();
 								}
+								app.request({
+									method: "POST",
+									url: database_connect + "transaction/deposit/insert_deposit.php",
+										data:{
+											username : localStorage.username,
+											transaction_price : transaction_price,
+											bank_id : bank_id
+										},
+									success: function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											var x = obj['data'];
+											determinateLoading = false;
+											app.dialog.close();
+											page.router.navigate('/show_deposit/' + x);
+										} else {
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(obj['message']);
+										}
+									},
+									error: function(data) {
+										determinateLoading = false;
+										app.dialog.close();
+										var toastBottom = app.toast.create({
+											text: ERRNC,
+											closeTimeout: 2000,
+										});
+										toastBottom.open();
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									}
+								});
 							});
 						}
 					});
@@ -642,55 +646,58 @@ var app = new Framework7({
 									if(transaction_message == "Bonus Pasti" && localStorage.user_level == "Basic") {
 										app.dialog.alert("Bonus pasti hanya dapat ditarik jika Anda telah mencapai level Premium!");
 									} else {
-										showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-										  determinateLoading = true;
-										  var progressBarEl;
-										  if (inline) {
-										    progressBarEl = app.dialog.progress();
-										  } else {
-										    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										  }
-										  function simulateLoading() {
-										    setTimeout(function () {
-										      simulateLoading();
-										    }, Math.random() * 300 + 300);
-										  }
-										  simulateLoading();
-										}
-										app.request({
-											method: "POST",
-											url: database_connect + "transaction/withdraw/insert_withdraw.php",
-												data:{
-													username : localStorage.username,
-													transaction_price : transaction_price,
-													transaction_message : transaction_message
-												},
-											success: function(data) {
-												var obj = JSON.parse(data);
-												if(obj['status'] == true) {
-													var x = obj['data'];
-													determinateLoading = false;
-													app.dialog.close();
-													page.router.navigate('/show_withdraw/' + x,{ force: true, ignoreCache: true });
-												} else {
-													determinateLoading = false;
-													app.dialog.close();
-													app.dialog.alert(obj['message']);
-												}
-											},
-											error: function(data) {
-												determinateLoading = false;
-												app.dialog.close();
-												var toastBottom = app.toast.create({
-													text: ERRNC,
-													closeTimeout: 2000,
-												});
-												toastBottom.open();
-												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi withdraw sebesar " + 
+											formatRupiah(transaction_price) + " ini?",function(){
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+											  determinateLoading = true;
+											  var progressBarEl;
+											  if (inline) {
+											    progressBarEl = app.dialog.progress();
+											  } else {
+											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											  }
+											  function simulateLoading() {
+											    setTimeout(function () {
+											      simulateLoading();
+											    }, Math.random() * 300 + 300);
+											  }
+											  simulateLoading();
 											}
+											app.request({
+												method: "POST",
+												url: database_connect + "transaction/withdraw/insert_withdraw.php",
+													data:{
+														username : localStorage.username,
+														transaction_price : transaction_price,
+														transaction_message : transaction_message
+													},
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														var x = obj['data'];
+														determinateLoading = false;
+														app.dialog.close();
+														page.router.navigate('/show_withdraw/' + x,{ force: true, ignoreCache: true });
+													} else {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['message']);
+													}
+												},
+												error: function(data) {
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+												}
+											});
 										});
 									}
 								}
@@ -2763,24 +2770,6 @@ var app = new Framework7({
 					});
 
 					$$('#btnincrease').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
 						var transaction_price = $$('#transaction_price_increase').val();
 						var transaction_message = $$('#transaction_message_increase').val();
 						var balance_increase = $$('#balance_increase').val();
@@ -2791,39 +2780,61 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah penambahan saldo/bonus member adalah IDR 1!");
 						} else {
-							app.request({
-								method: "POST",
-								url: database_connect + "transaction/increase.php",
-									data:{
-										transaction_price : transaction_price,
-										balance_increase : balance_increase,
-										transaction_message : transaction_message,
-										username : username
-									},
-								success: function(data) {
-									var obj = JSON.parse(data);
-									if(obj['status'] == true) {
-										var x = obj['data'];
-										determinateLoading = false;
-										app.dialog.close();
-										app.dialog.alert(x);
-										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-									} else {
-										determinateLoading = false;
-										app.dialog.close();
-										app.dialog.alert(obj['message']);
-									}
-								},
-								error: function(data) {
-									determinateLoading = false;
-									app.dialog.close();
-									var toastBottom = app.toast.create({
-										text: ERRNC,
-										closeTimeout: 2000,
-									});
-									toastBottom.open();
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + 
+								formatRupiah(transaction_price) + " kepada " + username + "?",function(){
+								showDeterminate(true);
+								determinateLoading = false;
+								function showDeterminate(inline)
+								{
+								  determinateLoading = true;
+								  var progressBarEl;
+								  if (inline) {
+								    progressBarEl = app.dialog.progress();
+								  } else {
+								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								  }
+								  function simulateLoading() {
+								    setTimeout(function () {
+								      simulateLoading();
+								    }, Math.random() * 300 + 300);
+								  }
+								  simulateLoading();
 								}
+
+								app.request({
+									method: "POST",
+									url: database_connect + "transaction/increase.php",
+										data:{
+											transaction_price : transaction_price,
+											balance_increase : balance_increase,
+											transaction_message : transaction_message,
+											username : username
+										},
+									success: function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											var x = obj['data'];
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(x);
+											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										} else {
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(obj['message']);
+										}
+									},
+									error: function(data) {
+										determinateLoading = false;
+										app.dialog.close();
+										var toastBottom = app.toast.create({
+											text: ERRNC,
+											closeTimeout: 2000,
+										});
+										toastBottom.open();
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									}
+								});
 							});
 						}
 					});
@@ -2900,24 +2911,6 @@ var app = new Framework7({
 					});
 
 					$$('#btndecrease').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-									simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
 						var transaction_price = $$('#transaction_price_decrease').val();
 						var transaction_message = $$('#transaction_message_decrease').val();
 						var balance_decrease = $$('#balance_decrease').val();
@@ -2928,39 +2921,60 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah pengurangan saldo member adalah IDR 1!");
 						} else {
-							app.request({
-								method: "POST",
-								url: database_connect + "transaction/decrease.php",
-									data:{
-										transaction_price : transaction_price,
-										balance_decrease : balance_decrease,
-										transaction_message : transaction_message,
-										username : username
-									},
-								success: function(data) {
-									var obj = JSON.parse(data);
-									if(obj['status'] == true) {
-										var x = obj['data'];
-										determinateLoading = false;
-										app.dialog.close();
-										app.dialog.alert(x);
-										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + 
+								formatRupiah(transaction_price) + " kepada " + username + "?",function(){
+								showDeterminate(true);
+								determinateLoading = false;
+								function showDeterminate(inline)
+								{
+									determinateLoading = true;
+									var progressBarEl;
+									if (inline) {
+										progressBarEl = app.dialog.progress();
 									} else {
+										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+									}
+									function simulateLoading() {
+										setTimeout(function () {
+											simulateLoading();
+										}, Math.random() * 300 + 300);
+									}
+									simulateLoading();
+								}
+								app.request({
+									method: "POST",
+									url: database_connect + "transaction/decrease.php",
+										data:{
+											transaction_price : transaction_price,
+											balance_decrease : balance_decrease,
+											transaction_message : transaction_message,
+											username : username
+										},
+									success: function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											var x = obj['data'];
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(x);
+											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										} else {
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(obj['message']);
+										}
+									},
+									error: function(data) {
 										determinateLoading = false;
 										app.dialog.close();
-										app.dialog.alert(obj['message']);
+										var toastBottom = app.toast.create({
+											text: ERRNC,
+											closeTimeout: 2000,
+										});
+										toastBottom.open();
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 									}
-								},
-								error: function(data) {
-									determinateLoading = false;
-									app.dialog.close();
-									var toastBottom = app.toast.create({
-										text: ERRNC,
-										closeTimeout: 2000,
-									});
-									toastBottom.open();
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-								}
+								});
 							});
 						}
 					});
@@ -5538,19 +5552,19 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
 					}
 					app.request({
 						method: "GET",
@@ -5642,59 +5656,62 @@ var app = new Framework7({
 									if(customer_no == "") {
 										app.dialog.alert("Nomor telepon atau token tidak boleh kosong!");
 									} else {
-										showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
-										localStorage.user_balance_a = localStorage.user_balance_a - tagihan;
-										app.request({
-											method: "POST",
-											url: database_connect + "digiflazz/buy_product.php",
-												data:{
-												transaction_price : tagihan,
-												username : localStorage.username,
-												customer_no : customer_no,
-												product_id : buyer_sku_code
-											},
-											success: function(data) {
-												var obj = JSON.parse(data);
-												if(obj['status'] == true) {
-													var x = obj['data'];
-													determinateLoading = false;
-													app.dialog.close();
-													app.dialog.alert(x, 'Notifikasi', function(){
-														page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-													});
+										app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi ini?",function(){
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+												determinateLoading = true;
+												var progressBarEl;
+												if (inline) {
+													progressBarEl = app.dialog.progress();
 												} else {
+													progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+												}
+												function simulateLoading() {
+													setTimeout(function () {
+													simulateLoading();
+													}, Math.random() * 300 + 300);
+												}
+												simulateLoading();
+											}
+											localStorage.user_balance_a = localStorage.user_balance_a - tagihan;
+
+											app.request({
+												method: "POST",
+												url: database_connect + "digiflazz/buy_product.php",
+													data:{
+													transaction_price : tagihan,
+													username : localStorage.username,
+													customer_no : customer_no,
+													product_id : buyer_sku_code
+												},
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														var x = obj['data'];
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(x, 'Notifikasi', function(){
+															page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+														});
+													} else {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['message']);
+													}
+												},
+												error: function(data) {
 													determinateLoading = false;
 													app.dialog.close();
-													app.dialog.alert(obj['message']);
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 												}
-											},
-											error: function(data) {
-												determinateLoading = false;
-												app.dialog.close();
-												var toastBottom = app.toast.create({
-													text: ERRNC,
-													closeTimeout: 2000,
-												});
-												toastBottom.open();
-												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-											}
+											});
 										});
 									}
 								});
@@ -5901,63 +5918,73 @@ var app = new Framework7({
 								$$('#btn_back_show_deposit_pin').on('click', function() {
 									page.router.navigate('/history_pin/');
 								});
+
 								$$('#btn_yes_show_deposit_pin').on('click', function() {
-									app.request({
-										method: "POST",
-										url: database_connect + "pin/member_accept_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
-										success: function(data) {
-											var obj = JSON.parse(data);
-											if(obj['status'] == true) {
-												var x = obj['data'];
+									app.dialog.confirm("Apakah Anda yakin untuk memproses pembelian " + x[0]['request_pin_count'] + 
+										" pin " + x[0]['request_pin_type'] + "?",function(){
+										app.request({
+											method: "POST",
+											url: database_connect + "pin/member_accept_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
+											success: function(data) {
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+													var x = obj['data'];
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert("Transaksi diproses!");
+												} else {
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert(obj['message']);
+												}
+											},
+											error: function(data) {
 												determinateLoading = false;
 												app.dialog.close();
-											} else {
-												determinateLoading = false;
-												app.dialog.close();
-												app.dialog.alert(obj['message']);
+												var toastBottom = app.toast.create({
+													text: ERRNC,
+													closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 											}
-										},
-										error: function(data) {
-											determinateLoading = false;
-											app.dialog.close();
-											var toastBottom = app.toast.create({
-												text: ERRNC,
-												closeTimeout: 2000,
-											});
-											toastBottom.open();
-											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-										}
+										});
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 									});
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 								});
+
 								$$('#btn_no_show_deposit_pin').on('click', function() {
-									app.request({
-										method: "POST",
-										url: database_connect + "pin/member_decline_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
-										success: function(data) {
-											var obj = JSON.parse(data);
-											if(obj['status'] == true) {
-												var x = obj['data'];
+									app.dialog.confirm("Apakah Anda yakin untuk membatalkan pembelian " + x[0]['request_pin_count'] + 
+										" pin " + x[0]['request_pin_type'] + "?",function(){
+										app.request({
+											method: "POST",
+											url: database_connect + "pin/member_decline_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
+											success: function(data) {
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+													var x = obj['data'];
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert("Transaksi dibatalkan!");
+												} else {
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert(obj['message']);
+												}
+											},
+											error: function(data) {
 												determinateLoading = false;
 												app.dialog.close();
-											} else {
-												determinateLoading = false;
-												app.dialog.close();
-												app.dialog.alert(obj['message']);
+												var toastBottom = app.toast.create({
+													text: ERRNC,
+													closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 											}
-										},
-										error: function(data) {
-											determinateLoading = false;
-											app.dialog.close();
-											var toastBottom = app.toast.create({
-												text: ERRNC,
-												closeTimeout: 2000,
-											});
-											toastBottom.open();
-											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-										}
+										});
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 									});
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 								});
 							} else {
 								determinateLoading = false;
@@ -5988,23 +6015,24 @@ var app = new Framework7({
 		    pageInit:function(e,page)
 		    {
 		      showDeterminate(true);
-			determinateLoading = false;
-			function showDeterminate(inline)
-			{
-			determinateLoading = true;
-			var progressBarEl;
-			if (inline) {
-				progressBarEl = app.dialog.progress();
-			} else {
-				progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-			}
-			function simulateLoading() {
-				setTimeout(function () {
+			  determinateLoading = false;
+			  function showDeterminate(inline)
+			  {
+				determinateLoading = true;
+				var progressBarEl;
+				if (inline) {
+					progressBarEl = app.dialog.progress();
+				} else {
+					progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+				}
+				function simulateLoading() {
+					setTimeout(function () {
+					simulateLoading();
+					}, Math.random() * 300 + 300);
+				}
 				simulateLoading();
-				}, Math.random() * 300 + 300);
-			}
-			simulateLoading();
-			}
+			  }
+
 		      app.request({
 		        method:"POST",
 		        url:database_connect+"pin/select_request_pin_member.php", data:{ username : localStorage.username },
@@ -6650,176 +6678,241 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
 					}
-					simulateLoading();
-					}
+
 					app.request({
 						method:"GET",
 						url:database_connect+"pin/select_request_pin.php",
 						success:function(data){
-						var obj = JSON.parse(data);
-						if(obj['status'] == true) {
-							var x = obj['data'];
-							for(var i = 0;i < x.length; i++) {
-							if(x[i]['status'] == 0) {
-								$$('#confirm_pin').append(`
-								<li class="swipeout">
-									<div class="item-content swipeout-content">
-									<a href="#" class="item-media ">
-										<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
-									</a>
-									<div class="item-inner">
-										<div class="item-title-row">
-										<div class="item-title" style="">`+x[i]['username']+`</div>
-										<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
-										</div>
-										<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
-										<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
-									</div>
-									<div class="swipeout-actions-right">
-										<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
-										`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">check_round</i></a>
-									</div>
-									</div>
-								</li>
-								`);
-							} else {
-								$$('#confirm_pin').append(`
-								<li class="swipeout">
-									<div class="item-content swipeout-content">
-									<a href="#" class="item-media ">
-										<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
-									</a>
-									<div class="item-inner">
-										<div class="item-title-row">
-										<div class="item-title" style="">`+x[i]['username']+`</div>
-										<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
-										</div>
-										<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
-										<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
-									</div>
-									</div>
-								</li>
-								`);
-							}
-							}
-
-							$$('.sw-accepted').on('click', function () {
-							var id = $$(this).data('id');
-							var username = $$(this).data('username');
-							var type = $$(this).data('type');
-							var count = $$(this).data('count');
-
-							var url = "";
-							if(type == "Basic") {
-								url = "pin/generate_pin_basic.php";
-							} else {
-								url = "pin/generate_pin_premium.php";
-							}
-							showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-							}
-							for(var i = 0; i < count; i++) {
-								var suc = 0;
-								app.request({
-								method: "POST",
-								url: database_connect + url, data:{ username_sponsor : username },
-								success: function(data) {
-									var obj = JSON.parse(data);
-									if(obj['status'] == true) {
-									var x = obj['data'];
-									suc++;
-									if (suc == count) {
-										app.request({
-										method: "POST",
-										url: database_connect + "pin/update_request_pin.php", data:{ request_pin_id : id },
-										success: function(data) {
-											var obj = JSON.parse(data);
-											if(obj['status'] == true) {
-											var x = obj['data'];
-											app.dialog.close();
-											app.dialog.alert(x, 'Notifikasi', function(){
-												mainView.router.refreshPage();
-											});
-											} else {
-											$$('.sw-accepted').click();
-											}
-										},
-										error: function(data) {
-											determinateLoading = false;
-											app.dialog.close();
-											var toastBottom = app.toast.create({
-											text: ERRNC,
-											closeTimeout: 2000,
-											});
-											toastBottom.open();
-											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-										}
-										});
-									}
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								for(var i = 0;i < x.length; i++) {
+									if(x[i]['status'] == 0) {
+										$$('#confirm_pin').append(`
+										<li class="swipeout">
+											<div class="item-content swipeout-content">
+				                      		<a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+												<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+											</a>
+											<div class="item-inner">
+												<div class="item-title-row">
+												<div class="item-title" style="">`+x[i]['username']+`</div>
+												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
+												</div>
+												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
+											</div>
+											<div class="swipeout-actions-right">
+												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+												`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">check_round</i></a>
+												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+												`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">xmark_circle</i></a>
+											</div>
+											</div>
+										</li>
+										`);
 									} else {
-									$$('.sw-accepted').click();
+										$$('#confirm_pin').append(`
+										<li class="swipeout">
+											<div class="item-content swipeout-content">
+				                      		<a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+												<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+											</a>
+											<div class="item-inner">
+												<div class="item-title-row">
+												<div class="item-title" style="">`+x[i]['username']+`</div>
+												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
+												</div>
+												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
+											</div>
+											</div>
+										</li>
+										`);
 									}
-								},
-								error: function(data) {
-									determinateLoading = false;
-									app.dialog.close();
-									var toastBottom = app.toast.create({
-									text: ERRNC,
-									closeTimeout: 2000,
-									});
-									toastBottom.open();
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 								}
+
+								$$('.sw-accepted').on('click', function () {
+									var id = $$(this).data('id');
+									var username = $$(this).data('username');
+									var type = $$(this).data('type');
+									var count = $$(this).data('count');
+
+									app.dialog.confirm("Apakah Anda yakin memberikan " + count + " pin " + type + 
+										" kepada " + username + "? Pastikan member telah membayar!",function(){
+										var url = "";
+										if(type == "Basic") {
+											url = "pin/generate_pin_basic.php";
+										} else {
+											url = "pin/generate_pin_premium.php";
+										}
+
+										showDeterminate(true);
+										determinateLoading = false;
+										function showDeterminate(inline)
+										{
+											determinateLoading = true;
+											var progressBarEl;
+											if (inline) {
+												progressBarEl = app.dialog.progress();
+											} else {
+												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											}
+											function simulateLoading() {
+												setTimeout(function () {
+												simulateLoading();
+												}, Math.random() * 300 + 300);
+											}
+											simulateLoading();
+										}
+
+										for(var i = 0; i < count; i++) {
+											var suc = 0;
+											app.request({
+												method: "POST",
+												url: database_connect + url, data:{ username_sponsor : username },
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														var x = obj['data'];
+														suc++;
+														if (suc == count) {
+															app.request({
+															method: "POST",
+															url: database_connect + "pin/update_request_pin.php", data:{ request_pin_id : id },
+															success: function(data) {
+																var obj = JSON.parse(data);
+																if(obj['status'] == true) {
+																	var x = obj['data'];
+																	app.dialog.close();
+																	app.dialog.alert(x, 'Notifikasi', function(){
+																		mainView.router.refreshPage();
+																	});
+																} else {
+																	$$('.sw-accepted').click();
+																}
+															},
+															error: function(data) {
+																determinateLoading = false;
+																app.dialog.close();
+																var toastBottom = app.toast.create({
+																	text: ERRNC,
+																	closeTimeout: 2000,
+																});
+																toastBottom.open();
+																page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+															}
+															});
+														}
+													} else {
+														$$('.sw-accepted').click();
+													}
+												},
+												error: function(data) {
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+												}
+											});
+										}
+									});
+								});
+
+								$$('.sw-deleted').on('click', function () {
+									var id = $$(this).data('id');
+									var username = $$(this).data('username');
+									var type = $$(this).data('type');
+									var count = $$(this).data('count');
+
+									app.dialog.confirm("Apakah Anda yakin menghapus permintaan " + count + " pin " + type + 
+										" oleh " + username + "? Pastikan member belum membayar!",function(){
+										var url = "pin/delete_request_pin.php";
+
+										showDeterminate(true);
+										determinateLoading = false;
+										function showDeterminate(inline)
+										{
+											determinateLoading = true;
+											var progressBarEl;
+											if (inline) {
+												progressBarEl = app.dialog.progress();
+											} else {
+												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											}
+											function simulateLoading() {
+												setTimeout(function () {
+												simulateLoading();
+												}, Math.random() * 300 + 300);
+											}
+											simulateLoading();
+										}
+
+										app.request({
+											method: "POST",
+											url: database_connect + url, data:{ request_pin_id : id },
+											success: function(data) {
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+													var x = obj['data'];
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert(x,'Notifikasi',function(){
+							                            mainView.router.refreshPage();
+							                        });
+												}
+											},
+											error: function(data) {
+												determinateLoading = false;
+												app.dialog.close();
+												var toastBottom = app.toast.create({
+													text: ERRNC,
+													closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+											}
+										});
+									});
+								});
+
+								determinateLoading = false;
+								app.dialog.close();
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message'], 'Notifikasi', function(){
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 								});
 							}
-							});
-							determinateLoading = false;
-							app.dialog.close();
-						}
-						else {
-							determinateLoading = false;
-							app.dialog.close();
-							app.dialog.alert(obj['message'], 'Notifikasi', function(){
-							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-							});
-						}
 						},
 						error:function(data){
-						determinateLoading = false;
-						app.dialog.close();
-						var toastBottom = app.toast.create({
-							text: ERRNC,
-							closeTimeout: 2000,
-						});
-						toastBottom.open();
-						page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
 				},
