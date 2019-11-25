@@ -6041,6 +6041,13 @@ var app = new Framework7({
 		          if(obj['status'] == true) {
 		            var x = obj['data'];
 		            for(var i = 0; i < x.length; i++) {
+		              var total = "";
+		              if(x[0]['request_pin_type'] == "Basic") {
+						total = formatRupiah(((parseInt(x[0]['count']) * 50000)) + parseInt(x[0]['unique']));
+					  } else {
+						total = formatRupiah(((parseInt(x[0]['count']) * 300000)) + parseInt(x[0]['unique']));
+					  }
+
 		              if(x[i]['status'] == 0 || x[i]['status'] == 2) {
 		                $$('#history_pin').append(`
 		                  <li>
@@ -6054,6 +6061,7 @@ var app = new Framework7({
 		                          <div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
 		                        </div>
 		                        <div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+		                        <div class="item-subtitle" style="">`+total+`</div>
 		                        <div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 		                      </div>
 		                    </div>
@@ -6072,6 +6080,7 @@ var app = new Framework7({
 		                          <div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
 		                        </div>
 		                        <div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+		                        <div class="item-subtitle" style="">`+total+`</div>
 		                        <div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 		                      </div>
 		                    </div>
@@ -6701,6 +6710,13 @@ var app = new Framework7({
 							if(obj['status'] == true) {
 								var x = obj['data'];
 								for(var i = 0;i < x.length; i++) {
+									var total = "";
+						            if(x[0]['request_pin_type'] == "Basic") {
+										total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
+									} else {
+										total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
+									}
+
 									if(x[i]['status'] == 0) {
 										$$('#confirm_pin').append(`
 										<li class="swipeout">
@@ -6714,13 +6730,14 @@ var app = new Framework7({
 												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
 												</div>
 												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+												<div class="item-subtitle" style="">`+total+`</div>
 												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 											</div>
 											<div class="swipeout-actions-right">
 												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
-												`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">check_round</i></a>
+												`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">checkmark</i></a>
 												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
-												`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">xmark_circle</i></a>
+												`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">trash</i></a>
 											</div>
 											</div>
 										</li>
@@ -6738,6 +6755,7 @@ var app = new Framework7({
 												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
 												</div>
 												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+												<div class="item-subtitle" style="">`+total+`</div>
 												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 											</div>
 											</div>
