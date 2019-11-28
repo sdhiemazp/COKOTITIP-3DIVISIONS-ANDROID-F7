@@ -3,9 +3,9 @@
   "display": "standalone",
   "name": "3DVisions",
   "short_name": "3DVisions",
-  "version": "com.tigadsaja.tigadvisions",
+  "version": "3dvisions.3dsaja.com",
   "description": "Aplikasi PPOB",
-  "author": "COkotitip Team",
+  "author": "Cokotitip Team",
   "icons": [],
   "start_url": "index.html",
   "theme_color": "#2196f3"
