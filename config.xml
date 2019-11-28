@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tigadsaja.tigadvisions" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="https://3dsaja.com/">
+<widget id="3DVisions" version="1.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="https://3dsaja.com/">
     <name>3DVisions</name>
     <description>
         Aplikasi PPOB
     </description>
     <author email="cokotitip@gmail.com" href="https://cokotitip.com">
-        COkotitip Team
+        Cokotitip Team
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
