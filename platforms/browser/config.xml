@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="3dvisions.3dsaja.com" version="1.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="https://3dsaja.com/">
+<widget id="com.3dsaja.3dvisions" version="1.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="https://3dsaja.com/">
     <name>3DVisions</name>
     <description>
         Aplikasi PPOB
