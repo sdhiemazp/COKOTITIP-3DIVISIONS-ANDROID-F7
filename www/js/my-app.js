@@ -6042,10 +6042,10 @@ var app = new Framework7({
 		            var x = obj['data'];
 		            for(var i = 0; i < x.length; i++) {
 		              var total = "";
-		              if(x[0]['request_pin_type'] == "Basic") {
-						total = formatRupiah(((parseInt(x[0]['count']) * 50000)) + parseInt(x[0]['unique']));
+		              if(x[0]['pin_type'] == "Basic") {
+						total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
 					  } else {
-						total = formatRupiah(((parseInt(x[0]['count']) * 300000)) + parseInt(x[0]['unique']));
+						total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
 					  }
 
 		              if(x[i]['status'] == 0 || x[i]['status'] == 2) {
@@ -6711,7 +6711,7 @@ var app = new Framework7({
 								var x = obj['data'];
 								for(var i = 0;i < x.length; i++) {
 									var total = "";
-						            if(x[0]['request_pin_type'] == "Basic") {
+						            if(x[0]['pin_type'] == "Basic") {
 										total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
 									} else {
 										total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
