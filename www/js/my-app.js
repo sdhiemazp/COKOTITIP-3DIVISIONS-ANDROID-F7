@@ -1963,6 +1963,122 @@ var app = new Framework7({
 				},
 			},
 		},
+		// HISTORY BONUS
+		{
+			path: '/history_bonus_all/',
+			url: 'pages/feature/history_bonus_all.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "history_bonus/select_history_bonus_all.php", data:{ category : "Bonus Sponsor" },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								for(var i = 0; i < x.length; i++) {
+									$$('#listhistorybonusall').append(`
+										<div class="card demo-facebook-card">
+										  <div class="card-header">
+										    <div class="demo-facebook-name">` + x[i]['history_bonus_username'] + `<span></div>
+										    <div class="demo-facebook-name">` + x[i]['history_bonus_message'] + `<span></div>
+										    <div class="demo-facebook-price">` + formatRupiah(x[i]['history_bonus_price']) + `</div>
+										    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
+										  </div>
+										</div>
+										`);
+								}
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message'],'Notifikasi',function(){
+			                        app.views.main.router.back();
+			                    });
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#category_bonus_selection').on('change', function () {
+						var category = $$('#category_bonus_selection').val();
+						$$('#listhistorybonusall').html('');
+
+						app.request({
+							method: "POST",
+							url: database_connect + "history_bonus/select_history_bonus_all.php", data:{ category : category },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+									for(var i = 0; i < x.length; i++) {
+										$$('#listhistorybonusall').append(`
+											<div class="card demo-facebook-card">
+											  <div class="card-header">
+											    <div class="demo-facebook-name">` + x[i]['history_bonus_username'] + `<span></div>
+											    <div class="demo-facebook-name">` + x[i]['history_bonus_message'] + `<span></div>
+											    <div class="demo-facebook-price">` + formatRupiah(x[i]['history_bonus_price']) + `</div>
+											    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
+											  </div>
+											</div>
+											`);
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message'],'Notifikasi',function(){
+				                        app.views.main.router.back();
+				                    });
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
 		// HISTORY BY MEMBER
 		{
 			path: '/history/',
@@ -2193,7 +2309,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:'All' },
+						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:'Deposit' },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -2699,6 +2815,87 @@ var app = new Framework7({
 				},
 			},
 		},
+		// CHECK TRANSACTION
+		{
+			path: '/check_transaction/',
+			url: 'pages/feature/check_transaction.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					app.calendar.create({
+			            inputEl: '#start_date_check_transaction',
+			            openIn: 'customModal',
+			            header: true,
+			            footer: true,
+		         	});
+
+					app.calendar.create({
+			            inputEl: '#end_date_check_transaction',
+			            openIn: 'customModal',
+			            header: true,
+			            footer: true,
+		          	});
+
+					$$('#btnchecktransaction').on('click', function() {
+						showDeterminate(true);
+						determinateLoading = false;
+						function showDeterminate(inline)
+						{
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
+							simulateLoading();
+						}
+
+						var start_date = $$('#start_date_check_transaction').val();
+						var end_date = $$('#end_date_check_transaction').val();
+						app.request({
+							method: "POST",
+							url: database_connect + "transaction/check_transaction_all.php",
+								data:{
+								start_date: start_date,
+								end_date: end_date
+							},
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['message'];
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(x, 'Notifikasi', function(){
+										page.router.navigate('/list_transaction/');
+									});
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message']);
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
 		// INCREASE
 		{
 			path: '/increase/',
@@ -3154,6 +3351,7 @@ var app = new Framework7({
 					  }
 					  simulateLoading();
 					}
+
 					app.request({
 						method: "POST",
 						url: database_connect + "users/select_member.php", data:{ username : localStorage.username },
@@ -3329,6 +3527,54 @@ var app = new Framework7({
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
+					
+					var url = "select_users";
+					if(localStorage.user_type == "Member") {
+						url = "select_users_by_member";
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/" + url + ".php", data:{ username : localStorage.username },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								// for(var i = 0; i < x.length; i++) {
+								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
+								// }
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#txtsearch',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
 
 					$$('#btnsearch').on('click', function() {
 						var search = $$('#txtsearch').val();
@@ -3383,10 +3629,14 @@ var app = new Framework7({
 								var sponsor = "";
 								if(x_data_sendiri[0]['username'] != "Kanza31") {
 									sponsor = `<br><span>` + x_data_sendiri[0]['username_sponsor'] + `</span></p>`;
-									$$('#back_2').show();
-									$$('#back_2').on('click', function() {
-										page.router.navigate('/list_member_3/' + x_data_sendiri[0]['username_upline']);
-									});
+									if(x_data_sendiri[0]['username'] == localStorage.username) {
+										$$('#back_2').hide();
+									} else {
+										$$('#back_2').show();
+										$$('#back_2').on('click', function() {
+											page.router.navigate('/list_member_3/' + x_data_sendiri[0]['username_upline']);
+										});
+									}
 								} else {
 									$$('#back_2').hide();
 								}
@@ -3546,6 +3796,54 @@ var app = new Framework7({
 						}
 					});
 
+					var url = "select_users";
+					if(localStorage.user_type == "Member") {
+						url = "select_users_by_member";
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/" + url + ".php", data:{ username : localStorage.username },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								// for(var i = 0; i < x.length; i++) {
+								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
+								// }
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#txtsearch_2',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
 					$$('#btnsearch_2').on('click', function() {
 						var search = $$('#txtsearch_2').val();
 						page.router.navigate('/list_member_3/' + search);
@@ -3599,10 +3897,14 @@ var app = new Framework7({
 								var sponsor = "";
 								if(x_data_sendiri[0]['username'] != "Kanza31") {
 									sponsor = `<br><span>` + x_data_sendiri[0]['username_sponsor'] + `</span></p>`;
-									$$('#back_3').show();
-									$$('#back_3').on('click', function() {
-										page.router.navigate('/list_member_2/' + x_data_sendiri[0]['username_upline']);
-									});
+									if(x_data_sendiri[0]['username'] == localStorage.username) {
+										$$('#back_3').hide();
+									} else {
+										$$('#back_3').show();
+										$$('#back_3').on('click', function() {
+											page.router.navigate('/list_member_2/' + x_data_sendiri[0]['username_upline']);
+										});
+									}
 								} else {
 									$$('#back_3').hide();
 								}
@@ -3744,6 +4046,54 @@ var app = new Framework7({
 								if(localStorage.user_type == "Member") {
 									$$('.menu_admin').hide();
 								}
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					var url = "select_users";
+					if(localStorage.user_type == "Member") {
+						url = "select_users_by_member";
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/" + url + ".php", data:{ username : localStorage.username },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								// for(var i = 0; i < x.length; i++) {
+								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
+								// }
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#txtsearch_3',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -4424,19 +4774,19 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
 					}
 					app.request({
 						method: "GET",
@@ -4462,7 +4812,7 @@ var app = new Framework7({
 									        </div>
 									      </div>
 									    </li>
-										`);
+									`);
 								}
 
 								$$('.delete_bank').on('click', function () {
@@ -4473,18 +4823,18 @@ var app = new Framework7({
 									function showDeterminate(inline)
 									{
 									determinateLoading = true;
-									var progressBarEl;
-									if (inline) {
-										progressBarEl = app.dialog.progress();
-									} else {
-										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-									}
-									function simulateLoading() {
-										setTimeout(function () {
+										var progressBarEl;
+										if (inline) {
+											progressBarEl = app.dialog.progress();
+										} else {
+											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+										}
+										function simulateLoading() {
+											setTimeout(function () {
+											simulateLoading();
+											}, Math.random() * 300 + 300);
+										}
 										simulateLoading();
-										}, Math.random() * 300 + 300);
-									}
-									simulateLoading();
 									}
 				                    app.request({
 				                      method:"POST",
@@ -4554,19 +4904,19 @@ var app = new Framework7({
 						determinateLoading = false;
 						function showDeterminate(inline)
 						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
 							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
 						}
 						var bank_name = $$('#bank_name_create_bank').val();
 						app.request({
@@ -5848,6 +6198,181 @@ var app = new Framework7({
 								});
 							}
 						});
+					});
+				},
+			},
+		},
+		// TRANSFER PIN
+		{
+			path: '/transfer_pin/:type',
+			url: 'pages/feature/transfer_pin.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					var type = page.router.currentRoute.params.type;
+
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+								simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					$$('#type_transfer_pin').val(type);
+
+					app.request({
+						method: "POST",
+						url: database_connect + "pin/select_pin_user_no_usage_by_type.php", 
+							data:{ type: type, username : localStorage.username },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								$$('#available_transfer_pin').val(x.length);
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/select_users.php", data:{  },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								// for(var i = 0; i < x.length; i++) {
+								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
+								// }
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#member_transfer_pin',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btntransferpin').on('click', function() {
+						var pin_type = $$('#type_transfer_pin').val();
+						var pin_available = $$('#available_transfer_pin').val();
+						var pin_count = $$('#count_transfer_pin').val();
+						var username = $$('#member_transfer_pin').val();
+
+						if(pin_count < 1 || pin_count == "") {
+							app.dialog.alert("Minimum jumlah transfer pin adalah 1 buah!");
+						} else if (username == "") {
+							app.dialog.alert("Anda belum memilih member tujuan penerima pin!");
+						} else if (pin_count > pin_available) {
+							app.dialog.alert("Jumlah pin yang Anda transfer melebihi jumlah pin Anda yang tersedia!");
+						} else {
+							app.dialog.confirm("Apakah Anda yakin melakukan transfer pin " + pin_type + " sebanyak " + 
+								pin_count + " buah kepada " + username + "?",function(){
+								showDeterminate(true);
+								determinateLoading = false;
+								function showDeterminate(inline)
+								{
+								  determinateLoading = true;
+								  var progressBarEl;
+								  if (inline) {
+								    progressBarEl = app.dialog.progress();
+								  } else {
+								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								  }
+								  function simulateLoading() {
+								    setTimeout(function () {
+								      simulateLoading();
+								    }, Math.random() * 300 + 300);
+								  }
+								  simulateLoading();
+								}
+
+								app.request({
+									method: "POST",
+									url: database_connect + "pin/transfer_pin.php",
+										data:{
+											pin_type : pin_type,
+											pin_count : pin_count,
+											username_owner : localStorage.username,
+											username : username
+										},
+									success: function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											var x = obj['message'];
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(x);
+											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										} else {
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(obj['message']);
+										}
+									},
+									error: function(data) {
+										determinateLoading = false;
+										app.dialog.close();
+										var toastBottom = app.toast.create({
+											text: ERRNC,
+											closeTimeout: 2000,
+										});
+										toastBottom.open();
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									}
+								});
+							});
+						}
 					});
 				},
 			},
