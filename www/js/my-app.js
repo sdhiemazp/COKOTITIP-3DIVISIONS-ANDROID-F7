@@ -2838,60 +2838,67 @@ var app = new Framework7({
 		          	});
 
 					$$('#btnchecktransaction').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
-
 						var start_date = $$('#start_date_check_transaction').val();
 						var end_date = $$('#end_date_check_transaction').val();
-						app.request({
-							method: "POST",
-							url: database_connect + "transaction/check_transaction_all.php",
-								data:{
-								start_date: start_date,
-								end_date: end_date
-							},
-							success: function(data) {
-								var obj = JSON.parse(data);
-								if(obj['status'] == true) {
-									var x = obj['message'];
-									determinateLoading = false;
-									app.dialog.close();
-									app.dialog.alert(x, 'Notifikasi', function(){
-										page.router.navigate('/list_transaction/');
-									});
+
+						if(start_date == "") {
+							app.dialog.alert("Tanggal mulai tidak boleh kosong!");
+						} else if(end_date == null) {
+							app.dialog.alert("Tanggal selesai tidak boleh kosong!");
+						} else {
+							showDeterminate(true);
+							determinateLoading = false;
+							function showDeterminate(inline)
+							{
+								determinateLoading = true;
+								var progressBarEl;
+								if (inline) {
+									progressBarEl = app.dialog.progress();
 								} else {
+									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								}
+								function simulateLoading() {
+									setTimeout(function () {
+									simulateLoading();
+									}, Math.random() * 300 + 300);
+								}
+								simulateLoading();
+							}
+
+							app.request({
+								method: "POST",
+								url: database_connect + "transaction/check_transaction_all.php",
+									data:{
+									start_date: start_date,
+									end_date: end_date
+								},
+								success: function(data) {
+									var obj = JSON.parse(data);
+									if(obj['status'] == true) {
+										var x = obj['message'];
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(x, 'Notifikasi', function(){
+											page.router.navigate('/list_transaction/');
+										});
+									} else {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+									}
+								},
+								error: function(data) {
 									determinateLoading = false;
 									app.dialog.close();
-									app.dialog.alert(obj['message']);
+									var toastBottom = app.toast.create({
+										text: ERRNC,
+										closeTimeout: 2000,
+									});
+									toastBottom.open();
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 								}
-							},
-							error: function(data) {
-								determinateLoading = false;
-								app.dialog.close();
-								var toastBottom = app.toast.create({
-									text: ERRNC,
-									closeTimeout: 2000,
-								});
-								toastBottom.open();
-								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-							}
-						});
+							});
+						}
 					});
 				},
 			},
@@ -7236,7 +7243,7 @@ var app = new Framework7({
 								var x = obj['data'];
 								for(var i = 0;i < x.length; i++) {
 									var total = "";
-						            if(x[0]['pin_type'] == "Basic") {
+						            if(x[i]['pin_type'] == "Basic") {
 										total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
 									} else {
 										total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
