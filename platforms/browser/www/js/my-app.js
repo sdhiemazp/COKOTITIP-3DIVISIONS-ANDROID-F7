@@ -2309,7 +2309,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:'Deposit' },
+						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:'Decrease' },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -2354,7 +2354,7 @@ var app = new Framework7({
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
 												<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
-												<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b>` + sell +
+												<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + sell +
 													x[i]['transaction_message'].toUpperCase() + `</div>
 												<div class="demo-facebook-price"><b>` +  x[i]['customer_number'] + `</b></div>
 												<div class="demo-facebook-price">` + price + `</div>
@@ -2376,29 +2376,31 @@ var app = new Framework7({
 											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 												<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 										}
-										$$('#listtransaction').append(`
-											<div class="card demo-facebook-card">
-												<div class="card-header">
-													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
-													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
-														x[i]['transaction_message'].toUpperCase() + `</div>
-													<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
-												  	parseInt(x[i]['transaction_unique_code']))) + `</div>
-												  	` + adminfee + `
-													<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
+										if(x[i]['transaction_type'] != "Sell") {
+											$$('#listtransaction').append(`
+												<div class="card demo-facebook-card">
+													<div class="card-header">
+														<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
+														<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
+															x[i]['transaction_message'].toUpperCase() + `</div>
+														<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
+														parseInt(x[i]['transaction_unique_code']))) + `</div>
+														` + adminfee + `
+														<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
+													</div>
+													<div class="card-footer">
+														<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
+															x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
+															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
+															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
+														<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
+															x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
+															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
+															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
+													</div>
 												</div>
-												<div class="card-footer">
-													<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
-														x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
-														(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-														x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
-													<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
-														x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
-														(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-														x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
-												</div>
-											</div>
-										`);
+											`);
+										}
 									}
 								}
 
@@ -2639,29 +2641,31 @@ var app = new Framework7({
 												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 													<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 											}
-											$$('#listtransaction').append(`
-												<div class="card demo-facebook-card">
-													<div class="card-header">
-														<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
-														<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
-															x[i]['transaction_message'].toUpperCase() + `</div>
-														<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
-													  	parseInt(x[i]['transaction_unique_code']))) + `</div>
-													  	` + adminfee + `
-														<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
+											if(x[i]['transaction_type'] != "Sell") {
+												$$('#listtransaction').append(`
+													<div class="card demo-facebook-card">
+														<div class="card-header">
+															<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
+															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
+																x[i]['transaction_message'].toUpperCase() + `</div>
+															<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
+															parseInt(x[i]['transaction_unique_code']))) + `</div>
+															` + adminfee + `
+															<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
+														</div>
+														<div class="card-footer">
+															<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
+																x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
+																(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
+																x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
+															<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
+																x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
+																(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
+																x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
+														</div>
 													</div>
-													<div class="card-footer">
-														<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
-															x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
-															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
-														<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
-															x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
-															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
-													</div>
-												</div>
-											`);
+												`);
+											}
 										}
 									}
 
@@ -3230,6 +3234,7 @@ var app = new Framework7({
 										<td class="numeric-cell">` +x[i]['user_balance_b']+ `</td>
 										<td class="numeric-cell">` +x[i]['user_balance_c']+ `</td>
 										<td class="label-cell">` +x[i]['user_date']+ `</td>
+										<td class="label-cell">` +x[i]['user_date_premium']+ `</td>
 									</tr>`;
 								}
 
@@ -3243,6 +3248,7 @@ var app = new Framework7({
 													<th class="label-cell">Saldo Bonus Sponsor</th>
 													<th class="label-cell">Saldo Bonus Pasti</th>
 													<th class="label-cell">Tanggal Masuk</th>
+													<th class="label-cell">Tanggal Premium</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -3290,6 +3296,7 @@ var app = new Framework7({
 											<td class="numeric-cell">` +x[i]['user_balance_b']+ `</td>
 											<td class="numeric-cell">` +x[i]['user_balance_c']+ `</td>
 											<td class="label-cell">` +x[i]['user_date']+ `</td>
+											<td class="label-cell">` +x[i]['user_date_premium']+ `</td>
 										</tr>`;
 									}
 
@@ -3303,6 +3310,7 @@ var app = new Framework7({
 														<th class="label-cell">Saldo Bonus Sponsor</th>
 														<th class="label-cell">Saldo Bonus Pasti</th>
 														<th class="label-cell">Tanggal Masuk</th>
+														<th class="label-cell">Tanggal Premium</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -6817,19 +6825,19 @@ var app = new Framework7({
 						determinateLoading = false;
 						function showDeterminate(inline)
 						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
 							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
 						}
 						app.request({
 							method: "POST",
@@ -6865,19 +6873,19 @@ var app = new Framework7({
 						determinateLoading = false;
 						function showDeterminate(inline)
 						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
 							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
 						}
 						app.request({
 							method: "POST",
@@ -6939,7 +6947,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "pin/select_pin.php", data:{  },
+						url: database_connect + "pin/select_pin.php", data:{ pin_type:'Basic' },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -7067,6 +7075,142 @@ var app = new Framework7({
 							toastBottom.open();
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
+					});
+
+					$$('#pin_type_overall_selection').on('change', function () {
+						var search = $$('#pin_type_overall_selection').val();
+						app.request({
+							method: "POST",
+							url: database_connect + "pin/select_pin.php", data:{ pin_type:search },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									$$('#list_all_pin_user').html('');
+									determinateLoading = false;
+									app.dialog.close();
+									var tmphsl ='';
+									for(var i = 0; i < x.length; i++)
+									{
+										if(x[i]['username_member']==null || x[i]['username_member']== "")
+										{
+											tmphsl += `
+												<tr>
+													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
+													<td class="label-cell">` +x[i]['pin_value']+ `</td>
+													<td class="label-cell">` +x[i]['pin_type']+ `</td>
+													<td class="numeric-cell">
+														<a class="link color-red delete_pin" data-id="` + x[i]['pin_id'] + `">Hapus</a>
+													</td>
+												</tr>
+											`;
+										}
+										else
+										{
+											tmphsl += `
+												<tr>
+													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
+													<td class="label-cell">` +x[i]['pin_value']+ `</td>
+													<td class="label-cell">` +x[i]['pin_type']+ `</td>
+													<td class="numeric-cell">` +x[i]['username_member']+ `</td>
+												</tr>
+											`;
+										}
+									}
+	
+									$$('#list_all_pin_user').append(`
+										<div class="data-table card">
+											<table>
+												<thead>
+													<tr>
+														<th class="label-cell">Pemilik</th>
+														<th class="label-cell">Pin</th>
+														<th class="label-cell">Type</th>
+														<th class="numeric-cell">Member</th>
+													</tr>
+												</thead>
+												<tbody>
+													` +tmphsl+ `
+												</tbody>
+											</table>
+										</div>
+									`);
+	
+									$$('.delete_pin').on('click', function () {
+									  var id = $$(this).data('id');
+									  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
+										showDeterminate(true);
+										determinateLoading = false;
+										function showDeterminate(inline)
+										{
+											determinateLoading = true;
+											var progressBarEl;
+											if (inline) {
+												progressBarEl = app.dialog.progress();
+											} else {
+												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											}
+											function simulateLoading() {
+												setTimeout(function () {
+												simulateLoading();
+												}, Math.random() * 300 + 300);
+											}
+											simulateLoading();
+										}
+										app.request({
+										  method:"POST",
+										  url:database_connect + "pin/delete_pin.php",
+										  data:{
+											pin_id : id
+										  },
+										  success:function(data){
+											var obj = JSON.parse(data);
+											if(obj['status'] == true) {
+											  var x = obj['data'];
+											  determinateLoading = false;
+											  app.dialog.close();
+											  app.dialog.alert(x,'Notifikasi',function(){
+												mainView.router.refreshPage();
+											  });
+											}
+											else {
+											  determinateLoading = false;
+											  app.dialog.close();
+											  app.dialog.alert(obj['message']);
+											}
+										  },
+										  error:function(data){
+											determinateLoading = false;
+											app.dialog.close();
+											var toastBottom = app.toast.create({
+											  text: ERRNC,
+											  closeTimeout: 2000,
+											});
+											toastBottom.open();
+											page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+										  }
+										});
+									  });
+									});
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message'], 'Notifikasi', function(){
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									});
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
 					});
 
 					$$('#txtsearchpin').on('keyup', function() {
@@ -7235,8 +7379,9 @@ var app = new Framework7({
 					}
 
 					app.request({
-						method:"GET",
+						method:"POST",
 						url:database_connect+"pin/select_request_pin.php",
+						data:{request_pin_type:'Basic'},
 						success:function(data){
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -7443,6 +7588,437 @@ var app = new Framework7({
 										});
 									});
 								});
+
+								determinateLoading = false;
+								app.dialog.close();
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message'], 'Notifikasi', function(){
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								});
+							}
+						},
+						error:function(data){
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#request_pin_type_confirm_selection').on('change', function () {
+						var search = $$('#request_pin_type_confirm_selection').val();
+						app.request({
+							method:"POST",
+							url:database_connect+"pin/select_request_pin.php",
+							data:{request_pin_type:search},
+							success:function(data){
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									$$('#confirm_pin').html('');
+									var x = obj['data'];
+									for(var i = 0;i < x.length; i++) {
+										var total = "";
+										if(x[i]['pin_type'] == "Basic") {
+											total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
+										} else {
+											total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
+										}
+	
+										if(x[i]['status'] == 0) {
+											$$('#confirm_pin').append(`
+											<li class="swipeout">
+												<div class="item-content swipeout-content">
+												  <a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+													<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+												</a>
+												<div class="item-inner">
+													<div class="item-title-row">
+													<div class="item-title" style="">`+x[i]['username']+`</div>
+													<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
+													</div>
+													<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+													<div class="item-subtitle" style="">`+total+`</div>
+													<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
+												</div>
+												<div class="swipeout-actions-right">
+													<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+													`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">checkmark</i></a>
+													<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+													`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">trash</i></a>
+												</div>
+												</div>
+											</li>
+											`);
+										} else {
+											$$('#confirm_pin').append(`
+											<li class="swipeout">
+												<div class="item-content swipeout-content">
+												  <a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+													<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+												</a>
+												<div class="item-inner">
+													<div class="item-title-row">
+													<div class="item-title" style="">`+x[i]['username']+`</div>
+													<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
+													</div>
+													<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+													<div class="item-subtitle" style="">`+total+`</div>
+													<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
+												</div>
+												</div>
+											</li>
+											`);
+										}
+									}
+	
+									$$('.sw-accepted').on('click', function () {
+										var id = $$(this).data('id');
+										var username = $$(this).data('username');
+										var type = $$(this).data('type');
+										var count = $$(this).data('count');
+	
+										app.dialog.confirm("Apakah Anda yakin memberikan " + count + " pin " + type + 
+											" kepada " + username + "? Pastikan member telah membayar!",function(){
+											var url = "";
+											if(type == "Basic") {
+												url = "pin/generate_pin_basic.php";
+											} else {
+												url = "pin/generate_pin_premium.php";
+											}
+	
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+												determinateLoading = true;
+												var progressBarEl;
+												if (inline) {
+													progressBarEl = app.dialog.progress();
+												} else {
+													progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+												}
+												function simulateLoading() {
+													setTimeout(function () {
+													simulateLoading();
+													}, Math.random() * 300 + 300);
+												}
+												simulateLoading();
+											}
+	
+											for(var i = 0; i < count; i++) {
+												var suc = 0;
+												app.request({
+													method: "POST",
+													url: database_connect + url, data:{ username_sponsor : username },
+													success: function(data) {
+														var obj = JSON.parse(data);
+														if(obj['status'] == true) {
+															var x = obj['data'];
+															suc++;
+															if (suc == count) {
+																app.request({
+																method: "POST",
+																url: database_connect + "pin/update_request_pin.php", data:{ request_pin_id : id },
+																success: function(data) {
+																	var obj = JSON.parse(data);
+																	if(obj['status'] == true) {
+																		var x = obj['data'];
+																		app.dialog.close();
+																		app.dialog.alert(x, 'Notifikasi', function(){
+																			mainView.router.refreshPage();
+																		});
+																	} else {
+																		$$('.sw-accepted').click();
+																	}
+																},
+																error: function(data) {
+																	determinateLoading = false;
+																	app.dialog.close();
+																	var toastBottom = app.toast.create({
+																		text: ERRNC,
+																		closeTimeout: 2000,
+																	});
+																	toastBottom.open();
+																	page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+																}
+																});
+															}
+														} else {
+															$$('.sw-accepted').click();
+														}
+													},
+													error: function(data) {
+														determinateLoading = false;
+														app.dialog.close();
+														var toastBottom = app.toast.create({
+															text: ERRNC,
+															closeTimeout: 2000,
+														});
+														toastBottom.open();
+														page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+													}
+												});
+											}
+										});
+									});
+	
+									$$('.sw-deleted').on('click', function () {
+										var id = $$(this).data('id');
+										var username = $$(this).data('username');
+										var type = $$(this).data('type');
+										var count = $$(this).data('count');
+	
+										app.dialog.confirm("Apakah Anda yakin menghapus permintaan " + count + " pin " + type + 
+											" oleh " + username + "? Pastikan member belum membayar!",function(){
+											var url = "pin/delete_request_pin.php";
+	
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+												determinateLoading = true;
+												var progressBarEl;
+												if (inline) {
+													progressBarEl = app.dialog.progress();
+												} else {
+													progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+												}
+												function simulateLoading() {
+													setTimeout(function () {
+													simulateLoading();
+													}, Math.random() * 300 + 300);
+												}
+												simulateLoading();
+											}
+	
+											app.request({
+												method: "POST",
+												url: database_connect + url, data:{ request_pin_id : id },
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														var x = obj['data'];
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(x,'Notifikasi',function(){
+															mainView.router.refreshPage();
+														});
+													}
+												},
+												error: function(data) {
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+												}
+											});
+										});
+									});
+	
+									determinateLoading = false;
+									app.dialog.close();
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message'], 'Notifikasi', function(){
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									});
+								}
+							},
+							error:function(data){
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
+		// HISTORY TRANSFER PIN
+		{
+			path: '/history_transfer_pin/',
+			url: 'pages/feature/history_transfer_pin.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method:"POST",
+						url:database_connect+"pin/select_transfer_pin.php",
+						data:{pin_type:'Basic'},
+						success:function(data){
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								for(var i = 0;i < x.length; i++) {
+									$$('#listhistorytransactionpin').append(`
+										<div class="card demo-facebook-card">
+											<div class="card-header">
+											<div class="demo-facebook-price">Dari : <b>` + x[i]['username_sender'] + `</b><span style="float: right; color: green">` + x[i]['transfer_pin_type'] + `</span></div>
+											<div class="demo-facebook-price">Untuk : <b>` + x[i]['username_receiver'] + `</b> </div>
+											<div class="demo-facebook-price">Jumlah : <b>` +  x[i]['transfer_pin_count'] + ` Buah</b></div>
+											<div class="demo-facebook-date">` + formatDateTime(x[i]['transfer_pin_date']) + `</div>
+											</div>
+										</div>
+									`);
+
+								}
+
+								determinateLoading = false;
+								app.dialog.close();
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message'], 'Notifikasi', function(){
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								});
+							}
+						},
+						error:function(data){
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#history_transfer_pin_selection').on('change', function () {
+						var search = $$('#history_transfer_pin_selection').val();
+						app.request({
+							method:"POST",
+							url:database_connect+"pin/select_transfer_pin.php",
+							data:{pin_type:search},
+							success:function(data){
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									$$('#listhistorytransactionpin').html('');
+									for(var i = 0;i < x.length; i++) {
+										$$('#listhistorytransactionpin').append(`
+											<div class="card demo-facebook-card">
+												<div class="card-header">
+												<div class="demo-facebook-name">Dari : ` + x[i]['username_sender'] + `<span style="float: right; color: green">` + x[i]['transfer_pin_type'] + `</span></div>
+												<div class="demo-facebook-price">Untuk : <b>` + x[i]['username_receiver'] + `</b> </div>
+												<div class="demo-facebook-price"><b>` +  x[i]['transfer_pin_count'] + `</b></div>
+												<div class="demo-facebook-date">` + formatDateTime(x[i]['transfer_pin_date']) + `</div>
+												</div>
+											</div>
+										`);
+	
+									}
+	
+									determinateLoading = false;
+									app.dialog.close();
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message'], 'Notifikasi', function(){
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									});
+								}
+							},
+							error:function(data){
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
+		// HISTORY TRANSFER PIN MEMBER
+		{
+			path: '/history_transfer_pin_member/',
+			url: 'pages/feature/history_transfer_pin_member.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method:"POST",
+						url:database_connect+"pin/select_transfer_pin_member.php",
+						data:{username:localStorage.username},
+						success:function(data){
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								for(var i = 0;i < x.length; i++) {
+									$$('#listhistorytransactionpinmember').append(`
+										<div class="card demo-facebook-card">
+											<div class="card-header">
+											<div class="demo-facebook-price">Dari : <b>` + x[i]['username_sender'] + `</b><span style="float: right; color: ` + x[i]['transfer_pin_color'] + `">` + x[i]['transfer_pin_status'] + `</span></div>
+											<div class="demo-facebook-price">Untuk : <b>` + x[i]['username_receiver'] + `</b> </div>
+											<div class="demo-facebook-price">Jumlah : <b>` +  x[i]['transfer_pin_count'] + ` ` +  x[i]['transfer_pin_type'] + `</b></div>
+											<div class="demo-facebook-date">` + formatDateTime(x[i]['transfer_pin_date']) + `</div>
+											</div>
+										</div>
+									`);
+
+								}
 
 								determinateLoading = false;
 								app.dialog.close();
