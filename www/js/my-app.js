@@ -4041,7 +4041,7 @@ var app = new Framework7({
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
 									<br><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
-									<br><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
+									<br><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor + `</p>`
 								);
 
@@ -4060,7 +4060,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4080,7 +4080,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4102,7 +4102,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4124,7 +4124,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4146,7 +4146,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4168,7 +4168,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4321,7 +4321,7 @@ var app = new Framework7({
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
 									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
-									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
+									<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor
 								);
 
@@ -4340,7 +4340,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4360,7 +4360,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4382,7 +4382,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4404,7 +4404,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4426,7 +4426,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4448,7 +4448,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4601,7 +4601,7 @@ var app = new Framework7({
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
 									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
-									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
+									<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor
 								);
 
@@ -4620,7 +4620,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4640,7 +4640,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4662,7 +4662,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4684,7 +4684,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4706,7 +4706,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4728,7 +4728,7 @@ var app = new Framework7({
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
 										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
-										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
+										<br><span><img src="img/icon/premium red.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -6720,7 +6720,6 @@ var app = new Framework7({
 												}
 												simulateLoading();
 											}
-											localStorage.user_balance_a = localStorage.user_balance_a - tagihan;
 
 											app.request({
 												method: "POST",
@@ -6729,8 +6728,7 @@ var app = new Framework7({
 													transaction_price : tagihan,
 													username : localStorage.username,
 													customer_no : customer_no,
-													product_id : buyer_sku_code,
-													transaction_balance_left : localStorage.user_balance_a
+													product_id : buyer_sku_code
 												},
 												success: function(data) {
 													var obj = JSON.parse(data);
