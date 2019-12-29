@@ -7,7 +7,7 @@
         </a>
       </div>
       <div class="title">
-        <font>Deposit</font>
+        <font>Transfer E-Cash</font>
       </div>
     </div>
   </div>
@@ -19,20 +19,18 @@
           <ul>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Nama Bank Tujuan</div>
+                <div class="item-title">Member Tujuan</div>
                 <div class="item-input-wrap">
-                  <select id="bank_id_deposit">
-
-                  </select>
+                  <input type="text" id="username_transfer_ecash" required validate data-error-message="Harap mengisi data ini!">
                   <span class="input-clear-button"></span>
                 </div>
               </div>
             </li>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Jumlah Deposit</div>
+                <div class="item-title">Nominal Transfer</div>
                 <div class="item-input-wrap">
-                  <input type="number" id="transaction_price_deposit" value="0" required validate data-error-message="Harap mengisi data ini!">
+                  <input type="number" id="count_transfer_ecash" value="0" required validate data-error-message="Harap mengisi data ini!">
                   <span class="input-clear-button"></span>
                 </div>
               </div>
@@ -41,7 +39,7 @@
               <div class="item-inner">
                 <div class="item-title"></div>
                 <div class="item-input-wrap">
-                  <a href="" class="col button button-raised button-fill button-round" id="btndeposit">Lanjut</a>
+                  <a href="" class="col button button-raised button-fill button-round" id="btntransferecash">Lanjut</a>
                 </div>
               </div>
             </li>

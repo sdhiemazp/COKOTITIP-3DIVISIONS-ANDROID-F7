@@ -1,13 +1,13 @@
-<div class="page" data-name="film_detail">
+<div class="page" data-name="deposit">
   <div class="navbar">
-    <div class="navbar-inner">  
+    <div class="navbar-inner">
       <div class="left" style="margin-left: 5%;">
         <a href="#" class="back">
           <i class="icon icon-back"></i>
         </a>
       </div>
       <div class="title">
-        <font>Setting Biaya Admin WD</font>
+        <font>Transfer Bonus</font>
       </div>
     </div>
   </div>
@@ -19,18 +19,17 @@
           <ul>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Biaya Admin WD Saldo Bonus Sponsor</div>
+                <div class="item-title">Nominal Bonus Tersedia</div>
                 <div class="item-input-wrap">
-                  <input type="number" id="wd_sponsor_setting" required validate data-error-message="Harap mengisi data ini!">
-                  <span class="input-clear-button"></span>
+                  <input type="number" id="available_transfer_bonus" value="0" disabled>
                 </div>
               </div>
             </li>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Biaya Admin WD Saldo Bonus Pasti</div>
+                <div class="item-title">Nominal Transfer</div>
                 <div class="item-input-wrap">
-                  <input type="number" id="wd_pasti_setting" required validate data-error-message="Harap mengisi data ini!">
+                  <input type="number" id="count_transfer_bonus" value="0" required validate data-error-message="Harap mengisi data ini!">
                   <span class="input-clear-button"></span>
                 </div>
               </div>
@@ -39,7 +38,7 @@
               <div class="item-inner">
                 <div class="item-title"></div>
                 <div class="item-input-wrap">
-                  <a href="" class="col button button-raised button-fill button-round" id="btnsavebiayawd">Simpan</a>
+                  <a href="" class="col button button-raised button-fill button-round" id="btntransferbonus">Lanjut</a>
                 </div>
               </div>
             </li>

@@ -1,10 +1,10 @@
 var $$ = Dom7;
-var database_connect = "https://3dsaja.com/";
-var lokasifoto = "https://3dsaja.com/image/";
-// var database_connect = "https://adamcell.cokotitip.com/";
-// var lokasifoto = "https://adamcell.cokotitip.com/image/";
-var ERRNC ="Koneksi Anda terputus!";
-var PHOTO_ERR ="Foto tidak berhasil diunggah!";
+// var database_connect = "https://3dsaja.com/";
+// var lokasifoto = "https://3dsaja.com/image/";
+var database_connect = "https://adamcell.cokotitip.com/";
+var lokasifoto = "https://adamcell.cokotitip.com/image/";
+var ERRNC = "Koneksi Anda terputus!";
+var PHOTO_ERR = "Foto tidak berhasil diunggah!";
 
 var app = new Framework7({
 	root: '#app',
@@ -244,7 +244,11 @@ var app = new Framework7({
 					$$('#basic').hide();
 					if(localStorage.user_type == "Admin") {
 						$$('.menu_member').hide();
+						$$('.menu_member_premium').hide();
 					} else if(localStorage.user_type == "Member") {
+						if(localStorage.user_level == "Basic") {
+							$$('.menu_member_premium').hide();
+						}
 						$$('.menu_admin').hide();
 					}
 					app.request({
@@ -287,6 +291,10 @@ var app = new Framework7({
 									$$('#user_balance_b_home').html("Bonus Sponsor : " + formatRupiah(x[0]['user_balance_b']));
 									$$('#user_balance_c_home').html("Bonus Pasti : " + formatRupiah(x[0]['user_balance_c']));
 								}
+
+								localStorage.user_balance_a = x[0]['user_balance_a'];
+								localStorage.user_balance_b = x[0]['user_balance_b'];
+								localStorage.user_balance_c = x[0]['user_balance_c'];
 							} else {
 								// app.dialog.alert(obj['message']);
 							}
@@ -309,6 +317,12 @@ var app = new Framework7({
 					});
 					$$('.show_profile').on('click', function(e) {
 						page.router.navigate('/show_member/' + localStorage.username);
+					});
+					$$('#transfer_balance_a').on('click', function(e) {
+						page.router.navigate('/transfer_balance_a/');
+					});
+					$$('#transfer_balance_c').on('click', function(e) {
+						page.router.navigate('/transfer_balance_c/');
 					});
 
 					$$('#logout').on('click', function(e) {
@@ -373,6 +387,7 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
+								$$('#bank_id_deposit').append(`<option value="">-- Pilih Bank --</option>`);
 								for(var i = 0; i < x.length; i++) {
 									$$('#bank_id_deposit').append(`<option value="` + x[i]['bank_id'] + `">` + x[i]['bank_name'] + `</option>`);
 								}
@@ -394,42 +409,12 @@ var app = new Framework7({
 						}
 					});
 
-					app.request({
-						method: "POST",
-						url: database_connect + "users/show_users.php", data:{ username : localStorage.username },
-						success: function(data) {
-							var obj = JSON.parse(data);
-							if(obj['status'] == true) {
-								var x = obj['data'];
-								determinateLoading = false;
-								app.dialog.close();
-								$$('#bank_name_deposit').val(x[0]['bank_name']);
-								$$('#user_account_name_deposit').val(x[0]['user_account_name']);
-								$$('#user_account_number_deposit').val(x[0]['user_account_number']);
-							} else {
-								determinateLoading = false;
-								app.dialog.close();
-								app.dialog.alert(obj['message']);
-							}
-						},
-						error: function(data) {
-							determinateLoading = false;
-							app.dialog.close();
-							var toastBottom = app.toast.create({
-								text: ERRNC,
-								closeTimeout: 2000,
-							});
-							toastBottom.open();
-							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-						}
-					});
-
 					$$('#btndeposit').on('click', function() {
 						var transaction_price = $$('#transaction_price_deposit').val();
 						var bank_id = $$('#bank_id_deposit').val();
-						if(transaction_price < 50000) {
-							determinateLoading = false;
-							app.dialog.close();
+						if(bank_id == "") {
+							app.dialog.alert("Silahkan pilih bank tujuan terlebih daluhu!");
+						} else if(transaction_price < 50000) {
 							app.dialog.alert("Minimum jumlah deposit adalah IDR 50.000!");
 						} else {
 							app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi deposit sebesar " + 
@@ -778,6 +763,279 @@ var app = new Framework7({
 				},
 			},
 		},
+		// TRANSFER E-CASH
+		{
+			path: '/transfer_balance_a/',
+			url: 'pages/feature/transfer_balance_a.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method: "GET",
+						url: database_connect + "users/select_users_premium.php", data:{  },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#username_transfer_ecash',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  if(results.length == 0) {
+									  	$$('#btntransferecash').addClass('disabled');
+									  } else {
+									  	$$('#btntransferecash').removeClass('disabled');
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btntransferecash').on('click', function() {
+						app.request({
+							method: "GET",
+							url: database_connect + "bonus/select_bonus.php", data:{  },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+
+									var username_receiver = $$('#username_transfer_ecash').val();
+									var count = $$('#count_transfer_ecash').val();
+									if(username_receiver == "") {
+										app.dialog.alert("Silahkan masukkan member tujuan terlebih dahulu!");
+									} else if(parseInt(count) <= (parseInt(x[38]['bonus_value']) + 1) || count == "") {
+										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[38]['bonus_value']) + 1)) 
+											+ "!");
+									} else if(parseInt(count) > parseInt(localStorage.user_balance_a)) {
+										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer!");
+									} else {
+										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer sebesar " + 
+											formatRupiah(count) + " kepada " + username_receiver + "? Nominal transfer Anda akan " +
+											"dipotong biaya admin sebesar " + formatRupiah(x[38]['bonus_value']),function(){
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+											  determinateLoading = true;
+											  var progressBarEl;
+											  if (inline) {
+											    progressBarEl = app.dialog.progress();
+											  } else {
+											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											  }
+											  function simulateLoading() {
+											    setTimeout(function () {
+											      simulateLoading();
+											    }, Math.random() * 300 + 300);
+											  }
+											  simulateLoading();
+											}
+											app.request({
+												method: "POST",
+												url: database_connect + "transaction/transfer_balance_a.php",
+													data:{
+														username_sender : localStorage.username,
+														username_receiver : username_receiver,
+														count : count
+													},
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['data']);
+														page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+													} else {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['message']);
+													}
+												},
+												error: function(data) {
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+												}
+											});
+										});	
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message']);
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
+		// TRANSFER BONUS
+		{
+			path: '/transfer_balance_c/',
+			url: 'pages/feature/transfer_balance_c.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					$$('#available_transfer_bonus').val(localStorage.user_balance_c);
+
+					$$('#btntransferbonus').on('click', function() {
+						app.request({
+							method: "GET",
+							url: database_connect + "bonus/select_bonus.php", data:{  },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+
+									var count = $$('#count_transfer_bonus').val();
+									if(parseInt(count) <= (parseInt(x[50]['bonus_value']) + 1) || count == "") {
+										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[50]['bonus_value']) + 1)) 
+											+ "!");
+									} else if(parseInt(count) > parseInt(localStorage.user_balance_a)) {
+										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer!");
+									} else {
+										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer bonus sebesar " + 
+											formatRupiah(count) + " ke saldo E-Cash Anda? Nominal transfer Anda akan " +
+											"dipotong biaya admin sebesar " + formatRupiah(x[50]['bonus_value']),function(){
+											showDeterminate(true);
+											determinateLoading = false;
+											function showDeterminate(inline)
+											{
+											  determinateLoading = true;
+											  var progressBarEl;
+											  if (inline) {
+											    progressBarEl = app.dialog.progress();
+											  } else {
+											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+											  }
+											  function simulateLoading() {
+											    setTimeout(function () {
+											      simulateLoading();
+											    }, Math.random() * 300 + 300);
+											  }
+											  simulateLoading();
+											}
+											app.request({
+												method: "POST",
+												url: database_connect + "transaction/transfer_balance_c.php",
+													data:{
+														username : localStorage.username,
+														count : count
+													},
+												success: function(data) {
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['data']);
+														page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+													} else {
+														determinateLoading = false;
+														app.dialog.close();
+														app.dialog.alert(obj['message']);
+													}
+												},
+												error: function(data) {
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+														text: ERRNC,
+														closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+												}
+											});
+										});	
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message']);
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+				},
+			},
+		},
 		// PROFIT
 		{
 			path: '/profit/',
@@ -928,8 +1186,14 @@ var app = new Framework7({
 					$$('#btn_setting_cashback_transaksi_ppob').on('click', function() {
 						page.router.navigate('/setting_cashback_transaksi_ppob/');
 					});
-					$$('#btn_setting_biaya_admin_wd').on('click', function() {
-						page.router.navigate('/setting_biaya_admin_wd/');
+					$$('#btn_setting_bonus_repeat_order').on('click', function() {
+						page.router.navigate('/setting_bonus_repeat_order/');
+					});
+					$$('#btn_setting_royalty_repeat_order').on('click', function() {
+						page.router.navigate('/setting_royalty_repeat_order/');
+					});
+					$$('#btn_setting_biaya_admin').on('click', function() {
+						page.router.navigate('/setting_biaya_admin/');
 					});
 				},
 			},
@@ -1774,10 +2038,285 @@ var app = new Framework7({
 				},
 			},
 		},
-		// SETTING BIAYA ADMIN WD
+		// SETTING BONUS REPEAT ORDER
 		{
-			path: '/setting_biaya_admin_wd/',
-			url: 'pages/feature/setting_biaya_admin_wd.html',
+			path: '/setting_bonus_repeat_order/',
+			url: 'pages/feature/setting_bonus_repeat_order.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+					  determinateLoading = true;
+					  var progressBarEl;
+					  if (inline) {
+					    progressBarEl = app.dialog.progress();
+					  } else {
+					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+					  }
+					  function simulateLoading() {
+					    setTimeout(function () {
+					      simulateLoading();
+					    }, Math.random() * 300 + 300);
+					  }
+					  simulateLoading();
+					}
+
+					app.request({
+						method: "GET",
+						url: database_connect + "bonus/select_bonus.php", data:{  },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								$$('#bonus_ro_setting').val(x[39]['bonus_value']);
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btnsavebonusro').on('click', function() {
+						showDeterminate(true);
+						determinateLoading = false;
+						function showDeterminate(inline)
+						{
+						  determinateLoading = true;
+						  var progressBarEl;
+						  if (inline) {
+						    progressBarEl = app.dialog.progress();
+						  } else {
+						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						  }
+						  function simulateLoading() {
+						    setTimeout(function () {
+						      simulateLoading();
+						    }, Math.random() * 300 + 300);
+						  }
+						  simulateLoading();
+						}
+						var bonus_ro = $$('#bonus_ro_setting').val();
+
+						if(bonus_ro == "") {
+							app.dialog.alert("Minimum bonus bonus repeat order adalah 0!");
+						} else {
+							app.request({
+								method: "POST",
+								url: database_connect + "bonus/update_bonus.php",
+									data:{
+										bonus : "bonus ro",
+										bonus_ro : bonus_ro,
+									},
+								success: function(data) {
+									var obj = JSON.parse(data);
+									if(obj['status'] == true) {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									} else {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+									}
+								},
+								error: function(data) {
+									determinateLoading = false;
+									app.dialog.close();
+									var toastBottom = app.toast.create({
+										text: ERRNC,
+										closeTimeout: 2000,
+									});
+									toastBottom.open();
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								}
+							});
+						}
+					});
+				},
+			},
+		},
+		// SETTING ROYALTY REPEAT ORDER
+		{
+			path: '/setting_royalty_repeat_order/',
+			url: 'pages/feature/setting_royalty_repeat_order.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+					  determinateLoading = true;
+					  var progressBarEl;
+					  if (inline) {
+					    progressBarEl = app.dialog.progress();
+					  } else {
+					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+					  }
+					  function simulateLoading() {
+					    setTimeout(function () {
+					      simulateLoading();
+					    }, Math.random() * 300 + 300);
+					  }
+					  simulateLoading();
+					}
+
+					app.request({
+						method: "GET",
+						url: database_connect + "bonus/select_bonus.php", data:{  },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								$$('#royalty_ro_1_setting').val(x[40]['bonus_value']);
+								$$('#royalty_ro_2_setting').val(x[41]['bonus_value']);
+								$$('#royalty_ro_3_setting').val(x[42]['bonus_value']);
+								$$('#royalty_ro_4_setting').val(x[43]['bonus_value']);
+								$$('#royalty_ro_5_setting').val(x[44]['bonus_value']);
+								$$('#royalty_ro_6_setting').val(x[45]['bonus_value']);
+								$$('#royalty_ro_7_setting').val(x[46]['bonus_value']);
+								$$('#royalty_ro_8_setting').val(x[47]['bonus_value']);
+								$$('#royalty_ro_9_setting').val(x[48]['bonus_value']);
+								$$('#royalty_ro_10_setting').val(x[49]['bonus_value']);
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btnsaveroyaltyro').on('click', function() {
+						showDeterminate(true);
+						determinateLoading = false;
+						function showDeterminate(inline)
+						{
+						  determinateLoading = true;
+						  var progressBarEl;
+						  if (inline) {
+						    progressBarEl = app.dialog.progress();
+						  } else {
+						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						  }
+						  function simulateLoading() {
+						    setTimeout(function () {
+						      simulateLoading();
+						    }, Math.random() * 300 + 300);
+						  }
+						  simulateLoading();
+						}
+						var royalty_ro_1 = $$('#royalty_ro_1_setting').val();
+						var royalty_ro_2 = $$('#royalty_ro_2_setting').val();
+						var royalty_ro_3 = $$('#royalty_ro_3_setting').val();
+						var royalty_ro_4 = $$('#royalty_ro_4_setting').val();
+						var royalty_ro_5 = $$('#royalty_ro_5_setting').val();
+						var royalty_ro_6 = $$('#royalty_ro_6_setting').val();
+						var royalty_ro_7 = $$('#royalty_ro_7_setting').val();
+						var royalty_ro_8 = $$('#royalty_ro_8_setting').val();
+						var royalty_ro_9 = $$('#royalty_ro_9_setting').val();
+						var royalty_ro_10 = $$('#royalty_ro_10_setting').val();
+
+						if(royalty_ro_1 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 1 adalah 0!");
+						} else if(royalty_ro_2 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 2 adalah 0!");
+						} else if(royalty_ro_3 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 3 adalah 0!");
+						} else if(royalty_ro_4 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 4 adalah 0!");
+						} else if(royalty_ro_5 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 5 adalah 0!");
+						} else if(royalty_ro_6 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 6 adalah 0!");
+						} else if(royalty_ro_7 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 7 adalah 0!");
+						} else if(royalty_ro_8 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 8 adalah 0!");
+						} else if(royalty_ro_9 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 9 adalah 0!");
+						} else if(royalty_ro_10 == "") {
+							app.dialog.alert("Minimum royalty repeat order level 10 adalah 0!");
+						} else {
+							app.request({
+								method: "POST",
+								url: database_connect + "bonus/update_bonus.php",
+									data:{
+										bonus : "royalty ro",
+										royalty_ro_1 : royalty_ro_1,
+										royalty_ro_2 : royalty_ro_2,
+										royalty_ro_3 : royalty_ro_3,
+										royalty_ro_4 : royalty_ro_4,
+										royalty_ro_5 : royalty_ro_5,
+										royalty_ro_6 : royalty_ro_6,
+										royalty_ro_7 : royalty_ro_7,
+										royalty_ro_8 : royalty_ro_8,
+										royalty_ro_9 : royalty_ro_9,
+										royalty_ro_10 : royalty_ro_10,
+									},
+								success: function(data) {
+									var obj = JSON.parse(data);
+									if(obj['status'] == true) {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									} else {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+									}
+								},
+								error: function(data) {
+									determinateLoading = false;
+									app.dialog.close();
+									var toastBottom = app.toast.create({
+										text: ERRNC,
+										closeTimeout: 2000,
+									});
+									toastBottom.open();
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								}
+							});
+						}
+					});
+				},
+			},
+		},
+		// SETTING BIAYA ADMIN
+		{
+			path: '/setting_biaya_admin/',
+			url: 'pages/feature/setting_biaya_admin.html',
 			on:
 			{
 				pageInit:function(e,page)
@@ -1812,6 +2351,8 @@ var app = new Framework7({
 								app.dialog.close();
 								$$('#wd_sponsor_setting').val(x[35]['bonus_value']);
 								$$('#wd_pasti_setting').val(x[36]['bonus_value']);
+								$$('#transfer_ecash_setting').val(x[38]['bonus_value']);
+								$$('#transfer_bonus_setting').val(x[50]['bonus_value']);
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -1851,11 +2392,17 @@ var app = new Framework7({
 						}
 						var wd_sponsor = $$('#wd_sponsor_setting').val();
 						var wd_pasti = $$('#wd_pasti_setting').val();
+						var transfer_ecash = $$('#transfer_ecash_setting').val();
+						var transfer_bonus = $$('#transfer_bonus_setting').val();
 
 						if(wd_sponsor == "") {
 							app.dialog.alert("Minimum biaya admin WD saldo bonus sponsor adalah 0!");
 						} else if(wd_pasti == "") {
 							app.dialog.alert("Minimum biaya admin WD saldo bonus pasti adalah 0!");
+						} else if(transfer_ecash == "") {
+							app.dialog.alert("Minimum biaya admin transfer e-cash adalah 0!");
+						} else if(transfer_bonus == "") {
+							app.dialog.alert("Minimum biaya admin transfer bonus adalah 0!");
 						} else {
 							app.request({
 								method: "POST",
@@ -1864,6 +2411,8 @@ var app = new Framework7({
 										bonus : "wd",
 										wd_sponsor : wd_sponsor,
 										wd_pasti : wd_pasti,
+										transfer_ecash : transfer_ecash,
+										transfer_bonus : transfer_bonus
 									},
 								success: function(data) {
 									var obj = JSON.parse(data);
@@ -1894,7 +2443,7 @@ var app = new Framework7({
 				},
 			},
 		},
-		// HISTORY BONUS
+		// HISTORY BONUS BY MEMBER
 		{
 			path: '/history_bonus/:username',
 			url: 'pages/feature/history_bonus.html',
@@ -1963,7 +2512,7 @@ var app = new Framework7({
 				},
 			},
 		},
-		// HISTORY BONUS
+		// LIST HISTORY BONUS
 		{
 			path: '/history_bonus_all/',
 			url: 'pages/feature/history_bonus_all.html',
@@ -2079,7 +2628,7 @@ var app = new Framework7({
 				},
 			},
 		},
-		// HISTORY BY MEMBER
+		// HISTORY TRANSACTION BY MEMBER
 		{
 			path: '/history/',
 			url: 'pages/feature/history.html',
@@ -2108,7 +2657,8 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction.php", data:{ username : localStorage.username },
+						url: database_connect + "transaction/select_transaction.php", data:{ username : localStorage.username, 
+							transaction_type : "Sell" },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -2123,7 +2673,16 @@ var app = new Framework7({
 									} else if(x[i]['transaction_type'] == "Withdraw") {
 										url = "/show_withdraw/";
 										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+									} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+											<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+									}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+											<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 									}
 
 									var color = "white";
@@ -2135,21 +2694,31 @@ var app = new Framework7({
 
 									var price = "";
 									var sell = "";
-									if(x[i]['transaction_type'] == "Sell") {
+									if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
+										x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 										price = formatRupiah((parseInt(x[i]['transaction_price'])));
-										sell = "<br> Ket/SN : ";
+										if(x[i]['transaction_type'] == "Sell") {
+											sell = "Ket/SN : ";
+										}
 									} else {
 										price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+									}
+
+									var balance = "";
+									if(x[i]['transaction_balance_left'] != "") {
+										balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
 									}
 
 									$$('#listhistory').append(`
 										<a href="` + url + x[i]['transaction_id'] + `">
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
-											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + ` ` + sell + x[i]['transaction_message'] +
-											    	`<span style="float: right; color:` + color + `">` + x[i]['transaction_status'] + `<span></div>
+											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
+											    	color + `">` + x[i]['transaction_status'] + `</span></div>
+											    <div class="demo-facebook-price">` + price + `<span style="float: right; color: orange;">` + balance + 
+											    	`<span></div>
 											    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
-											    <div class="demo-facebook-price">` + price + `</div>
+											    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
 											    ` + adminfee + `
 											    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
 											  </div>
@@ -2160,9 +2729,8 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								app.dialog.alert(obj['message'],'Notifikasi',function(){
-			                        app.views.main.router.back();
-			                    });
+								$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+									obj['message'] + `</p></center>`);
 							}
 						},
 						error: function(data) {
@@ -2176,10 +2744,123 @@ var app = new Framework7({
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
+
+					$$('#category_transaction_selection_history').on('change', function () {
+						var category = $$('#category_transaction_selection_history').val();
+						$$('#listhistory').html('');
+						showDeterminate(true);
+						determinateLoading = false;
+						function showDeterminate(inline)
+						{
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
+							simulateLoading();
+						}
+
+						app.request({
+							method: "POST",
+							url: database_connect + "transaction/select_transaction.php", data:{ username : localStorage.username, 
+								transaction_type : category },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+									for(var i = 0; i < x.length; i++) {
+										var url = "#";
+										var adminfee = "";
+										if(x[i]['transaction_type'] == "Deposit") {
+											url = "/show_deposit/";
+										} else if(x[i]['transaction_type'] == "Withdraw") {
+											url = "/show_withdraw/";
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										}
+
+										var color = "white";
+										if(x[i]['transaction_status'] == "Failed") {
+											color = "red";
+										} else {
+											color = "green";
+										}
+
+										var price = "";
+										var sell = "";
+										if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
+											x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+											price = formatRupiah((parseInt(x[i]['transaction_price'])));
+											if(x[i]['transaction_type'] == "Sell") {
+												sell = "Ket/SN : ";
+											}
+										} else {
+											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+										}
+
+										var balance = "";
+										if(x[i]['transaction_balance_left'] != "") {
+											balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
+										}
+
+										$$('#listhistory').append(`
+											<a href="` + url + x[i]['transaction_id'] + `">
+												<div class="card demo-facebook-card">
+												  <div class="card-header">
+												    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
+												    	color + `">` + x[i]['transaction_status'] + `</span></div>
+												    <div class="demo-facebook-price">` + price + `<span style="float: right; color: orange;">` + balance + 
+												    	`<span></div>
+												    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
+												    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
+												    ` + adminfee + `
+												    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
+												  </div>
+												</div>
+											</a>
+										`);
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+										obj['message'] + `</p></center>`);
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
 				},
 			},
 		},
-		// HISTORY BY ADMIN
+		// HISTORY TRANSACTION BY ADMIN
 		{
 			path: '/list_history/:username',
 			url: 'pages/feature/history.html',
@@ -2209,7 +2890,8 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction.php", data:{ username : x },
+						url: database_connect + "transaction/select_transaction.php", data:{ username : x, 
+							transaction_type : "Sell" },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -2224,7 +2906,16 @@ var app = new Framework7({
 									} else if(x[i]['transaction_type'] == "Withdraw") {
 										url = "/show_withdraw/";
 										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+									} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+											<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+									}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+											<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 									}
 
 									var color = "white";
@@ -2236,21 +2927,31 @@ var app = new Framework7({
 
 									var price = "";
 									var sell = "";
-									if(x[i]['transaction_type'] == "Sell") {
+									if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
+										x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 										price = formatRupiah((parseInt(x[i]['transaction_price'])));
-										sell = "<br> Ket/SN : ";
+										if(x[i]['transaction_type'] == "Sell") {
+											sell = "Ket/SN : ";
+										}
 									} else {
 										price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+									}
+
+									var balance = "";
+									if(x[i]['transaction_balance_left'] != "") {
+										balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
 									}
 
 									$$('#listhistory').append(`
 										<a href="` + url + x[i]['transaction_id'] + `">
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
-											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + ` ` + sell + x[i]['transaction_message'] +
-											    	`<span style="float: right; color:` + color + `">` + x[i]['transaction_status'] + `<span></div>
+											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
+											    	color + `">` + x[i]['transaction_status'] + `</span></div>
+											    <div class="demo-facebook-price">` + price + `<span style="float: right; color: orange;">` + balance + 
+											    	`<span></div>
 											    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
-											    <div class="demo-facebook-price">` + price + `</div>
+											    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
 											    ` + adminfee + `
 											    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
 											  </div>
@@ -2261,9 +2962,8 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								app.dialog.alert(obj['message'],'Notifikasi',function(){
-			                        app.views.main.router.back();
-			                    });
+								$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+									obj['message'] + `</p></center>`);
 							}
 						},
 						error: function(data) {
@@ -2277,10 +2977,123 @@ var app = new Framework7({
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
+
+					$$('#category_transaction_selection_history').on('change', function () {
+						var category = $$('#category_transaction_selection_history').val();
+						$$('#listhistory').html('');
+						showDeterminate(true);
+						determinateLoading = false;
+						function showDeterminate(inline)
+						{
+							determinateLoading = true;
+							var progressBarEl;
+							if (inline) {
+								progressBarEl = app.dialog.progress();
+							} else {
+								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							}
+							function simulateLoading() {
+								setTimeout(function () {
+								simulateLoading();
+								}, Math.random() * 300 + 300);
+							}
+							simulateLoading();
+						}
+
+						app.request({
+							method: "POST",
+							url: database_connect + "transaction/select_transaction.php", data:{ username : x, 
+								transaction_type : category },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+									for(var i = 0; i < x.length; i++) {
+										var url = "#";
+										var adminfee = "";
+										if(x[i]['transaction_type'] == "Deposit") {
+											url = "/show_deposit/";
+										} else if(x[i]['transaction_type'] == "Withdraw") {
+											url = "/show_withdraw/";
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+												<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										}
+
+										var color = "white";
+										if(x[i]['transaction_status'] == "Failed") {
+											color = "red";
+										} else {
+											color = "green";
+										}
+
+										var price = "";
+										var sell = "";
+										if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
+											x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+											price = formatRupiah((parseInt(x[i]['transaction_price'])));
+											if(x[i]['transaction_type'] == "Sell") {
+												sell = "Ket/SN : ";
+											}
+										} else {
+											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+										}
+
+										var balance = "";
+										if(x[i]['transaction_balance_left'] != "") {
+											balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
+										}
+
+										$$('#listhistory').append(`
+											<a href="` + url + x[i]['transaction_id'] + `">
+												<div class="card demo-facebook-card">
+												  <div class="card-header">
+												    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
+												    	color + `">` + x[i]['transaction_status'] + `</span></div>
+												    <div class="demo-facebook-price">` + price + `<span style="float: right; color: orange;">` + balance + 
+												    	`<span></div>
+												    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
+												    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
+												    ` + adminfee + `
+												    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
+												  </div>
+												</div>
+											</a>
+										`);
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+										obj['message'] + `</p></center>`);
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
 				},
 			},
 		},
-		// LIST TRANSACTION
+		// LIST HISTORY TRANSACTION
 		{
 			path: '/list_transaction/',
 			url: 'pages/feature/list_transaction.html',
@@ -2309,7 +3122,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:'Decrease' },
+						url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type: 'Decrease' },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -2329,214 +3142,25 @@ var app = new Framework7({
 											color = "green";
 										}
 
-										var price = "";
-										var sell = "";
-										if(x[i]['transaction_type'] == "Sell") {
-											price = formatRupiah((parseInt(x[i]['transaction_price'])));
-											sell = "<br> Ket/SN : ";
-										} else {
-											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
-										}
-
-										var adminfee = "";
-										if(x[i]['transaction_type'] == "Deposit") {
-											message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
-											message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
-										} else if(x[i]['transaction_type'] == "Withdraw") {
-											message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
-											message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
-											withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
-												x[i]['user_account_number'] + `</div>`;
-											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-												<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-										}
+										var price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
 										$$('#listtransaction').append(`
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
 												<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
-												<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + sell +
-													x[i]['transaction_message'].toUpperCase() + `</div>
-												<div class="demo-facebook-price"><b>` +  x[i]['customer_number'] + `</b></div>
+												<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b></div>
 												<div class="demo-facebook-price">` + price + `</div>
-												` + adminfee + `
-												<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
+												<div class="demo-facebook-price">` + x[i]['transaction_message'].toUpperCase() + `</div>
+												<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
 											  </div>
 											</div>
 										`);
-									} else {
-										var adminfee = "";
-										if(x[i]['transaction_type'] == "Deposit") {
-											message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
-											message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
-										} else if(x[i]['transaction_type'] == "Withdraw") {
-											message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
-											message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
-											withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
-												x[i]['user_account_number'] + `</div>`;
-											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-												<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-										}
-										if(x[i]['transaction_type'] != "Sell") {
-											$$('#listtransaction').append(`
-												<div class="card demo-facebook-card">
-													<div class="card-header">
-														<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
-														<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
-															x[i]['transaction_message'].toUpperCase() + `</div>
-														<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
-														parseInt(x[i]['transaction_unique_code']))) + `</div>
-														` + adminfee + `
-														<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
-													</div>
-													<div class="card-footer">
-														<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
-															x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
-															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
-														<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
-															x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
-															(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-															x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
-													</div>
-												</div>
-											`);
-										}
-									}
+									} 
 								}
-
-								$$('.accept_transaction').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  var message_accept = $$(this).data('message_accept');
-				                  var user_balance = $$(this).data('balance');
-				                  var username = $$(this).data('username');
-				                  var transaction_message = $$(this).data('message');
-								  var transaction_type = $$(this).data('type');
-				                  app.dialog.confirm(message_accept,function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-									determinateLoading = true;
-									var progressBarEl;
-									if (inline) {
-										progressBarEl = app.dialog.progress();
-									} else {
-										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-									}
-									function simulateLoading() {
-										setTimeout(function () {
-										simulateLoading();
-										}, Math.random() * 300 + 300);
-									}
-									simulateLoading();
-									}
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "transaction/accept_transaction.php",
-				                      data:{
-				                        transaction_id : id,
-				                        user_balance : user_balance,
-				                        username : username,
-				                        transaction_message : transaction_message,
-				                        transaction_type : transaction_type
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
-
-				                $$('.decline_transaction').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  var message_decline = $$(this).data('message_decline');
-				                  var user_balance = $$(this).data('balance');
-				                  var username = $$(this).data('username');
-				                  var transaction_type = $$(this).data('type');
-				                  app.dialog.confirm(message_decline,function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-										determinateLoading = true;
-										var progressBarEl;
-										if (inline) {
-											progressBarEl = app.dialog.progress();
-										} else {
-											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										}
-										function simulateLoading() {
-											setTimeout(function () {
-											simulateLoading();
-											}, Math.random() * 300 + 300);
-										}
-										simulateLoading();
-									}
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "transaction/decline_transaction.php",
-				                      data:{
-				                        transaction_id : id,
-				                        user_balance : user_balance,
-				                        username : username,
-				                        transaction_type : transaction_type
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								app.dialog.alert(obj['message']);
+								$$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+									obj['message'] + `</p></center>`);
 							}
 						},
 						error: function(data) {
@@ -2572,6 +3196,7 @@ var app = new Framework7({
 							}
 							simulateLoading();
 						}
+
 						app.request({
 							method: "POST",
 							url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type:category },
@@ -2587,7 +3212,7 @@ var app = new Framework7({
 										var withdraw = "";
 
 										if(x[i]['transaction_status'] == "Failed" || x[i]['transaction_status'] == "Success") {
-											var color = "";
+											var color = "white";
 											if(x[i]['transaction_status'] == "Failed") {
 												color = "red";
 											} else {
@@ -2596,11 +3221,19 @@ var app = new Framework7({
 
 											var price = "";
 											var sell = "";
-											if(x[i]['transaction_type'] == "Sell") {
+											if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
+												x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 												price = formatRupiah((parseInt(x[i]['transaction_price'])));
-												sell = "<br> Ket/SN : ";
+												if(x[i]['transaction_type'] == "Sell") {
+													sell = "Ket/SN : ";
+												}
 											} else {
 												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+											}
+
+											var balance = "";
+											if(x[i]['transaction_balance_left'] != "") {
+												balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
 											}
 
 											var adminfee = "";
@@ -2614,16 +3247,26 @@ var app = new Framework7({
 													x[i]['user_account_number'] + `</div>`;
 												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 													<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+											} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+													<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+													parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+											}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+													<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+													parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 											}
+
 											$$('#listtransaction').append(`
 												<div class="card demo-facebook-card">
 												  <div class="card-header">
-													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + color + `">` + x[i]['transaction_status'] + `</span></div>
-													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + sell +
-														x[i]['transaction_message'].toUpperCase() + `</div>
-													<div class="demo-facebook-price"><b>` +  x[i]['customer_number'] + `</b></div>
+													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + 
+														color + `">` + x[i]['transaction_status'] + `</span></div>
+													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + 
+														`</b> <span style="float: right; color: orange;">` + balance + `<span></div>
 													<div class="demo-facebook-price">` + price + `</div>
-													` + adminfee + `
+													<div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
+													<div class="demo-facebook-price">` + sell + x[i]['transaction_message'].toUpperCase() + `</div>` + adminfee + `
 													<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
 												  </div>
 												</div>
@@ -2801,7 +3444,8 @@ var app = new Framework7({
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
-									app.dialog.alert(obj['message']);
+									$$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
+										obj['message'] + `</p></center>`);
 								}
 							},
 							error: function(data) {
@@ -3397,6 +4041,7 @@ var app = new Framework7({
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
 									<br><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
+									<br><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor + `</p>`
 								);
 
@@ -3414,7 +4059,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri[0]['username'] + `">` + x_data_anak_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3433,7 +4079,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan[0]['username'] + `">` + x_data_anak_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3454,7 +4101,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri_cucu_kiri[0]['username'] + `">` + x_data_anak_kiri_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3475,7 +4123,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri_cucu_kanan[0]['username'] + `">` + x_data_anak_kiri_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3496,7 +4145,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan_cucu_kiri[0]['username'] + `">` + x_data_anak_kanan_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3517,7 +4167,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan_cucu_kanan[0]['username'] + `">` + x_data_anak_kanan_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3568,6 +4219,11 @@ var app = new Framework7({
 									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
 										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  if(results.length == 0) {
+									  	$$('#btnsearch').addClass('disabled');
+									  } else {
+									  	$$('#btnsearch').removeClass('disabled');
 									  }
 									  // Render items by passing array with result items
 									  render(results);
@@ -3664,7 +4320,8 @@ var app = new Framework7({
 								$$('#self_2').html(photo_self + `<br>` + x_data_sendiri[0]['username'] + 
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
-									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
+									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
+									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor
 								);
 
@@ -3682,7 +4339,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kiri[0]['username'] + `">` + x_data_anak_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3701,7 +4359,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kanan[0]['username'] + `">` + x_data_anak_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3722,7 +4381,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kiri_cucu_kiri[0]['username'] + `">` + x_data_anak_kiri_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3743,7 +4403,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kiri_cucu_kanan[0]['username'] + `">` + x_data_anak_kiri_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3764,7 +4425,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kanan_cucu_kiri[0]['username'] + `">` + x_data_anak_kanan_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3785,7 +4447,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_3/` + x_data_anak_kanan_cucu_kanan[0]['username'] + `">` + x_data_anak_kanan_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3836,6 +4499,11 @@ var app = new Framework7({
 									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
 										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  if(results.length == 0) {
+									  	$$('#btnsearch_2').addClass('disabled');
+									  } else {
+									  	$$('#btnsearch_2').removeClass('disabled');
 									  }
 									  // Render items by passing array with result items
 									  render(results);
@@ -3932,7 +4600,8 @@ var app = new Framework7({
 								$$('#self_3').html(photo_self  + `<br>` + x_data_sendiri[0]['username'] + 
 									`<br><br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_left_count'] + ` | ` + x_data_sendiri[0]['user_right_count'] + `</span>
 									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_right_count'] + `</span>
-									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
+									<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_basic_left_count'] + ` | ` + x_data_sendiri[0]['user_basic_right_count'] + `</span>
+									<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_sendiri[0]['user_premium_new_left_count'] + ` | ` + x_data_sendiri[0]['user_premium_new_right_count'] + `</span>
 									` + sponsor
 								);
 
@@ -3950,7 +4619,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri[0]['username'] + `">` + x_data_anak_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3969,7 +4639,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan[0]['username'] + `">` + x_data_anak_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -3990,7 +4661,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri_cucu_kiri[0]['username'] + `">` + x_data_anak_kiri_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4011,7 +4683,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kiri_cucu_kanan[0]['username'] + `">` + x_data_anak_kiri_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kiri_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kiri_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4032,7 +4705,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan_cucu_kiri[0]['username'] + `">` + x_data_anak_kanan_cucu_kiri[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kiri[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kiri[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4053,7 +4727,8 @@ var app = new Framework7({
 										<a class="link color-black" href="/list_member_2/` + x_data_anak_kanan_cucu_kanan[0]['username'] + `">` + x_data_anak_kanan_cucu_kanan[0]['username'] + `</a><br>
 										<br><span><img src="img/icon/total member.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_right_count'] + `</span>
 										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_right_count'] + `</span>
-										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"><span> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/basic 1.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_basic_right_count'] + `</span>
+										<br><span><img src="img/icon/premium 2.png" style="width: 12px; height: 12px;"> ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_left_count'] + ` | ` + x_data_anak_kanan_cucu_kanan[0]['user_premium_new_right_count'] + `</span>
 										<br><span>` + x_data_anak_kanan_cucu_kanan[0]['username_sponsor'] + `</span>
 									`);
 								}
@@ -4104,6 +4779,11 @@ var app = new Framework7({
 									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
 										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  if(results.length == 0) {
+									  	$$('#btnsearch_3').addClass('disabled');
+									  } else {
+									  	$$('#btnsearch_3').removeClass('disabled');
 									  }
 									  // Render items by passing array with result items
 									  render(results);
@@ -6049,7 +6729,8 @@ var app = new Framework7({
 													transaction_price : tagihan,
 													username : localStorage.username,
 													customer_no : customer_no,
-													product_id : buyer_sku_code
+													product_id : buyer_sku_code,
+													transaction_balance_left : localStorage.user_balance_a
 												},
 												success: function(data) {
 													var obj = JSON.parse(data);
@@ -6324,11 +7005,11 @@ var app = new Framework7({
 						var pin_count = $$('#count_transfer_pin').val();
 						var username = $$('#member_transfer_pin').val();
 
-						if(pin_count < 1 || pin_count == "") {
+						if(parseInt(pin_count) < 1 || parseInt(pin_count) == "") {
 							app.dialog.alert("Minimum jumlah transfer pin adalah 1 buah!");
 						} else if (username == "") {
 							app.dialog.alert("Anda belum memilih member tujuan penerima pin!");
-						} else if (pin_count > pin_available) {
+						} else if (parseInt(pin_count) > parseInt(pin_available)) {
 							app.dialog.alert("Jumlah pin yang Anda transfer melebihi jumlah pin Anda yang tersedia!");
 						} else {
 							app.dialog.confirm("Apakah Anda yakin melakukan transfer pin " + pin_type + " sebanyak " + 
