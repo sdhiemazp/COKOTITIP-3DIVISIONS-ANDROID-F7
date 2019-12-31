@@ -1,4 +1,4 @@
-<div class="page" data-name="film_detail">
+<div class="page" data-name="checkout">
   <div class="navbar">
     <div class="navbar-inner">  
       <div class="left" style="margin-left: 5%;">
@@ -15,7 +15,7 @@
   <div class="page-content background-body">
     <div id="checkout_detail">
       <div class="card card-outline">
-        <div class="card-header border_card">
+        <div class="card-body border_card">
           <div class="block">
             <div class="row">
               <div id="product_checkout"></div>
@@ -24,12 +24,11 @@
         </div>
       </div>
       <div class="card card-outline">
-        <div class="card-header border_card">
+        <div class="card-body border_card">
           <div class="list">
             <ul>
               <li class="item-content item-input item-input-outline">
                 <div class="item-inner">
-                  <div class="item-title">Nomor Telepon / Token</div>
                   <div class="item-input-wrap">
                     <input type="text" id="customer_no_checkout" placeholder="Masukkan nomor telepon/token disini.." required validate data-error-message="Harap mengisi data ini!">
                     <span class="input-clear-button"></span>
@@ -41,17 +40,17 @@
         </div>
       </div>
       <div class="card card-outline">
-        <div class="card-header border_card">
+        <div class="card-body border_card">
           <div class="block">
             <div class="row">
               <div class="col-50">
-                Saldo :
+                <b>Saldo</b>
               </div>
               <div class="col-50" style="text-align: right;">
                 <div id="saldo_checkout"></div>
               </div>
               <div class="col-50">
-                Tagihan :
+                <b>Tagihan</b>
               </div>
               <div class="col-50" style="text-align: right;">
                 <div id="tagihan_checkout"></div>
@@ -64,7 +63,7 @@
           </div>
         </div>
         <div class="card-content card-content-padding">
-          <a href="/home/" class="col button button-raised button-fill button-round disabled" id="btn_checkout">BELI</a>
+          <a class="col button button-raised button-fill button-round disabled" id="btn_checkout">BELI</a>
         </div>
       </div>
     </div>

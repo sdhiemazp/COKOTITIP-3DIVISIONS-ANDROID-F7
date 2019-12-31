@@ -1,13 +1,13 @@
-<div class="page" data-name="film_detail">
+<div class="page" data-name="deposit">
   <div class="navbar">
-    <div class="navbar-inner">  
+    <div class="navbar-inner">
       <div class="left" style="margin-left: 5%;">
         <a href="#" class="back">
           <i class="icon icon-back"></i>
         </a>
       </div>
       <div class="title">
-        <font>Setting Bonus Repeat Order</font>
+        <font>Repeat Order</font>
       </div>
     </div>
   </div>
@@ -19,18 +19,20 @@
           <ul>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Harga Repeat Order</div>
+                <div class="item-title">Nama Bank Tujuan</div>
                 <div class="item-input-wrap">
-                  <input type="number" id="price_ro_setting" required validate data-error-message="Harap mengisi data ini!">
+                  <select id="bank_id_repeat_order">
+
+                  </select>
                   <span class="input-clear-button"></span>
                 </div>
               </div>
             </li>
             <li class="item-content item-input item-input-outline">
               <div class="item-inner">
-                <div class="item-title">Bonus Repeat Order</div>
+                <div class="item-title">Jumlah Repeat Order</div>
                 <div class="item-input-wrap">
-                  <input type="number" id="bonus_ro_setting" required validate data-error-message="Harap mengisi data ini!">
+                  <input type="number" id="transaction_count_repeat_order" value="0" required validate data-error-message="Harap mengisi data ini!">
                   <span class="input-clear-button"></span>
                 </div>
               </div>
@@ -39,7 +41,7 @@
               <div class="item-inner">
                 <div class="item-title"></div>
                 <div class="item-input-wrap">
-                  <a href="" class="col button button-raised button-fill button-round" id="btnsavebonusro">Simpan</a>
+                  <a href="" class="col button button-raised button-fill button-round" id="btnrepeatorder">Lanjut</a>
                 </div>
               </div>
             </li>

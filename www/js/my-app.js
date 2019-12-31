@@ -266,6 +266,13 @@ var app = new Framework7({
 									$$('#user_loading').hide();
 									$$('#premium').show();
 								}
+
+								if(x[0]['user_pascabayar'] == "Y") {
+									$$('#pascabayar').show();
+								} else {
+									$$('#pascabayar').hide();
+								}
+
 								if(localStorage.user_type == "Admin") {
 									app.request({
 										method: "GET",
@@ -348,7 +355,7 @@ var app = new Framework7({
 					} else {
 						page.router.navigate('/home/',{ animate:false, reloadAll:true });
 					}
-				}
+				},
 			},
 		},
 		// DEPOSIT
@@ -502,6 +509,7 @@ var app = new Framework7({
 					  }
 					  simulateLoading();
 					}
+
 					app.request({
 						method: "POST",
 						url: database_connect + "transaction/deposit/show_deposit.php", data:{ transaction_id : x },
@@ -538,6 +546,7 @@ var app = new Framework7({
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
+
 					$$('#btn_show_deposit_home').on('click', function() {
 						page.router.navigate('/home/',{ animate:false, reloadAll:true });
 					});
@@ -762,6 +771,276 @@ var app = new Framework7({
 					});
 				},
 			},
+		},		
+		// REPEAT ORDER
+		{
+			path: '/repeat_order/',
+			url: 'pages/feature/repeat_order.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+					  determinateLoading = true;
+					  var progressBarEl;
+					  if (inline) {
+					    progressBarEl = app.dialog.progress();
+					  } else {
+					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+					  }
+					  function simulateLoading() {
+					    setTimeout(function () {
+					      simulateLoading();
+					    }, Math.random() * 300 + 300);
+					  }
+					  simulateLoading();
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "company_account/select_company_account.php", data:{ },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								$$('#bank_id_repeat_order').append(`<option value="">-- Pilih Bank --</option>`);
+								for(var i = 0; i < x.length; i++) {
+									$$('#bank_id_repeat_order').append(`<option value="` + x[i]['bank_id'] + `">` + x[i]['bank_name'] + `</option>`);
+								}
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btnrepeatorder').on('click', function() {
+						var transaction_count = $$('#transaction_count_repeat_order').val();
+						var bank_id = $$('#bank_id_repeat_order').val();
+						if(bank_id == "") {
+							app.dialog.alert("Silahkan pilih bank tujuan terlebih daluhu!");
+						} else if(transaction_count < 1) {
+							app.dialog.alert("Minimum jumlah repeat order adalah 1 buah!");
+						} else {
+							showDeterminate(true);
+							determinateLoading = false;
+							function showDeterminate(inline)
+							{
+							  determinateLoading = true;
+							  var progressBarEl;
+							  if (inline) {
+							    progressBarEl = app.dialog.progress();
+							  } else {
+							    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+							  }
+							  function simulateLoading() {
+							    setTimeout(function () {
+							      simulateLoading();
+							    }, Math.random() * 300 + 300);
+							  }
+							  simulateLoading();
+							}
+							app.request({
+								method: "POST",
+								url: database_connect + "transaction/repeat_order/insert_repeat_order.php",
+									data:{
+										username : localStorage.username,
+										transaction_count : transaction_count,
+										bank_id : bank_id
+									},
+								success: function(data) {
+									var obj = JSON.parse(data);
+									if(obj['status'] == true) {
+										var x = obj['data'];
+										determinateLoading = false;
+										app.dialog.close();
+										page.router.navigate('/show_repeat_order/' + x);
+									} else {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+									}
+								},
+								error: function(data) {
+									determinateLoading = false;
+									app.dialog.close();
+									var toastBottom = app.toast.create({
+										text: ERRNC,
+										closeTimeout: 2000,
+									});
+									toastBottom.open();
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								}
+							});
+						}
+					});
+				},
+			},
+		},
+		// SHOW REPEAT ORDER
+		{
+			path: '/show_repeat_order/:transaction_id',
+			url: 'pages/feature/show_repeat_order.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					var x = page.router.currentRoute.params.transaction_id;
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+					  determinateLoading = true;
+					  var progressBarEl;
+					  if (inline) {
+					    progressBarEl = app.dialog.progress();
+					  } else {
+					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+					  }
+					  function simulateLoading() {
+					    setTimeout(function () {
+					      simulateLoading();
+					    }, Math.random() * 300 + 300);
+					  }
+					  simulateLoading();
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "transaction/repeat_order/show_repeat_order.php", data:{ transaction_id : x },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								var x_account = obj['data_account'];
+								determinateLoading = false;
+								app.dialog.close();
+
+								$$('#jumlah_repeat_order').html(x[0]['transaction_message']);
+								$$('#kode_unik_repeat_order').html(x[0]['transaction_unique_code']);
+								$$('#harga_repeat_order').html(x[0]['transaction_price']);
+								
+								var total = formatRupiah(((parseInt(x[0]['transaction_message']) * 
+									(parseInt(x[0]['transaction_price']))) + parseInt(x[0]['transaction_unique_code'])));
+								$$('#total_repeat_order').html(total);
+									
+								$$('#bank_tujuan_repeat_order').html(x_account[0]['bank_name']);
+								$$('#nama_pemilik_rekening_repeat_order').html(x_account[0]['company_account_name']);
+								$$('#nomor_rekening_repeat_order').html(x_account[0]['company_account_number']);
+
+								if(x[0]['transaction_status'] == "Process") {
+									$$('#btn_back_show_repeat_order').hide();
+								} else {
+									$$('#btn_yes_show_repeat_order').hide();
+									$$('#btn_no_show_repeat_order').hide();
+								}
+
+								$$('#btn_back_show_repeat_order').on('click', function() {
+									page.router.navigate('/home/',{ animate:false, reloadAll:true });
+								});
+
+								$$('#btn_yes_show_repeat_order').on('click', function() {
+									app.dialog.confirm("Apakah Anda yakin untuk melakukan repeat order sejumlah  " + 
+										x[0]['transaction_message'] + " buah ini?",function(){
+										app.request({
+											method: "POST",
+											url: database_connect + "transaction/repeat_order/member_accept_repeat_order.php", data:{ transaction_id : x[0]['transaction_id'] },
+											success: function(data) {
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+													var x = obj['data'];
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert("Transaksi diproses!");
+												} else {
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert(obj['message']);
+												}
+											},
+											error: function(data) {
+												determinateLoading = false;
+												app.dialog.close();
+												var toastBottom = app.toast.create({
+													text: ERRNC,
+													closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+											}
+										});
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									});
+								});
+
+								$$('#btn_no_show_repeat_order').on('click', function() {
+									app.dialog.confirm("Apakah Anda yakin untuk membatalkan repeat order sejumlah  " + 
+										x[0]['transaction_message'] + " buah ini?",function(){
+										app.request({
+											method: "POST",
+											url: database_connect + "transaction/repeat_order/member_decline_repeat_order.php", data:{ transaction_id : x[0]['transaction_id'] },
+											success: function(data) {
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+													var x = obj['data'];
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert("Transaksi dibatalkan!");
+												} else {
+													determinateLoading = false;
+													app.dialog.close();
+													app.dialog.alert(obj['message']);
+												}
+											},
+											error: function(data) {
+												determinateLoading = false;
+												app.dialog.close();
+												var toastBottom = app.toast.create({
+													text: ERRNC,
+													closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+											}
+										});
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									});
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								//app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+				},
+			},
 		},
 		// TRANSFER E-CASH
 		{
@@ -854,8 +1133,9 @@ var app = new Framework7({
 									} else if(parseInt(count) <= (parseInt(x[38]['bonus_value']) + 1) || count == "") {
 										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[38]['bonus_value']) + 1)) 
 											+ "!");
-									} else if(parseInt(count) > parseInt(localStorage.user_balance_a)) {
-										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer!");
+									} else if((parseInt(count) + parseInt(x[52]['bonus_value'])) > parseInt(localStorage.user_balance_a)) {
+										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer! Minimum saldo Anda yang harus tersisa adalah " + 
+											formatRupiah(x[52]['bonus_value'])) + ".";
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer sebesar " + 
 											formatRupiah(count) + " kepada " + username_receiver + "? Nominal transfer Anda akan " +
@@ -958,8 +1238,9 @@ var app = new Framework7({
 									if(parseInt(count) <= (parseInt(x[50]['bonus_value']) + 1) || count == "") {
 										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[50]['bonus_value']) + 1)) 
 											+ "!");
-									} else if(parseInt(count) > parseInt(localStorage.user_balance_a)) {
-										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer!");
+									} else if((parseInt(count) + parseInt(x[53]['bonus_value'])) > parseInt(localStorage.user_balance_c)) {
+										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer! Minimum saldo Anda yang harus tersisa adalah " + 
+											formatRupiah(x[53]['bonus_value'])) + ".";
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer bonus sebesar " + 
 											formatRupiah(count) + " ke saldo E-Cash Anda? Nominal transfer Anda akan " +
@@ -2075,6 +2356,7 @@ var app = new Framework7({
 								determinateLoading = false;
 								app.dialog.close();
 								$$('#bonus_ro_setting').val(x[39]['bonus_value']);
+								$$('#price_ro_setting').val(x[51]['bonus_value']);
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -2112,16 +2394,20 @@ var app = new Framework7({
 						  }
 						  simulateLoading();
 						}
+						var price_ro = $$('#price_ro_setting').val();
 						var bonus_ro = $$('#bonus_ro_setting').val();
 
-						if(bonus_ro == "") {
-							app.dialog.alert("Minimum bonus bonus repeat order adalah 0!");
+						if(price_ro == "") {
+							app.dialog.alert("Minimum harga repeat order adalah 0!");
+						} else if(bonus_ro == "") {
+							app.dialog.alert("Minimum bonus repeat order adalah 0!");
 						} else {
 							app.request({
 								method: "POST",
 								url: database_connect + "bonus/update_bonus.php",
 									data:{
 										bonus : "bonus ro",
+										price_ro : price_ro,
 										bonus_ro : bonus_ro,
 									},
 								success: function(data) {
@@ -2353,6 +2639,8 @@ var app = new Framework7({
 								$$('#wd_pasti_setting').val(x[36]['bonus_value']);
 								$$('#transfer_ecash_setting').val(x[38]['bonus_value']);
 								$$('#transfer_bonus_setting').val(x[50]['bonus_value']);
+								$$('#minimum_ecash_setting').val(x[52]['bonus_value']);
+								$$('#minimum_bonus_setting').val(x[53]['bonus_value']);
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -2394,6 +2682,8 @@ var app = new Framework7({
 						var wd_pasti = $$('#wd_pasti_setting').val();
 						var transfer_ecash = $$('#transfer_ecash_setting').val();
 						var transfer_bonus = $$('#transfer_bonus_setting').val();
+						var minimum_ecash = $$('#minimum_ecash_setting').val();
+						var minimum_bonus = $$('#minimum_bonus_setting').val();
 
 						if(wd_sponsor == "") {
 							app.dialog.alert("Minimum biaya admin WD saldo bonus sponsor adalah 0!");
@@ -2403,6 +2693,10 @@ var app = new Framework7({
 							app.dialog.alert("Minimum biaya admin transfer e-cash adalah 0!");
 						} else if(transfer_bonus == "") {
 							app.dialog.alert("Minimum biaya admin transfer bonus adalah 0!");
+						} else if(minimum_ecash == "") {
+							app.dialog.alert("Minimum saldo ecash minimum adalah 0!");
+						} else if(minimum_bonus == "") {
+							app.dialog.alert("Minimum saldo bonus pasti minimum adalah 0!");
 						} else {
 							app.request({
 								method: "POST",
@@ -2412,7 +2706,9 @@ var app = new Framework7({
 										wd_sponsor : wd_sponsor,
 										wd_pasti : wd_pasti,
 										transfer_ecash : transfer_ecash,
-										transfer_bonus : transfer_bonus
+										transfer_bonus : transfer_bonus,
+										minimum_ecash : minimum_ecash,
+										minimum_bonus : minimum_bonus
 									},
 								success: function(data) {
 									var obj = JSON.parse(data);
@@ -2666,25 +2962,6 @@ var app = new Framework7({
 								determinateLoading = false;
 								app.dialog.close();
 								for(var i = 0; i < x.length; i++) {
-									var url = "#";
-									var adminfee = "";
-									if(x[i]['transaction_type'] == "Deposit") {
-										url = "/show_deposit/";
-									} else if(x[i]['transaction_type'] == "Withdraw") {
-										url = "/show_withdraw/";
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									}
-
 									var color = "white";
 									if(x[i]['transaction_status'] == "Failed") {
 										color = "red";
@@ -2692,17 +2969,8 @@ var app = new Framework7({
 										color = "green";
 									}
 
-									var price = "";
-									var sell = "";
-									if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
-										x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
-										price = formatRupiah((parseInt(x[i]['transaction_price'])));
-										if(x[i]['transaction_type'] == "Sell") {
-											sell = "Ket/SN : ";
-										}
-									} else {
-										price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
-									}
+									var price = formatRupiah((parseInt(x[i]['transaction_price'])));
+									var sell = "Ket/SN : ";
 
 									var balance = "";
 									if(x[i]['transaction_balance_left'] != "") {
@@ -2710,7 +2978,7 @@ var app = new Framework7({
 									}
 
 									$$('#listhistory').append(`
-										<a href="` + url + x[i]['transaction_id'] + `">
+										<a>
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
 											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
@@ -2719,7 +2987,6 @@ var app = new Framework7({
 											    	`<span></div>
 											    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
 											    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
-											    ` + adminfee + `
 											    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
 											  </div>
 											</div>
@@ -2795,6 +3062,8 @@ var app = new Framework7({
 											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 												<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
 												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										} else if(x[i]['transaction_type'] == "Repeat Order") {
+											url = "/show_repeat_order/";
 										}
 
 										var color = "white";
@@ -2811,6 +3080,13 @@ var app = new Framework7({
 											price = formatRupiah((parseInt(x[i]['transaction_price'])));
 											if(x[i]['transaction_type'] == "Sell") {
 												sell = "Ket/SN : ";
+											}
+										}  else if(x[i]['transaction_type'] == "Repeat Order") {
+											price = formatRupiah(((parseInt(x[i]['transaction_price']) * parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
+											x[i]['transaction_message'] = "Jumlah : " + x[i]['transaction_message'] + " buah";
+											if(x[i]['transaction_status'] == "Process") {
+												color = "purple";
+												x[i]['transaction_status'] = "Waiting Confirmation";
 											}
 										} else {
 											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
@@ -2899,25 +3175,6 @@ var app = new Framework7({
 								determinateLoading = false;
 								app.dialog.close();
 								for(var i = 0; i < x.length; i++) {
-									var url = "#";
-									var adminfee = "";
-									if(x[i]['transaction_type'] == "Deposit") {
-										url = "/show_deposit/";
-									} else if(x[i]['transaction_type'] == "Withdraw") {
-										url = "/show_withdraw/";
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
-										adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-											<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
-											parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-									}
-
 									var color = "white";
 									if(x[i]['transaction_status'] == "Failed") {
 										color = "red";
@@ -2925,17 +3182,8 @@ var app = new Framework7({
 										color = "green";
 									}
 
-									var price = "";
-									var sell = "";
-									if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
-										x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
-										price = formatRupiah((parseInt(x[i]['transaction_price'])));
-										if(x[i]['transaction_type'] == "Sell") {
-											sell = "Ket/SN : ";
-										}
-									} else {
-										price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
-									}
+									var price = formatRupiah((parseInt(x[i]['transaction_price'])));
+									var sell = "Ket/SN : ";
 
 									var balance = "";
 									if(x[i]['transaction_balance_left'] != "") {
@@ -2943,7 +3191,7 @@ var app = new Framework7({
 									}
 
 									$$('#listhistory').append(`
-										<a href="` + url + x[i]['transaction_id'] + `">
+										<a>
 											<div class="card demo-facebook-card">
 											  <div class="card-header">
 											    <div class="demo-facebook-name">` + x[i]['transaction_type'] + `<span style="float: right; color:` + 
@@ -2952,7 +3200,6 @@ var app = new Framework7({
 											    	`<span></div>
 											    <div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
 											    <div class="demo-facebook-price">` + sell + x[i]['transaction_message'] + `</div>
-											    ` + adminfee + `
 											    <div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>
 											  </div>
 											</div>
@@ -3028,6 +3275,8 @@ var app = new Framework7({
 											adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 												<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
 												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+										} else if(x[i]['transaction_type'] == "Repeat Order") {
+											url = "/show_repeat_order/";
 										}
 
 										var color = "white";
@@ -3044,6 +3293,13 @@ var app = new Framework7({
 											price = formatRupiah((parseInt(x[i]['transaction_price'])));
 											if(x[i]['transaction_type'] == "Sell") {
 												sell = "Ket/SN : ";
+											}
+										} else if(x[i]['transaction_type'] == "Repeat Order") {
+											price = formatRupiah(((parseInt(x[i]['transaction_price']) * parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
+											x[i]['transaction_message'] = "Jumlah : " + x[i]['transaction_message'] + " buah";
+											if(x[i]['transaction_status'] == "Process") {
+												color = "purple";
+												x[i]['transaction_status'] = "Waiting Confirmation";
 											}
 										} else {
 											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
@@ -3227,6 +3483,9 @@ var app = new Framework7({
 												if(x[i]['transaction_type'] == "Sell") {
 													sell = "Ket/SN : ";
 												}
+											} else if(x[i]['transaction_type'] == "Repeat Order") {
+												price = formatRupiah(((parseInt(x[i]['transaction_price']) * parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
+												x[i]['transaction_message'] = "Jumlah : " + x[i]['transaction_message'] + " buah";
 											} else {
 												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
 											}
@@ -3243,17 +3502,18 @@ var app = new Framework7({
 											} else if(x[i]['transaction_type'] == "Withdraw") {
 												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
 												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
+												
 												withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
 													x[i]['user_account_number'] + `</div>`;
-												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-													<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+												adminfee = `<div class="demo-facebook-price">BIAYA ADMIN : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+													<div class="demo-facebook-price">TOTAL WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 											} else if(x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
-												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-													<div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+												adminfee = `<div class="demo-facebook-price">BIAYA ADMIN : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+													<div class="demo-facebook-price">TOTAL TRANSFER : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
 													parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-											}  else if(x[i]['transaction_type'] == "Transfer Masuk") {
-												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-													<div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
+											} else if(x[i]['transaction_type'] == "Transfer Masuk") {
+												adminfee = `<div class="demo-facebook-price">BIAYA ADMIN : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+													<div class="demo-facebook-price">TOTAL PENERIMAAN : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
 													parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 											}
 
@@ -3273,38 +3533,45 @@ var app = new Framework7({
 											`);
 										} else {
 											var adminfee = "";
+											var price = 0;
 											if(x[i]['transaction_type'] == "Deposit") {
 												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
 												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
+
+												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
 											} else if(x[i]['transaction_type'] == "Withdraw") {
 												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
 												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
+												
 												withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
 													x[i]['user_account_number'] + `</div>`;
 												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 													<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-											}
+												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+											} if(x[i]['transaction_type'] == "Repeat Order") {
+												message_accept = "Apakah Anda telah selesai memproses repeat order ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
+												message_decline = "Apakah Anda yakin ini menolak repeat order ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
+
+												x[i]['transaction_message'] = x[i]['transaction_message'] + " buah";
+												price = formatRupiah(((parseInt(x[i]['transaction_price']) * (parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code']))));
+											} 
+
 											if(x[i]['transaction_type'] != "Sell") {
 												$$('#listtransaction').append(`
 													<div class="card demo-facebook-card">
 														<div class="card-header">
 															<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
-															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` +
-																x[i]['transaction_message'].toUpperCase() + `</div>
-															<div class="demo-facebook-price">` + formatRupiah((parseInt(x[i]['transaction_price']) +
-															parseInt(x[i]['transaction_unique_code']))) + `</div>
-															` + adminfee + `
+															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + x[i]['transaction_message'].toUpperCase() + `</div>
+															<div class="demo-facebook-price">` + price + `</div>` + adminfee + `
 															<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
 														</div>
 														<div class="card-footer">
 															<a class="link color-green accept_transaction" style="width: 50%; text-align: center;" data-id="` +
 																x[i]['transaction_id'] + `" data-message_accept="` + message_accept + `" data-balance="` +
-																(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-																x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
+																price + `" data-username="` + x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Selesai</a>
 															<a class="link color-red decline_transaction" style="width: 50%; text-align: center;" data-id="` +
 																x[i]['transaction_id'] + `" data-message_decline="` + message_decline + `" data-balance="` +
-																(parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])) + `" data-username="` +
-																x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
+																price + `" data-username="` + x[i]['username'] + `" data-type="` + x[i]['transaction_type'] + `" data-message="` + x[i]['transaction_message'] + `">Tolak</a>
 														</div>
 													</div>
 												`);
@@ -3980,6 +4247,248 @@ var app = new Framework7({
 								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 							}
 						});
+					});
+				},
+			},
+		},
+		// USERS PASCABAYAR
+		{
+			path: '/users_pascabayar/',
+			url: 'pages/feature/users_pascabayar.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/select_users.php", data:{ user_pascabayar : 'N' },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#txtsearchpascabayar',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  if(results.length == 0) {
+									  	$$('#btninsertpascabayar').addClass('disabled');
+									  } else {
+									  	$$('#btninsertpascabayar').removeClass('disabled');
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btninsertpascabayar').on('click', function() {
+						var username = $$('#txtsearchpascabayar').val();
+						app.dialog.confirm("Apakah Anda yakin untuk menambah member ini ke whitelist akses pascabayar?",function(){
+		                    showDeterminate(true);
+							determinateLoading = false;
+							function showDeterminate(inline)
+							{
+								determinateLoading = true;
+								var progressBarEl;
+								if (inline) {
+									progressBarEl = app.dialog.progress();
+								} else {
+									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								}
+								function simulateLoading() {
+									setTimeout(function () {
+									simulateLoading();
+									}, Math.random() * 300 + 300);
+								}
+								simulateLoading();
+							}
+							
+		                    app.request({
+		                      method:"POST",
+		                      url:database_connect + "users/users_pascabayar_insert.php",
+		                      data:{
+		                        username : username
+		                      },
+		                      success:function(data){
+		                        var obj = JSON.parse(data);
+		                        if(obj['status'] == true) {
+		                          var x = obj['data'];
+		                          determinateLoading = false;
+		                          app.dialog.close();
+		                          app.dialog.alert(x,'Notifikasi',function(){
+		                            mainView.router.refreshPage();
+		                          });
+		                        }
+		                        else {
+		                          determinateLoading = false;
+		                          app.dialog.close();
+		                          app.dialog.alert(obj['message']);
+		                        }
+		                      },
+		                      error:function(data){
+		                        determinateLoading = false;
+		                        app.dialog.close();
+		                        var toastBottom = app.toast.create({
+		                          text: ERRNC,
+		                          closeTimeout: 2000,
+		                        });
+		                        toastBottom.open();
+		                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+		                      }
+		                    });
+				        });
+					});
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/select_users_pascabayar.php", data:{ user_pascabayar : "Y" },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								var tmphsl ='';
+								for(var i = 0; i < x.length; i++)
+								{
+									tmphsl += `<tr>
+										<td class="label-cell">` +x[i]['username']+ `</td>
+										<td class="numeric-cell"><a class="link color-red delete_user_pascabayar" data-id="` + 
+										x[i]['username'] + `">Hapus</a></td>
+									</tr>`;
+								}
+
+								$$('#list_all_member_users_pascabayar').append(`
+									<div class="data-table card">
+										<table>
+											<thead>
+												<tr>
+													<th class="label-cell">Username</th>
+													<th class="label-cell">Aksi</th>
+												</tr>
+											</thead>
+											<tbody>
+												` +tmphsl+ `
+											</tbody>
+										</table>
+									</div>
+								`);
+
+								$$('.delete_user_pascabayar').on('click', function () {
+				                  var id = $$(this).data('id');
+				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus member dari whitelist akses pascabayar?",function(){
+				                    showDeterminate(true);
+									determinateLoading = false;
+									function showDeterminate(inline)
+									{
+										determinateLoading = true;
+										var progressBarEl;
+										if (inline) {
+											progressBarEl = app.dialog.progress();
+										} else {
+											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+										}
+										function simulateLoading() {
+											setTimeout(function () {
+											simulateLoading();
+											}, Math.random() * 300 + 300);
+										}
+										simulateLoading();
+									}
+
+				                    app.request({
+				                      method:"POST",
+				                      url:database_connect + "users/users_pascabayar_delete.php",
+				                      data:{
+				                        username : id
+				                      },
+				                      success:function(data){
+				                        var obj = JSON.parse(data);
+				                        if(obj['status'] == true) {
+				                          var x = obj['data'];
+				                          determinateLoading = false;
+				                          app.dialog.close();
+				                          app.dialog.alert(x,'Notifikasi',function(){
+				                            mainView.router.refreshPage();
+				                          });
+				                        }
+				                        else {
+				                          determinateLoading = false;
+				                          app.dialog.close();
+				                          app.dialog.alert(obj['message']);
+				                        }
+				                      },
+				                      error:function(data){
+				                        determinateLoading = false;
+				                        app.dialog.close();
+				                        var toastBottom = app.toast.create({
+				                          text: ERRNC,
+				                          closeTimeout: 2000,
+				                        });
+				                        toastBottom.open();
+				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+				                      }
+				                    });
+				                  });
+				                });
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message'], 'Notifikasi');
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
 					});
 				},
 			},
@@ -6175,23 +6684,29 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
 					}
-					simulateLoading();
+
+					var url = "digiflazz/price_list.php";
+					if(category == "Pascabayar") {
+						url = "digiflazz/price_list_pasca.php";
 					}
+
 					app.request({
 						method: "GET",
-						url: database_connect + "digiflazz/price_list.php", data:{  },
+						url: database_connect + url, data:{  },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							var x = obj['data']['data'];
@@ -6292,9 +6807,14 @@ var app = new Framework7({
 					  simulateLoading();
 					}
 
+					var url = "digiflazz/price_list.php";
+					if(category == "Pascabayar") {
+						url = "digiflazz/price_list_pasca.php";
+					}
+
 					app.request({
 						method: "GET",
-						url: database_connect + "digiflazz/price_list.php", data:{  },
+						url: database_connect + url, data:{  },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							var x_price_list = obj['data']['data'];
@@ -6308,8 +6828,11 @@ var app = new Framework7({
 										}
 
 										var product_name = x_price_list[i]['product_name'];
-										var price = formatRupiah(x_price_list[i]['price']);
-										var seller_name = x_price_list[i]['seller_name'];
+										var price = "";
+										if(category != "Pascabayar") {
+											price = formatRupiah(x_price_list[i]['price']) + "<br>";
+										}
+										var seller_name = x_price_list[i]['seller_name']  + "<br>";
 										var buyer_sku_code = x_price_list[i]['buyer_sku_code'];
 
 										var a_selected = "";
@@ -6335,8 +6858,8 @@ var app = new Framework7({
 							               		<div class="card">
 							                		<div class="card-content card-content-padding">
 									                 	<span>` + product_name + `</span><span style="float: right;">` + status + `</span><br>
-									                 	<span>` + price + `</span><br>
-									                 	<span>` + seller_name + `</span><br>
+									                 	<span>` + price + `</span>
+									                 	<span>` + seller_name + `</span>
 									                 	<span>
 										                	<input type="radio" ` +a_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="1" data-value="1"> A
 										                  	<input type="radio" ` +b_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="2" data-value="2"> B
@@ -6419,23 +6942,28 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
 					}
-					simulateLoading();
+
+					var url = "digiflazz/price_list.php";
+					if(category == "Pascabayar") {
+						url = "digiflazz/price_list_pasca.php";
 					}
 					app.request({
 						method: "GET",
-						url: database_connect + "digiflazz/price_list.php", data:{  },
+						url: database_connect + url, data:{  },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							var x = obj['data']['data'];
@@ -6521,23 +7049,29 @@ var app = new Framework7({
 					determinateLoading = false;
 					function showDeterminate(inline)
 					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
 						simulateLoading();
-						}, Math.random() * 300 + 300);
 					}
-					simulateLoading();
+
+					var url = "digiflazz/price_list.php";
+					if(category == "Pascabayar") {
+						url = "digiflazz/price_list_pasca.php";
 					}
+
 					app.request({
 						method: "GET",
-						url: database_connect + "digiflazz/price_list.php", data:{  },
+						url: database_connect + url, data:{  },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							var x = obj['data']['data'];
@@ -6547,14 +7081,19 @@ var app = new Framework7({
 								app.dialog.close();
 								for(var i = 0; i < x.length; i++) {
 									if(x[i]['category'] == category && x[i]['brand'] == brand) {
-										var harga = parseInt(x_profit[i]['profit_value']) + parseInt(x[i]['price']);
+										var harga = "";
+										var url_checkout = "/checkout_pasca/";
+										if(category != "Pascabayar") {
+											harga = formatRupiah(parseInt(x_profit[i]['profit_value']) + parseInt(x[i]['price']));
+											url_checkout = "/checkout/";
+										}
 										$$('#listproductdetailmember').append(`
 											<div style="float: left; width: 100%;">
-												<a href="/checkout/` + x[i]['buyer_sku_code'] + `" style="">
+												<a href="` + url_checkout + x[i]['buyer_sku_code'] + `" style="">
 													<div class="card">
 														<div class="card-content card-content-padding">
 															<span>` + x[i]['product_name'] + `</span><br>
-															<span>` + formatRupiah(harga) + `</span>
+															<span>` + harga + `</span>
 														</div>
 													</div>
 												</a>
@@ -6582,7 +7121,7 @@ var app = new Framework7({
 				},
 			},
 		},
-		// CHECKOUT
+		// CHECKOUT PRABAYAR
 		{
 			path: '/checkout/:buyer_sku_code',
 			url: 'pages/feature/checkout.html',
@@ -6779,6 +7318,55 @@ var app = new Framework7({
 				},
 			},
 		},
+		// CHECKOUT PASCABAYAR
+		{
+			path: '/checkout_pasca/:buyer_sku_code',
+			url: 'pages/feature/checkout_pasca.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					var buyer_sku_code = page.router.currentRoute.params.buyer_sku_code;
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+							simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					app.request({
+						method: "GET",
+						url: database_connect + "digiflazz/price_list_pasca.php", data:{  },
+						success: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+				},
+			},
+		},
 		// DEPOSIT PIN
 		{
 			path: '/deposit_pin/',
@@ -6892,181 +7480,6 @@ var app = new Framework7({
 								});
 							}
 						});
-					});
-				},
-			},
-		},
-		// TRANSFER PIN
-		{
-			path: '/transfer_pin/:type',
-			url: 'pages/feature/transfer_pin.html',
-			on:
-			{
-				pageInit:function(e,page)
-				{
-					var type = page.router.currentRoute.params.type;
-
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-								simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
-
-					$$('#type_transfer_pin').val(type);
-
-					app.request({
-						method: "POST",
-						url: database_connect + "pin/select_pin_user_no_usage_by_type.php", 
-							data:{ type: type, username : localStorage.username },
-						success: function(data) {
-							var obj = JSON.parse(data);
-							if(obj['status'] == true) {
-								var x = obj['data'];
-								$$('#available_transfer_pin').val(x.length);
-							} else {
-								determinateLoading = false;
-								app.dialog.close();
-								app.dialog.alert(obj['message']);
-							}
-						},
-						error: function(data) {
-							determinateLoading = false;
-							app.dialog.close();
-							var toastBottom = app.toast.create({
-								text: ERRNC,
-								closeTimeout: 2000,
-							});
-							toastBottom.open();
-							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-						}
-					});
-
-					app.request({
-						method: "POST",
-						url: database_connect + "users/select_users.php", data:{  },
-						success: function(data) {
-							var obj = JSON.parse(data);
-							if(obj['status'] == true) {
-								var x = obj['data'];
-								determinateLoading = false;
-								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
-								var autocompleteDropdownAll = app.autocomplete.create({
-									inputEl: '#member_transfer_pin',
-									openIn: 'dropdown',
-									source: function (query, render) {
-									  var results = [];
-									  // Find matched items
-									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
-									  }
-									  // Render items by passing array with result items
-									  render(results);
-									}
-								});
-							} else {
-								determinateLoading = false;
-								app.dialog.close();
-								app.dialog.alert(obj['message']);
-							}
-						},
-						error: function(data) {
-							determinateLoading = false;
-							app.dialog.close();
-							var toastBottom = app.toast.create({
-								text: ERRNC,
-								closeTimeout: 2000,
-							});
-							toastBottom.open();
-							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-						}
-					});
-
-					$$('#btntransferpin').on('click', function() {
-						var pin_type = $$('#type_transfer_pin').val();
-						var pin_available = $$('#available_transfer_pin').val();
-						var pin_count = $$('#count_transfer_pin').val();
-						var username = $$('#member_transfer_pin').val();
-
-						if(parseInt(pin_count) < 1 || parseInt(pin_count) == "") {
-							app.dialog.alert("Minimum jumlah transfer pin adalah 1 buah!");
-						} else if (username == "") {
-							app.dialog.alert("Anda belum memilih member tujuan penerima pin!");
-						} else if (parseInt(pin_count) > parseInt(pin_available)) {
-							app.dialog.alert("Jumlah pin yang Anda transfer melebihi jumlah pin Anda yang tersedia!");
-						} else {
-							app.dialog.confirm("Apakah Anda yakin melakukan transfer pin " + pin_type + " sebanyak " + 
-								pin_count + " buah kepada " + username + "?",function(){
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-								  determinateLoading = true;
-								  var progressBarEl;
-								  if (inline) {
-								    progressBarEl = app.dialog.progress();
-								  } else {
-								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								  }
-								  function simulateLoading() {
-								    setTimeout(function () {
-								      simulateLoading();
-								    }, Math.random() * 300 + 300);
-								  }
-								  simulateLoading();
-								}
-
-								app.request({
-									method: "POST",
-									url: database_connect + "pin/transfer_pin.php",
-										data:{
-											pin_type : pin_type,
-											pin_count : pin_count,
-											username_owner : localStorage.username,
-											username : username
-										},
-									success: function(data) {
-										var obj = JSON.parse(data);
-										if(obj['status'] == true) {
-											var x = obj['message'];
-											determinateLoading = false;
-											app.dialog.close();
-											app.dialog.alert(x);
-											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-										} else {
-											determinateLoading = false;
-											app.dialog.close();
-											app.dialog.alert(obj['message']);
-										}
-									},
-									error: function(data) {
-										determinateLoading = false;
-										app.dialog.close();
-										var toastBottom = app.toast.create({
-											text: ERRNC,
-											closeTimeout: 2000,
-										});
-										toastBottom.open();
-										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-									}
-								});
-							});
-						}
 					});
 				},
 			},
@@ -8529,6 +8942,181 @@ var app = new Framework7({
 				},
 			},
 		},
+		// TRANSFER PIN
+		{
+			path: '/transfer_pin/:type',
+			url: 'pages/feature/transfer_pin.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					var type = page.router.currentRoute.params.type;
+
+					showDeterminate(true);
+					determinateLoading = false;
+					function showDeterminate(inline)
+					{
+						determinateLoading = true;
+						var progressBarEl;
+						if (inline) {
+							progressBarEl = app.dialog.progress();
+						} else {
+							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+						}
+						function simulateLoading() {
+							setTimeout(function () {
+								simulateLoading();
+							}, Math.random() * 300 + 300);
+						}
+						simulateLoading();
+					}
+
+					$$('#type_transfer_pin').val(type);
+
+					app.request({
+						method: "POST",
+						url: database_connect + "pin/select_pin_user_no_usage_by_type.php", 
+							data:{ type: type, username : localStorage.username },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								$$('#available_transfer_pin').val(x.length);
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					app.request({
+						method: "POST",
+						url: database_connect + "users/select_users.php", data:{  },
+						success: function(data) {
+							var obj = JSON.parse(data);
+							if(obj['status'] == true) {
+								var x = obj['data'];
+								determinateLoading = false;
+								app.dialog.close();
+								// for(var i = 0; i < x.length; i++) {
+								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
+								// }
+								var autocompleteDropdownAll = app.autocomplete.create({
+									inputEl: '#member_transfer_pin',
+									openIn: 'dropdown',
+									source: function (query, render) {
+									  var results = [];
+									  // Find matched items
+									  for (var i = 0; i < x.length; i++) {
+										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+									  }
+									  // Render items by passing array with result items
+									  render(results);
+									}
+								});
+							} else {
+								determinateLoading = false;
+								app.dialog.close();
+								app.dialog.alert(obj['message']);
+							}
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btntransferpin').on('click', function() {
+						var pin_type = $$('#type_transfer_pin').val();
+						var pin_available = $$('#available_transfer_pin').val();
+						var pin_count = $$('#count_transfer_pin').val();
+						var username = $$('#member_transfer_pin').val();
+
+						if(parseInt(pin_count) < 1 || parseInt(pin_count) == "") {
+							app.dialog.alert("Minimum jumlah transfer pin adalah 1 buah!");
+						} else if (username == "") {
+							app.dialog.alert("Anda belum memilih member tujuan penerima pin!");
+						} else if (parseInt(pin_count) > parseInt(pin_available)) {
+							app.dialog.alert("Jumlah pin yang Anda transfer melebihi jumlah pin Anda yang tersedia!");
+						} else {
+							app.dialog.confirm("Apakah Anda yakin melakukan transfer pin " + pin_type + " sebanyak " + 
+								pin_count + " buah kepada " + username + "?",function(){
+								showDeterminate(true);
+								determinateLoading = false;
+								function showDeterminate(inline)
+								{
+								  determinateLoading = true;
+								  var progressBarEl;
+								  if (inline) {
+								    progressBarEl = app.dialog.progress();
+								  } else {
+								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+								  }
+								  function simulateLoading() {
+								    setTimeout(function () {
+								      simulateLoading();
+								    }, Math.random() * 300 + 300);
+								  }
+								  simulateLoading();
+								}
+
+								app.request({
+									method: "POST",
+									url: database_connect + "pin/transfer_pin.php",
+										data:{
+											pin_type : pin_type,
+											pin_count : pin_count,
+											username_owner : localStorage.username,
+											username : username
+										},
+									success: function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											var x = obj['message'];
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(x);
+											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										} else {
+											determinateLoading = false;
+											app.dialog.close();
+											app.dialog.alert(obj['message']);
+										}
+									},
+									error: function(data) {
+										determinateLoading = false;
+										app.dialog.close();
+										var toastBottom = app.toast.create({
+											text: ERRNC,
+											closeTimeout: 2000,
+										});
+										toastBottom.open();
+										page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+									}
+								});
+							});
+						}
+					});
+				},
+			},
+		},
 		// HISTORY TRANSFER PIN
 		{
 			path: '/history_transfer_pin/',
@@ -8744,37 +9332,10 @@ function onBackKeyDown() {
 document.addEventListener("backbutton", onBackKeyDown, false);
 
 function formatDate(date) {
-  	// var monthNames = [
-	  //   "Januari", "Februari", "Maret",
-	  //   "April", "Mei", "Juni", "Juli",
-	  //   "Agustus", "September", "Oktober",
-	  //   "November", "Desember"
-  	// ];
-
-  	// var day = date.getDate();
-  	// var monthIndex = date.getMonth();
-  	// var year = date.getFullYear();
-
-  	// return day + ' ' + monthNames[monthIndex] + ' ' + year;
   	return date;
 }
 
 function formatDateTime(date) {
-  	// var monthNames = [
-	  //   "Januari", "Februari", "Maret",
-	  //   "April", "Mei", "Juni", "Juli",
-	  //   "Agustus", "September", "Oktober",
-	  //   "November", "Desember"
-  	// ];
-
-  	// var day = date.getDate();
-  	// var monthIndex = date.getMonth();
-  	// var year = date.getFullYear();
-  	// var hour = now.getHours();
-  	// var minute = now.getMinutes();
-  	// var second = now.getSeconds();
-
-  	// return day + ' ' + monthNames[monthIndex] + ' ' + year + ' ' + hour + ':' + minute + ':' + second;
   	return date;
 }
 
