@@ -1,8 +1,8 @@
 var $$ = Dom7;
-// var database_connect = "https://3dsaja.com/";
-// var lokasifoto = "https://3dsaja.com/image/";
-var database_connect = "https://adamcell.cokotitip.com/";
-var lokasifoto = "https://adamcell.cokotitip.com/image/";
+var database_connect = "https://3dsaja.com/";
+var lokasifoto = "https://3dsaja.com/image/";
+// var database_connect = "https://adamcell.cokotitip.com/";
+// var lokasifoto = "https://adamcell.cokotitip.com/image/";
 var ERRNC = "Koneksi Anda terputus!";
 var PHOTO_ERR = "Foto tidak berhasil diunggah!";
 
@@ -6104,7 +6104,6 @@ var app = new Framework7({
 							app.dialog.close();
 
 							var obj = JSON.parse(data);
-							console.log(obj);
 							var x = obj['data'];
 							var x_transaction = obj['transaction'];
 
@@ -6117,7 +6116,11 @@ var app = new Framework7({
 								$$('#btn_yes_show_checkout_detail').hide();
 								$$('#btn_no_show_checkout_detail').hide();
 							}
-							console.log(x);
+
+							var data_pasca = JSON.parse(x);
+							console.log(data_pasca);
+							console.log(data_pasca['ref_id']);
+							$$('#contentcheckoutdetail').html(x.toString());
 						},
 						error: function(data) {
 							determinateLoading = false;
