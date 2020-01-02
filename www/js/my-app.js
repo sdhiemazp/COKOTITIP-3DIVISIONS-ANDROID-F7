@@ -1,8 +1,8 @@
 var $$ = Dom7;
-var database_connect = "https://3dsaja.com/";
-var lokasifoto = "https://3dsaja.com/image/";
-// var database_connect = "https://adamcell.cokotitip.com/";
-// var lokasifoto = "https://adamcell.cokotitip.com/image/";
+// var database_connect = "https://3dsaja.com/";
+// var lokasifoto = "https://3dsaja.com/image/";
+var database_connect = "https://adamcell.cokotitip.com/";
+var lokasifoto = "https://adamcell.cokotitip.com/image/";
 var ERRNC = "Koneksi Anda terputus!";
 var PHOTO_ERR = "Foto tidak berhasil diunggah!";
 
@@ -28,12 +28,12 @@ var app = new Framework7({
 			{
 				pageInit:function(e, page)
 				{
-					var captcha           = '';
-			   		var characters       = '0123456789';
-				   	var charactersLength = characters.length;
-				   	for (var i = 0; i < 6; i++) {
-				      	captcha += characters.charAt(Math.floor(Math.random() * charactersLength));
-				   	}
+					var captcha = '';
+			   	var characters = '0123456789';
+				  var charactersLength = characters.length;
+				  for (var i = 0; i < 6; i++) {
+				  	captcha += characters.charAt(Math.floor(Math.random() * charactersLength));
+				  }
 					$$('#captcha_text').html(captcha);
 
 					$$('#btnsignin').on('click', function() {
@@ -44,24 +44,8 @@ var app = new Framework7({
 							} else {
 								var username = $$('#username_login').val();
 								var password = $$('#user_password_login').val();
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-								  determinateLoading = true;
-								  var progressBarEl;
-								  if (inline) {
-								    progressBarEl = app.dialog.progress();
-								  } else {
-								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								  }
-								  function simulateLoading() {
-								    setTimeout(function () {
-								      simulateLoading();
-								    }, Math.random() * 300 + 300);
-								  }
-								  simulateLoading();
-								}
+								loading();
+
 								app.request.post(database_connect + "login.php", { username : username, user_password : password }, function(data) {
 									var obj = JSON.parse(data);
 									if(obj['status'] == true) {
@@ -103,24 +87,8 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "bank/select_bank.php", data:{ },
@@ -159,24 +127,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnregister').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-						}
+						loading();
+
 						var username = $$('#username_register').val();
 						var user_name = $$('#user_name_register').val();
 						var user_email = $$('#user_email_register').val();
@@ -251,6 +203,7 @@ var app = new Framework7({
 						}
 						$$('.menu_admin').hide();
 					}
+
 					app.request({
 						method: "POST",
 						url: database_connect + "users/show_users.php", data:{ username : localStorage.username },
@@ -302,8 +255,6 @@ var app = new Framework7({
 								localStorage.user_balance_a = x[0]['user_balance_a'];
 								localStorage.user_balance_b = x[0]['user_balance_b'];
 								localStorage.user_balance_c = x[0]['user_balance_c'];
-							} else {
-								// app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -338,13 +289,12 @@ var app = new Framework7({
 							page.router.navigate('/login/');
 						});
 					});
+
 					var $ptrContent = $$('.ptr-content');
 					$ptrContent.on('ptr:refresh', function (e) {
-						// Emulate 2s loading
 						setTimeout(function () {
 							mainView.router.refreshPage();
-							// When loading done, we need to reset it
-							app.ptr.done(); // or e.detail();
+							app.ptr.done();
 						}, 2000);
 					});
 				},
@@ -366,24 +316,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -425,25 +358,9 @@ var app = new Framework7({
 							app.dialog.alert("Minimum jumlah deposit adalah IDR 50.000!");
 						} else {
 							app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi deposit sebesar " + 
-								formatRupiah(transaction_price) + " ini?",function(){
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-								  determinateLoading = true;
-								  var progressBarEl;
-								  if (inline) {
-								    progressBarEl = app.dialog.progress();
-								  } else {
-								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								  }
-								  function simulateLoading() {
-								    setTimeout(function () {
-								      simulateLoading();
-								    }, Math.random() * 300 + 300);
-								  }
-								  simulateLoading();
-								}
+								formatRupiah(transaction_price) + " ini?",function() {
+								loading();
+
 								app.request({
 									method: "POST",
 									url: database_connect + "transaction/deposit/insert_deposit.php",
@@ -491,24 +408,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.transaction_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -532,7 +432,6 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								//app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -561,27 +460,9 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
+					loading();
 					if(localStorage.user_level == "Basic") {
 						$$('#option_bonus_pasti').hide();
-					}
-
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
 					}
 
 					app.request({
@@ -641,25 +522,9 @@ var app = new Framework7({
 										app.dialog.alert("Bonus pasti hanya dapat ditarik jika Anda telah mencapai level Premium!");
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi withdraw sebesar " + 
-											formatRupiah(transaction_price) + " ini?",function(){
-											showDeterminate(true);
-											determinateLoading = false;
-											function showDeterminate(inline)
-											{
-											  determinateLoading = true;
-											  var progressBarEl;
-											  if (inline) {
-											    progressBarEl = app.dialog.progress();
-											  } else {
-											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											  }
-											  function simulateLoading() {
-											    setTimeout(function () {
-											      simulateLoading();
-											    }, Math.random() * 300 + 300);
-											  }
-											  simulateLoading();
-											}
+											formatRupiah(transaction_price) + " ini?", function() {
+											loading();
+
 											app.request({
 												method: "POST",
 												url: database_connect + "transaction/withdraw/insert_withdraw.php",
@@ -710,24 +575,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.transaction_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -752,7 +600,6 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								//app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -766,6 +613,7 @@ var app = new Framework7({
 							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 						}
 					});
+
 					$$('#btn_show_withdraw_home').on('click', function() {
 						page.router.navigate('/home/',{ animate:false, reloadAll:true });
 					});
@@ -780,24 +628,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -838,24 +669,8 @@ var app = new Framework7({
 						} else if(transaction_count < 1) {
 							app.dialog.alert("Minimum jumlah repeat order adalah 1 buah!");
 						} else {
-							showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-							  determinateLoading = true;
-							  var progressBarEl;
-							  if (inline) {
-							    progressBarEl = app.dialog.progress();
-							  } else {
-							    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							  }
-							  function simulateLoading() {
-							    setTimeout(function () {
-							      simulateLoading();
-							    }, Math.random() * 300 + 300);
-							  }
-							  simulateLoading();
-							}
+							loading();
+
 							app.request({
 								method: "POST",
 								url: database_connect + "transaction/repeat_order/insert_repeat_order.php",
@@ -902,24 +717,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.transaction_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -1025,7 +823,6 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								//app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -1050,24 +847,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1084,16 +864,15 @@ var app = new Framework7({
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
+
 									  if(results.length == 0) {
 									  	$$('#btntransferecash').addClass('disabled');
 									  } else {
 									  	$$('#btntransferecash').removeClass('disabled');
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -1139,25 +918,9 @@ var app = new Framework7({
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer sebesar " + 
 											formatRupiah(count) + " kepada " + username_receiver + "? Nominal transfer Anda akan " +
-											"dipotong biaya admin sebesar " + formatRupiah(x[38]['bonus_value']),function(){
-											showDeterminate(true);
-											determinateLoading = false;
-											function showDeterminate(inline)
-											{
-											  determinateLoading = true;
-											  var progressBarEl;
-											  if (inline) {
-											    progressBarEl = app.dialog.progress();
-											  } else {
-											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											  }
-											  function simulateLoading() {
-											    setTimeout(function () {
-											      simulateLoading();
-											    }, Math.random() * 300 + 300);
-											  }
-											  simulateLoading();
-											}
+											"dipotong biaya admin sebesar " + formatRupiah(x[38]['bonus_value']), function() {
+											loading();
+
 											app.request({
 												method: "POST",
 												url: database_connect + "transaction/transfer_balance_a.php",
@@ -1244,25 +1007,9 @@ var app = new Framework7({
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk melakukan transfer bonus sebesar " + 
 											formatRupiah(count) + " ke saldo E-Cash Anda? Nominal transfer Anda akan " +
-											"dipotong biaya admin sebesar " + formatRupiah(x[50]['bonus_value']),function(){
-											showDeterminate(true);
-											determinateLoading = false;
-											function showDeterminate(inline)
-											{
-											  determinateLoading = true;
-											  var progressBarEl;
-											  if (inline) {
-											    progressBarEl = app.dialog.progress();
-											  } else {
-											    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											  }
-											  function simulateLoading() {
-											    setTimeout(function () {
-											      simulateLoading();
-											    }, Math.random() * 300 + 300);
-											  }
-											  simulateLoading();
-											}
+											"dipotong biaya admin sebesar " + formatRupiah(x[50]['bonus_value']), function() {
+											loading();
+
 											app.request({
 												method: "POST",
 												url: database_connect + "transaction/transfer_balance_c.php",
@@ -1325,24 +1072,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1377,24 +1107,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnprofit').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var profit_value_a = $$('#profit_value_a_profit').val();
 						var profit_value_b = $$('#profit_value_b_profit').val();
 						var profit_value_c = $$('#profit_value_c_profit').val();
@@ -1487,24 +1201,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1537,24 +1234,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavesponsor').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var sponsor_premium = $$('#sponsor_premium_setting').val();
 						var sponsor_basic = $$('#sponsor_basic_setting').val();
 						var saldo_ecash_member = $$('#saldo_ecash_member_setting').val();
@@ -1612,24 +1293,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1661,24 +1325,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavepasangan').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var pasangan_ganjil = $$('#pasangan_ganjil_setting').val();
 						var pasangan_genap = $$('#pasangan_genap_setting').val();
 
@@ -1732,24 +1380,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1789,24 +1420,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavetitik').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var titik_1 = $$('#titik_1_setting').val();
 						var titik_2 = $$('#titik_2_setting').val();
 						var titik_3 = $$('#titik_3_setting').val();
@@ -1892,24 +1507,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -1949,24 +1547,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavegenerasimlm').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var generasi_mlm_1 = $$('#generasi_mlm_1_setting').val();
 						var generasi_mlm_2 = $$('#generasi_mlm_2_setting').val();
 						var generasi_mlm_3 = $$('#generasi_mlm_3_setting').val();
@@ -2052,24 +1634,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -2109,24 +1674,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavegenerasippob').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var generasi_ppob_1 = $$('#generasi_ppob_1_setting').val();
 						var generasi_ppob_2 = $$('#generasi_ppob_2_setting').val();
 						var generasi_ppob_3 = $$('#generasi_ppob_3_setting').val();
@@ -2212,24 +1761,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -2260,24 +1792,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavecashbackppob').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var cashback_ppob = $$('#cashback_ppob_setting').val();
 
 						if(cashback_ppob == "") {
@@ -2327,24 +1843,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -2376,24 +1875,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavebonusro').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var price_ro = $$('#price_ro_setting').val();
 						var bonus_ro = $$('#bonus_ro_setting').val();
 
@@ -2447,24 +1930,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -2504,24 +1970,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsaveroyaltyro').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var royalty_ro_1 = $$('#royalty_ro_1_setting').val();
 						var royalty_ro_2 = $$('#royalty_ro_2_setting').val();
 						var royalty_ro_3 = $$('#royalty_ro_3_setting').val();
@@ -2607,24 +2057,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -2660,24 +2093,8 @@ var app = new Framework7({
 					});
 
 					$$('#btnsavebiayawd').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						  determinateLoading = true;
-						  var progressBarEl;
-						  if (inline) {
-						    progressBarEl = app.dialog.progress();
-						  } else {
-						    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						  }
-						  function simulateLoading() {
-						    setTimeout(function () {
-						      simulateLoading();
-						    }, Math.random() * 300 + 300);
-						  }
-						  simulateLoading();
-						}
+						loading();
+
 						var wd_sponsor = $$('#wd_sponsor_setting').val();
 						var wd_pasti = $$('#wd_pasti_setting').val();
 						var transfer_ecash = $$('#transfer_ecash_setting').val();
@@ -2748,24 +2165,8 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "history_bonus/select_history_bonus.php", data:{ username : x },
@@ -2784,14 +2185,14 @@ var app = new Framework7({
 										    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
 										  </div>
 										</div>
-										`);
+									`);
 								}
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
 								app.dialog.alert(obj['message'],'Notifikasi',function(){
-			                        app.views.main.router.back();
-			                    });
+                  app.views.main.router.back();
+                });
 							}
 						},
 						error: function(data) {
@@ -2816,24 +2217,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -2854,14 +2238,14 @@ var app = new Framework7({
 										    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
 										  </div>
 										</div>
-										`);
+									`);
 								}
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
 								app.dialog.alert(obj['message'],'Notifikasi',function(){
-			                        app.views.main.router.back();
-			                    });
+                  app.views.main.router.back();
+                });
 							}
 						},
 						error: function(data) {
@@ -2899,14 +2283,14 @@ var app = new Framework7({
 											    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
 											  </div>
 											</div>
-											`);
+										`);
 									}
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
 									app.dialog.alert(obj['message'],'Notifikasi',function(){
-				                        app.views.main.router.back();
-				                    });
+                    app.views.main.router.back();
+                  });
 								}
 							},
 							error: function(data) {
@@ -2932,24 +2316,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -2975,6 +2342,10 @@ var app = new Framework7({
 									var balance = "";
 									if(x[i]['transaction_balance_left'] != "") {
 										balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
+									}
+
+									if(x[i]['transaction_type'] == "Sell") {
+										x[i]['transaction_type'] = "Prabayar";
 									}
 
 									$$('#listhistory').append(`
@@ -3015,24 +2386,7 @@ var app = new Framework7({
 					$$('#category_transaction_selection_history').on('change', function () {
 						var category = $$('#category_transaction_selection_history').val();
 						$$('#listhistory').html('');
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
 
 						app.request({
 							method: "POST",
@@ -3064,6 +2418,8 @@ var app = new Framework7({
 												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 										} else if(x[i]['transaction_type'] == "Repeat Order") {
 											url = "/show_repeat_order/";
+										} else if(x[i]['transaction_type'] == "Pascabayar") {
+											url = "/checkout_pasca_detail/";
 										}
 
 										var color = "white";
@@ -3079,15 +2435,18 @@ var app = new Framework7({
 											x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 											price = formatRupiah((parseInt(x[i]['transaction_price'])));
 											if(x[i]['transaction_type'] == "Sell") {
+												x[i]['transaction_type'] = "Prabayar";
 												sell = "Ket/SN : ";
 											}
-										}  else if(x[i]['transaction_type'] == "Repeat Order") {
+										} else if(x[i]['transaction_type'] == "Repeat Order") {
 											price = formatRupiah(((parseInt(x[i]['transaction_price']) * parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
 											x[i]['transaction_message'] = "Jumlah : " + x[i]['transaction_message'] + " buah";
 											if(x[i]['transaction_status'] == "Process") {
 												color = "purple";
 												x[i]['transaction_status'] = "Waiting Confirmation";
 											}
+										} else if(x[i]['transaction_type'] == "Pascabayar") {
+											
 										} else {
 											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
 										}
@@ -3117,8 +2476,7 @@ var app = new Framework7({
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
-									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
-										obj['message'] + `</p></center>`);
+									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
 								}
 							},
 							error: function(data) {
@@ -3145,29 +2503,11 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
-						url: database_connect + "transaction/select_transaction.php", data:{ username : x, 
-							transaction_type : "Sell" },
+						url: database_connect + "transaction/select_transaction.php", data:{ username : x, transaction_type : "Sell" },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -3190,6 +2530,10 @@ var app = new Framework7({
 										balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
 									}
 
+									if(x[i]['transaction_type'] == "Sell") {
+										x[i]['transaction_type'] = "Prabayar";
+									}
+
 									$$('#listhistory').append(`
 										<a>
 											<div class="card demo-facebook-card">
@@ -3209,8 +2553,7 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
-									obj['message'] + `</p></center>`);
+								$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
 							}
 						},
 						error: function(data) {
@@ -3228,24 +2571,7 @@ var app = new Framework7({
 					$$('#category_transaction_selection_history').on('change', function () {
 						var category = $$('#category_transaction_selection_history').val();
 						$$('#listhistory').html('');
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
 
 						app.request({
 							method: "POST",
@@ -3277,6 +2603,8 @@ var app = new Framework7({
 												parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
 										} else if(x[i]['transaction_type'] == "Repeat Order") {
 											url = "/show_repeat_order/";
+										} else if(x[i]['transaction_type'] == "Pascabayar") {
+											url = "/checkout_pasca_detail/";
 										}
 
 										var color = "white";
@@ -3292,6 +2620,7 @@ var app = new Framework7({
 											x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 											price = formatRupiah((parseInt(x[i]['transaction_price'])));
 											if(x[i]['transaction_type'] == "Sell") {
+												x[i]['transaction_type'] = "Prabayar";
 												sell = "Ket/SN : ";
 											}
 										} else if(x[i]['transaction_type'] == "Repeat Order") {
@@ -3301,6 +2630,8 @@ var app = new Framework7({
 												color = "purple";
 												x[i]['transaction_status'] = "Waiting Confirmation";
 											}
+										} else if(x[i]['transaction_type'] == "Pascabayar") {
+											
 										} else {
 											price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
 										}
@@ -3330,8 +2661,7 @@ var app = new Framework7({
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
-									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
-										obj['message'] + `</p></center>`);
+									$$('#listhistory').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
 								}
 							},
 							error: function(data) {
@@ -3357,24 +2687,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -3434,24 +2747,7 @@ var app = new Framework7({
 					$$('#category_transaction_selection').on('change', function () {
 						var category = $$('#category_transaction_selection').val();
 						$$('#listtransaction').html('');
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
 
 						app.request({
 							method: "POST",
@@ -3477,10 +2773,10 @@ var app = new Framework7({
 
 											var price = "";
 											var sell = "";
-											if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || 
-												x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
+											if(x[i]['transaction_type'] == "Sell" || x[i]['transaction_type'] == "Transfer Masuk" || x[i]['transaction_type'] == "Transfer Keluar" || x[i]['transaction_type'] == "Transfer Bonus") {
 												price = formatRupiah((parseInt(x[i]['transaction_price'])));
 												if(x[i]['transaction_type'] == "Sell") {
+													x[i]['transaction_type'] = "Prabayar";
 													sell = "Ket/SN : ";
 												}
 											} else if(x[i]['transaction_type'] == "Repeat Order") {
@@ -3532,31 +2828,31 @@ var app = new Framework7({
 												</div>
 											`);
 										} else {
-											var adminfee = "";
-											var price = 0;
-											if(x[i]['transaction_type'] == "Deposit") {
-												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
-												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
+											if(x[i]['transaction_type'] != "Sell" && x[i]['transaction_type'] != "Pascabayar") {
+												var adminfee = "";
+												var price = 0;
+												if(x[i]['transaction_type'] == "Deposit") {
+													message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
+													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
 
-												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
-											} else if(x[i]['transaction_type'] == "Withdraw") {
-												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
-												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
-												
-												withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
-													x[i]['user_account_number'] + `</div>`;
-												adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
-													<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-												price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
-											} if(x[i]['transaction_type'] == "Repeat Order") {
-												message_accept = "Apakah Anda telah selesai memproses repeat order ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
-												message_decline = "Apakah Anda yakin ini menolak repeat order ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
+													price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+												} else if(x[i]['transaction_type'] == "Withdraw") {
+													message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
+													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
+													
+													withdraw =  `<hr><div class='demo-facebook-name'>` + x[i]['bank_name'] + `<br>A/N ` + x[i]['user_account_name'] + `<br>` +
+														x[i]['user_account_number'] + `</div>`;
+													adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
+														<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
+													price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+												} if(x[i]['transaction_type'] == "Repeat Order") {
+													message_accept = "Apakah Anda telah selesai memproses repeat order ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
+													message_decline = "Apakah Anda yakin ini menolak repeat order ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
 
-												x[i]['transaction_message'] = x[i]['transaction_message'] + " buah";
-												price = formatRupiah(((parseInt(x[i]['transaction_price']) * (parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code']))));
-											} 
+													x[i]['transaction_message'] = x[i]['transaction_message'] + " buah";
+													price = formatRupiah(((parseInt(x[i]['transaction_price']) * (parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code']))));
+												}
 
-											if(x[i]['transaction_type'] != "Sell") {
 												$$('#listtransaction').append(`
 													<div class="card demo-facebook-card">
 														<div class="card-header">
@@ -3580,139 +2876,104 @@ var app = new Framework7({
 									}
 
 									$$('.accept_transaction').on('click', function () {
-					                  var id = $$(this).data('id');
-					                  var message_accept = $$(this).data('message_accept');
-					                  var user_balance = $$(this).data('balance');
-					                  var username = $$(this).data('username');
-					                  var transaction_message = $$(this).data('message');
-					                  var transaction_type = $$(this).data('type');
-					                  app.dialog.confirm(message_accept,function(){
-					                    showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
-					                    app.request({
-					                      method:"POST",
-					                      url:database_connect + "transaction/accept_transaction.php",
-					                      data:{
-					                        transaction_id : id,
-					                        user_balance : user_balance,
-					                        username : username,
-					                        transaction_message : transaction_message,
-					                        transaction_type : transaction_type
-					                      },
-					                      success:function(data){
-					                        var obj = JSON.parse(data);
-					                        if(obj['status'] == true) {
-					                          var x = obj['data'];
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(x,'Notifikasi',function(){
-					                            mainView.router.refreshPage();
-					                          });
-					                        }
-					                        else {
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(obj['message']);
-					                        }
-					                      },
-					                      error:function(data){
-					                        determinateLoading = false;
-					                        app.dialog.close();
-					                        var toastBottom = app.toast.create({
-					                          text: ERRNC,
-					                          closeTimeout: 2000,
-					                        });
-					                        toastBottom.open();
-					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-					                      }
-					                    });
-					                  });
-					                });
+	                  var id = $$(this).data('id');
+	                  var message_accept = $$(this).data('message_accept');
+	                  var user_balance = $$(this).data('balance');
+	                  var username = $$(this).data('username');
+	                  var transaction_message = $$(this).data('message');
+	                  var transaction_type = $$(this).data('type');
+	                  app.dialog.confirm(message_accept,function(){
+	                    loading();
+	                    app.request({
+	                      method:"POST",
+	                      url:database_connect + "transaction/accept_transaction.php",
+	                      data:{
+	                        transaction_id : id,
+	                        user_balance : user_balance,
+	                        username : username,
+	                        transaction_message : transaction_message,
+	                        transaction_type : transaction_type
+	                      },
+	                      success:function(data){
+	                        var obj = JSON.parse(data);
+	                        if(obj['status'] == true) {
+	                          var x = obj['data'];
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(x,'Notifikasi',function(){
+	                            mainView.router.refreshPage();
+	                          });
+	                        }
+	                        else {
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(obj['message']);
+	                        }
+	                      },
+	                      error:function(data){
+	                        determinateLoading = false;
+	                        app.dialog.close();
+	                        var toastBottom = app.toast.create({
+	                          text: ERRNC,
+	                          closeTimeout: 2000,
+	                        });
+	                        toastBottom.open();
+	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+	                      }
+	                    });
+	                  });
+	                });
 
-					                $$('.decline_transaction').on('click', function () {
-					                  var id = $$(this).data('id');
-					                  var message_decline = $$(this).data('message_decline');
-					                  var user_balance = $$(this).data('balance');
-					                  var username = $$(this).data('username');
-					                  var transaction_type = $$(this).data('type');
-					                  app.dialog.confirm(message_decline,function(){
-					                    showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-										determinateLoading = true;
-										var progressBarEl;
-										if (inline) {
-											progressBarEl = app.dialog.progress();
-										} else {
-											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										}
-										function simulateLoading() {
-											setTimeout(function () {
-											simulateLoading();
-											}, Math.random() * 300 + 300);
-										}
-										simulateLoading();
-										}
-					                    app.request({
-					                      method:"POST",
-					                      url:database_connect + "transaction/decline_transaction.php",
-					                      data:{
-					                        transaction_id : id,
-					                        user_balance : user_balance,
-					                        username : username,
-					                        transaction_type : transaction_type
-					                      },
-					                      success:function(data){
-					                        var obj = JSON.parse(data);
-					                        if(obj['status'] == true) {
-					                          var x = obj['data'];
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(x,'Notifikasi',function(){
-					                            mainView.router.refreshPage();
-					                          });
-					                        }
-					                        else {
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(obj['message']);
-					                        }
-					                      },
-					                      error:function(data){
-					                        determinateLoading = false;
-					                        app.dialog.close();
-					                        var toastBottom = app.toast.create({
-					                          text: ERRNC,
-					                          closeTimeout: 2000,
-					                        });
-					                        toastBottom.open();
-					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-					                      }
-					                    });
-					                  });
-					                });
+	                $$('.decline_transaction').on('click', function () {
+	                  var id = $$(this).data('id');
+	                  var message_decline = $$(this).data('message_decline');
+	                  var user_balance = $$(this).data('balance');
+	                  var username = $$(this).data('username');
+	                  var transaction_type = $$(this).data('type');
+	                  app.dialog.confirm(message_decline,function(){
+	                    loading();
+	                    app.request({
+	                      method:"POST",
+	                      url:database_connect + "transaction/decline_transaction.php",
+	                      data:{
+	                        transaction_id : id,
+	                        user_balance : user_balance,
+	                        username : username,
+	                        transaction_type : transaction_type
+	                      },
+	                      success:function(data){
+	                        var obj = JSON.parse(data);
+	                        if(obj['status'] == true) {
+	                          var x = obj['data'];
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(x,'Notifikasi',function(){
+	                            mainView.router.refreshPage();
+	                          });
+	                        }
+	                        else {
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(obj['message']);
+	                        }
+	                      },
+	                      error:function(data){
+	                        determinateLoading = false;
+	                        app.dialog.close();
+	                        var toastBottom = app.toast.create({
+	                          text: ERRNC,
+	                          closeTimeout: 2000,
+	                        });
+	                        toastBottom.open();
+	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+	                      }
+	                    });
+	                  });
+	                });
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
-									$$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
-										obj['message'] + `</p></center>`);
+									$$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
 								}
 							},
 							error: function(data) {
@@ -3739,18 +3000,18 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					app.calendar.create({
-			            inputEl: '#start_date_check_transaction',
-			            openIn: 'customModal',
-			            header: true,
-			            footer: true,
-		         	});
+            inputEl: '#start_date_check_transaction',
+            openIn: 'customModal',
+            header: true,
+            footer: true,
+         	});
 
 					app.calendar.create({
-			            inputEl: '#end_date_check_transaction',
-			            openIn: 'customModal',
-			            header: true,
-			            footer: true,
-		          	});
+            inputEl: '#end_date_check_transaction',
+            openIn: 'customModal',
+            header: true,
+            footer: true,
+        	});
 
 					$$('#btnchecktransaction').on('click', function() {
 						var start_date = $$('#start_date_check_transaction').val();
@@ -3761,24 +3022,7 @@ var app = new Framework7({
 						} else if(end_date == null) {
 							app.dialog.alert("Tanggal selesai tidak boleh kosong!");
 						} else {
-							showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-								determinateLoading = true;
-								var progressBarEl;
-								if (inline) {
-									progressBarEl = app.dialog.progress();
-								} else {
-									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								}
-								function simulateLoading() {
-									setTimeout(function () {
-									simulateLoading();
-									}, Math.random() * 300 + 300);
-								}
-								simulateLoading();
-							}
+							loading();
 
 							app.request({
 								method: "POST",
@@ -3826,24 +3070,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 					
 					app.request({
 						method: "POST",
@@ -3854,19 +3081,15 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
+
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#username_increase',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -3899,26 +3122,9 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah penambahan saldo/bonus member adalah IDR 1!");
 						} else {
-							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + 
-								formatRupiah(transaction_price) + " kepada " + username + "?",function(){
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-								  determinateLoading = true;
-								  var progressBarEl;
-								  if (inline) {
-								    progressBarEl = app.dialog.progress();
-								  } else {
-								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								  }
-								  function simulateLoading() {
-								    setTimeout(function () {
-								      simulateLoading();
-								    }, Math.random() * 300 + 300);
-								  }
-								  simulateLoading();
-								}
+							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + formatRupiah(transaction_price) + " kepada " + 
+								username + "?", function() {
+								loading();
 
 								app.request({
 									method: "POST",
@@ -3968,24 +3174,8 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-								simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "users/select_users.php", data:{  },
@@ -3995,19 +3185,14 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#username_decrease',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -4040,26 +3225,10 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah pengurangan saldo member adalah IDR 1!");
 						} else {
-							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + 
-								formatRupiah(transaction_price) + " kepada " + username + "?",function(){
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-									determinateLoading = true;
-									var progressBarEl;
-									if (inline) {
-										progressBarEl = app.dialog.progress();
-									} else {
-										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-									}
-									function simulateLoading() {
-										setTimeout(function () {
-											simulateLoading();
-										}, Math.random() * 300 + 300);
-									}
-									simulateLoading();
-								}
+							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + formatRupiah(transaction_price) + " kepada " + username + 
+								"?", function() {
+								loading();
+
 								app.request({
 									method: "POST",
 									url: database_connect + "transaction/decrease.php",
@@ -4100,7 +3269,7 @@ var app = new Framework7({
 				},
 			},
 		},
-		// USERS
+		// USERS ALL
 		{
 			path: '/users/',
 			url: 'pages/feature/users.html',
@@ -4108,24 +3277,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -4133,12 +3285,12 @@ var app = new Framework7({
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
-								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
+
+								var x = obj['data'];
 								var tmphsl ='';
-								for(var i = 0; i < x.length; i++)
-								{
+								for(var i = 0; i < x.length; i++) {
 									tmphsl += `<tr>
 										<td class="label-cell">` +x[i]['username']+ `</td>
 										<td class="numeric-cell">` +x[i]['user_balance_a']+ `</td>
@@ -4199,8 +3351,7 @@ var app = new Framework7({
 									determinateLoading = false;
 									app.dialog.close();
 									var tmphsl ='';
-									for(var i = 0; i < x.length; i++)
-									{
+									for(var i = 0; i < x.length; i++) {
 										tmphsl += `<tr>
 											<td class="label-cell">` +x[i]['username']+ `</td>
 											<td class="numeric-cell">` +x[i]['user_balance_a']+ `</td>
@@ -4259,24 +3410,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -4292,16 +3426,15 @@ var app = new Framework7({
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
+
 									  if(results.length == 0) {
 									  	$$('#btninsertpascabayar').addClass('disabled');
 									  } else {
 									  	$$('#btninsertpascabayar').removeClass('disabled');
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -4325,60 +3458,42 @@ var app = new Framework7({
 
 					$$('#btninsertpascabayar').on('click', function() {
 						var username = $$('#txtsearchpascabayar').val();
-						app.dialog.confirm("Apakah Anda yakin untuk menambah member ini ke whitelist akses pascabayar?",function(){
-		                    showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-								determinateLoading = true;
-								var progressBarEl;
-								if (inline) {
-									progressBarEl = app.dialog.progress();
-								} else {
-									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								}
-								function simulateLoading() {
-									setTimeout(function () {
-									simulateLoading();
-									}, Math.random() * 300 + 300);
-								}
-								simulateLoading();
-							}
-							
-		                    app.request({
-		                      method:"POST",
-		                      url:database_connect + "users/users_pascabayar_insert.php",
-		                      data:{
-		                        username : username
-		                      },
-		                      success:function(data){
-		                        var obj = JSON.parse(data);
-		                        if(obj['status'] == true) {
-		                          var x = obj['data'];
-		                          determinateLoading = false;
-		                          app.dialog.close();
-		                          app.dialog.alert(x,'Notifikasi',function(){
-		                            mainView.router.refreshPage();
-		                          });
-		                        }
-		                        else {
-		                          determinateLoading = false;
-		                          app.dialog.close();
-		                          app.dialog.alert(obj['message']);
-		                        }
-		                      },
-		                      error:function(data){
-		                        determinateLoading = false;
-		                        app.dialog.close();
-		                        var toastBottom = app.toast.create({
-		                          text: ERRNC,
-		                          closeTimeout: 2000,
-		                        });
-		                        toastBottom.open();
-		                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-		                      }
-		                    });
-				        });
+						app.dialog.confirm("Apakah Anda yakin untuk menambah member ini ke whitelist akses pascabayar?", function() {
+              loading();
+		
+              app.request({
+                method:"POST",
+                url:database_connect + "users/users_pascabayar_insert.php",
+                data:{
+                  username : username
+                },
+                success:function(data){
+                  var obj = JSON.parse(data);
+                  if(obj['status'] == true) {
+                    var x = obj['data'];
+                    determinateLoading = false;
+                    app.dialog.close();
+                    app.dialog.alert(x,'Notifikasi',function(){
+                      mainView.router.refreshPage();
+                    });
+                  } else {
+                    determinateLoading = false;
+                    app.dialog.close();
+                    app.dialog.alert(obj['message']);
+                  }
+                },
+                error:function(data){
+                  determinateLoading = false;
+                  app.dialog.close();
+                  var toastBottom = app.toast.create({
+                    text: ERRNC,
+                    closeTimeout: 2000,
+                  });
+                  toastBottom.open();
+                  page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                }
+              });
+		        });
 					});
 
 					app.request({
@@ -4417,62 +3532,45 @@ var app = new Framework7({
 								`);
 
 								$$('.delete_user_pascabayar').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus member dari whitelist akses pascabayar?",function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-										determinateLoading = true;
-										var progressBarEl;
-										if (inline) {
-											progressBarEl = app.dialog.progress();
-										} else {
-											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										}
-										function simulateLoading() {
-											setTimeout(function () {
-											simulateLoading();
-											}, Math.random() * 300 + 300);
-										}
-										simulateLoading();
-									}
+                  var id = $$(this).data('id');
+                  app.dialog.confirm("Apakah Anda yakin untuk menghapus member dari whitelist akses pascabayar?",function(){
+                    loading();
 
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "users/users_pascabayar_delete.php",
-				                      data:{
-				                        username : id
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
+                    app.request({
+                      method:"POST",
+                      url:database_connect + "users/users_pascabayar_delete.php",
+                      data:{
+                        username : id
+                      },
+                      success:function(data){
+                        var obj = JSON.parse(data);
+                        if(obj['status'] == true) {
+                          var x = obj['data'];
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(x,'Notifikasi',function(){
+                            mainView.router.refreshPage();
+                          });
+                        }
+                        else {
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(obj['message']);
+                        }
+                      },
+                      error:function(data){
+                        determinateLoading = false;
+                        app.dialog.close();
+                        var toastBottom = app.toast.create({
+                          text: ERRNC,
+                          closeTimeout: 2000,
+                        });
+                        toastBottom.open();
+                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                      }
+                    });
+                  });
+                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -4501,24 +3599,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -4717,24 +3798,20 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#txtsearch',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
+
 									  if(results.length == 0) {
 									  	$$('#btnsearch').addClass('disabled');
 									  } else {
 									  	$$('#btnsearch').removeClass('disabled');
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -4772,24 +3849,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var username = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 					app.request({
 						method: "POST",
 						url: database_connect + "users/select_member.php", data:{ username : username },
@@ -4997,24 +4057,20 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#txtsearch_2',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
+
 									  if(results.length == 0) {
 									  	$$('#btnsearch_2').addClass('disabled');
 									  } else {
 									  	$$('#btnsearch_2').removeClass('disabled');
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -5052,24 +4108,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var username = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 					app.request({
 						method: "POST",
 						url: database_connect + "users/select_member.php", data:{ username : username },
@@ -5277,24 +4316,20 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#txtsearch_3',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
+
 									  if(results.length == 0) {
 									  	$$('#btnsearch_3').addClass('disabled');
 									  } else {
 									  	$$('#btnsearch_3').removeClass('disabled');
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -5332,24 +4367,8 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "users/show_users.php", data:{ username : x },
@@ -5375,7 +4394,7 @@ var app = new Framework7({
 									<a class="button menu_admin" href="/edit_member/` + x[0]['username'] + `">Ubah Data</a>
 									<a class="button" href="/list_history/` + x[0]['username'] + `">Riwayat Transaksi</a>
 									<a class="button" href="/history_bonus/` + x[0]['username'] + `">Riwayat Bonus</a>
-									`);
+								`);
 
 								if(localStorage.user_type == "Member") {
 									$$('.menu_admin').hide();
@@ -5383,7 +4402,6 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								//app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -5412,24 +4430,7 @@ var app = new Framework7({
 					var username_upline = page.router.currentRoute.params.username_upline;
 					$$('#pin_id_no_usage_premium').hide();
 					$$('#pin_id_no_usage_basic').hide();
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					$$('#user_name_sponsor_create_member').val(localStorage.user_name);
 					$$('#position_create_member').val(position);
@@ -5508,13 +4509,13 @@ var app = new Framework7({
 										$$('#pin_id_no_usage_premium').append(`<option value="` + x[i]['pin_id'] + `">` + x[i]['pin_type'] + ` - ` +
 											x[i]['pin_value'] + `</option>`);
 											premium ++;
-									}
-									else {
+									} else {
 										$$('#pin_id_no_usage_basic').append(`<option value="` + x[i]['pin_id'] + `">` + x[i]['pin_type'] + ` - ` +
 											x[i]['pin_value'] + `</option>`);
 											basic ++;
 									}
 								}
+
 								$$('.pin_id_no_usage_radio').on('click', function () {
 									var name = $$(this).data('name');
 									if (name == "Premium") {
@@ -5526,14 +4527,12 @@ var app = new Framework7({
 												$$('#radiopre').prop('checked', false);
 												document.getElementById("pin_id_no_usage_premium").selectedIndex=0;
 											});
-										}
-										else {
+										} else {
 											$$('#pin_id_no_usage_premium').show();
 											$$('#pin_id_no_usage_basic').hide();
 											document.getElementById("pin_id_no_usage_basic").selectedIndex=0;
 										}
-									}
-									else {
+									} else {
 										if (basic == 0) {
 											app.dialog.alert('Silahkan beli pin terlebih dahulu!',function () {
 												$$('#pin_id_no_usage_premium').show();
@@ -5542,8 +4541,7 @@ var app = new Framework7({
 												$$('#radiopre').prop('checked', true);
 												document.getElementById("pin_id_no_usage_basic").selectedIndex=0;
 											});
-										}
-										else {
+										} else {
 											$$('#pin_id_no_usage_premium').hide();
 											$$('#pin_id_no_usage_basic').show();
 											document.getElementById("pin_id_no_usage_premium").selectedIndex=0;
@@ -5693,24 +4691,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.username;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -5749,11 +4730,9 @@ var app = new Framework7({
 											app.dialog.close();
 											for(var i = 0; i < x2.length; i++) {
 												if(x[0]['bank_id'] == x2[i]['bank_id']) {
-													$$('#bank_id_edit_member').append(`<option value="` + x2[i]['bank_id'] + `" selected>` +
-														x2[i]['bank_name'] + `</option>`);
+													$$('#bank_id_edit_member').append(`<option value="` + x2[i]['bank_id'] + `" selected>` + x2[i]['bank_name'] + `</option>`);
 												} else {
-													$$('#bank_id_edit_member').append(`<option value="` + x2[i]['bank_id'] + `">` +
-														x2[i]['bank_name'] + `</option>`);
+													$$('#bank_id_edit_member').append(`<option value="` + x2[i]['bank_id'] + `">` + x2[i]['bank_name'] + `</option>`);
 												}
 											}
 										} else {
@@ -5797,12 +4776,6 @@ var app = new Framework7({
 					if(localStorage.user_type != "Admin") {
 						$$('.menu_admin').hide();
 					}
-					// app.calendar.create({
-					// 	inputEl: '#user_birthday_edit_member',
-					// 	openIn: 'customModal',
-					// 	header: true,
-					// 	footer: true,
-					// });
 
 					$$('#btneditmember').on('click', function() {
 						var username = $$('#username_edit_member').val();
@@ -5829,24 +4802,7 @@ var app = new Framework7({
 						} else if(user_account_number == "") {
 							app.dialog.alert("Nomor rekening tidak boleh kosong!");
 						} else {
-							showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-								determinateLoading = true;
-								var progressBarEl;
-								if (inline) {
-									progressBarEl = app.dialog.progress();
-								} else {
-									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								}
-								function simulateLoading() {
-									setTimeout(function () {
-									simulateLoading();
-									}, Math.random() * 300 + 300);
-								}
-								simulateLoading();
-							}
+							loading();
 							
 							app.request({
 								method: "POST",
@@ -5907,24 +4863,7 @@ var app = new Framework7({
 						var user_new_password = $$('#user_edit_new_password_member').val();
 						var user_confirm_new_password = $$('#user_edit_confirm_new_password_member').val();
 						if (user_new_password == user_confirm_new_password) {
-							showDeterminate(true);
-							determinateLoading = false;
-							function showDeterminate(inline)
-							{
-								determinateLoading = true;
-								var progressBarEl;
-								if (inline) {
-									progressBarEl = app.dialog.progress();
-								} else {
-									progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								}
-								function simulateLoading() {
-									setTimeout(function () {
-									simulateLoading();
-									}, Math.random() * 300 + 300);
-								}
-								simulateLoading();
-							}
+							loading();
 							app.request({
 								method: "POST",
 								url: database_connect + "users/update_users_password.php",
@@ -5974,24 +4913,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 					app.request({
 						method: "GET",
 						url: database_connect + "bank/select_bank.php", data:{  },
@@ -6004,77 +4926,60 @@ var app = new Framework7({
 								for(var i = 0; i < x.length; i++) {
 									$$('#listbank').append(`
 										<li>
-									      <div class="item-content">
-									        <div class="item-inner">
-									          <div class="item-title-row">
-									            <div class="item-title">` + x[i]['bank_name'] + `</div>
-									            <div class="item-subtitle">
-									            	<a class="link" href="/edit_bank/` + x[i]['bank_id'] + `">Ubah</a> |
-									            	<a class="link color-red delete_bank" data-id="` + x[i]['bank_id'] + `">Hapus</a>
-									            </div>
-									          </div>
-									        </div>
-									      </div>
-									    </li>
+								      <div class="item-content">
+								        <div class="item-inner">
+								          <div class="item-title-row">
+								            <div class="item-title">` + x[i]['bank_name'] + `</div>
+								            <div class="item-subtitle">
+								            	<a class="link" href="/edit_bank/` + x[i]['bank_id'] + `">Ubah</a> |
+								            	<a class="link color-red delete_bank" data-id="` + x[i]['bank_id'] + `">Hapus</a>
+								            </div>
+								          </div>
+								        </div>
+								      </div>
+								    </li>
 									`);
 								}
 
 								$$('.delete_bank').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus bank ini?",function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-									determinateLoading = true;
-										var progressBarEl;
-										if (inline) {
-											progressBarEl = app.dialog.progress();
-										} else {
-											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										}
-										function simulateLoading() {
-											setTimeout(function () {
-											simulateLoading();
-											}, Math.random() * 300 + 300);
-										}
-										simulateLoading();
-									}
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "bank/delete_bank.php",
-				                      data:{
-				                        bank_id : id
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
+                  var id = $$(this).data('id');
+                  app.dialog.confirm("Apakah Anda yakin untuk menghapus bank ini?",function(){
+                    loading();
+                    app.request({
+                      method:"POST",
+                      url:database_connect + "bank/delete_bank.php",
+                      data:{
+                        bank_id : id
+                      },
+                      success:function(data){
+                        var obj = JSON.parse(data);
+                        if(obj['status'] == true) {
+                          var x = obj['data'];
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(x,'Notifikasi',function(){
+                            mainView.router.refreshPage();
+                          });
+                        }
+                        else {
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(obj['message']);
+                        }
+                      },
+                      error:function(data){
+                        determinateLoading = false;
+                        app.dialog.close();
+                        var toastBottom = app.toast.create({
+                          text: ERRNC,
+                          closeTimeout: 2000,
+                        });
+                        toastBottom.open();
+                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                      }
+                    });
+                  });
+                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -6104,24 +5009,8 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					$$('#btncreatebank').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
+
 						var bank_name = $$('#bank_name_create_bank').val();
 						app.request({
 							method: "POST",
@@ -6168,24 +5057,8 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.bank_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "bank/show_bank.php", data:{ bank_id : x },
@@ -6279,24 +5152,8 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "GET",
 						url: database_connect + "company_account/select_company_account.php", data:{  },
@@ -6309,79 +5166,63 @@ var app = new Framework7({
 								for(var i = 0; i < x.length; i++) {
 									$$('#listcompanyaccount').append(`
 										<li>
-									      <div class="item-content">
-									        <div class="item-inner">
-									          <div class="item-title-row">
-									            <div class="item-title">Bank ` + x[i]['bank_name'] + `<br>A/N ` +
-									            	x[i]['company_account_name'] + `<br>` +
-									            	x[i]['company_account_number'] + `</div>
-									            <div class="item-subtitle">
-									            	<a class="link" href="/edit_company_account/` + x[i]['company_account_id'] + `">Ubah</a> |
-									            	<a class="link color-red delete_company_account" data-id="` + x[i]['company_account_id'] + `">Hapus</a>
-									            </div>
-									          </div>
-									        </div>
-									      </div>
-									    </li>
-										`);
+								      <div class="item-content">
+								        <div class="item-inner">
+								          <div class="item-title-row">
+								            <div class="item-title">Bank ` + x[i]['bank_name'] + `<br>A/N ` +
+								            	x[i]['company_account_name'] + `<br>` +
+								            	x[i]['company_account_number'] + `</div>
+								            <div class="item-subtitle">
+								            	<a class="link" href="/edit_company_account/` + x[i]['company_account_id'] + `">Ubah</a> |
+								            	<a class="link color-red delete_company_account" data-id="` + x[i]['company_account_id'] + `">Hapus</a>
+								            </div>
+								          </div>
+								        </div>
+								      </div>
+								    </li>
+									`);
 								}
 
 								$$('.delete_company_account').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus akun bank ini?",function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-									determinateLoading = true;
-									var progressBarEl;
-									if (inline) {
-										progressBarEl = app.dialog.progress();
-									} else {
-										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-									}
-									function simulateLoading() {
-										setTimeout(function () {
-										simulateLoading();
-										}, Math.random() * 300 + 300);
-									}
-									simulateLoading();
-									}
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "company_account/delete_company_account.php",
-				                      data:{
-				                        company_account_id : id
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
+                  var id = $$(this).data('id');
+                  app.dialog.confirm("Apakah Anda yakin untuk menghapus akun bank ini?",function(){
+                    loading();
+
+                    app.request({
+                      method:"POST",
+                      url:database_connect + "company_account/delete_company_account.php",
+                      data:{
+                        company_account_id : id
+                      },
+                      success:function(data){
+                        var obj = JSON.parse(data);
+                        if(obj['status'] == true) {
+                          var x = obj['data'];
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(x,'Notifikasi',function(){
+                            mainView.router.refreshPage();
+                          });
+                        }
+                        else {
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(obj['message']);
+                        }
+                      },
+                      error:function(data){
+                        determinateLoading = false;
+                        app.dialog.close();
+                        var toastBottom = app.toast.create({
+                          text: ERRNC,
+                          closeTimeout: 2000,
+                        });
+                        toastBottom.open();
+                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                      }
+                    });
+                  });
+                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -6410,24 +5251,8 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "bank/select_bank.php", data:{ },
@@ -6459,24 +5284,8 @@ var app = new Framework7({
 					});
 
 					$$('#btncreatecompanyaccount').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-						}
+						loading();
+
 						var bank_id = $$('#bank_id_create_company_account').val();
 						var company_account_name = $$('#company_account_name_create_company_account').val();
 						var company_account_number = $$('#company_account_number_create_company_account').val();
@@ -6527,24 +5336,8 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.company_account_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					determinateLoading = true;
-					var progressBarEl;
-					if (inline) {
-						progressBarEl = app.dialog.progress();
-					} else {
-						progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					}
-					function simulateLoading() {
-						setTimeout(function () {
-						simulateLoading();
-						}, Math.random() * 300 + 300);
-					}
-					simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "company_account/show_company_account.php", data:{ company_account_id : x },
@@ -6611,24 +5404,8 @@ var app = new Framework7({
 					});
 
 					$$('#btneditcompanyaccount').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-						}
+						loading();
+
 						var bank_id = $$('#bank_id_edit_company_account').val();
 						var company_account_name = $$('#company_account_name_edit_company_account').val();
 						var company_account_number = $$('#company_account_number_edit_company_account').val();
@@ -6680,24 +5457,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var category = page.router.currentRoute.params.category;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					var url = "digiflazz/price_list.php";
 					if(category == "Pascabayar") {
@@ -6788,24 +5548,7 @@ var app = new Framework7({
 					var category = page.router.currentRoute.params.category;
 					var brand = page.router.currentRoute.params.brand;
 					$$('#headerproductdetailadmin').html(category.toUpperCase() + " " + brand.toUpperCase());
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					var url = "digiflazz/price_list.php";
 					if(category == "Pascabayar") {
@@ -6853,59 +5596,59 @@ var app = new Framework7({
 											e_selected = "checked";
 										}
 
-						              	$$('#listproductdetailadmin').append(`
-							              	<div style="float: left; width: 100%;">
-							               		<div class="card">
-							                		<div class="card-content card-content-padding">
-									                 	<span>` + product_name + `</span><span style="float: right;">` + status + `</span><br>
-									                 	<span>` + price + `</span>
-									                 	<span>` + seller_name + `</span>
-									                 	<span>
-										                	<input type="radio" ` +a_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="1" data-value="1"> A
-										                  	<input type="radio" ` +b_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="2" data-value="2"> B
-										                  	<input type="radio" ` +c_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="3" data-value="3"> C
-										                  	<input type="radio" ` +d_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="4" data-value="4"> D
-							                  				<input type="radio" ` +e_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="5" data-value="5"> E
-							                			</span>
-							                		</div>
-							               		</div>
-							              	</div>
-						            	`);
+		              	$$('#listproductdetailadmin').append(`
+			              	<div style="float: left; width: 100%;">
+			               		<div class="card">
+			                		<div class="card-content card-content-padding">
+					                 	<span>` + product_name + `</span><span style="float: right;">` + status + `</span><br>
+					                 	<span>` + price + `</span>
+					                 	<span>` + seller_name + `</span>
+					                 	<span>
+						                	<input type="radio" ` +a_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="1" data-value="1"> A
+						                  	<input type="radio" ` +b_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="2" data-value="2"> B
+						                  	<input type="radio" ` +c_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="3" data-value="3"> C
+						                  	<input type="radio" ` +d_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="4" data-value="4"> D
+			                  				<input type="radio" ` +e_selected+ ` data-id="`+buyer_sku_code+`" class="pulsa_profit" name="profit`+i+`" value="5" data-value="5"> E
+			                			</span>
+			                		</div>
+			               		</div>
+			              	</div>
+		            		`);
 
-						            	$$('.pulsa_profit').on('click', function () {
-						                  	var id = $$(this).data('id');
-						                  	var value = $$(this).data('value');
-						                  	app.request({
-						                     	method:"POST",
-						                      	url:database_connect + "product_profit/update_product_profit.php",
-						                      	data:{
-						                        	product_id : id,
-						                        	profit_id : value
-						                      	},
-						                      	success:function(data){
-							                        var obj = JSON.parse(data);
-							                        if(obj['status'] == true) {
-							                          	var x = obj['data'];
-							                          	determinateLoading = false;
-							                          	app.dialog.close();
-							                        } else {
-							                          	determinateLoading = false;
-							                          	app.dialog.close();
-							                          	app.dialog.alert(obj['message']);
-							                        }
-						                      	},
-						                      	error:function(data){
-							                        determinateLoading = false;
-							                        app.dialog.close();
-							                        var toastBottom = app.toast.create({
-							                          	text: ERRNC,
-							                          	closeTimeout: 2000,
-							                        });
-							                        toastBottom.open();
-							                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-						                      	}
-						                    });
-						                });
+						        $$('.pulsa_profit').on('click', function () {
+	                  	var id = $$(this).data('id');
+	                  	var value = $$(this).data('value');
+	                  	app.request({
+	                     	method:"POST",
+                      	url:database_connect + "product_profit/update_product_profit.php",
+                      	data:{
+                        	product_id : id,
+                        	profit_id : value
+                      	},
+                      	success:function(data){
+	                        var obj = JSON.parse(data);
+	                        if(obj['status'] == true) {
+	                          	var x = obj['data'];
+	                          	determinateLoading = false;
+	                          	app.dialog.close();
+	                        } else {
+	                          	determinateLoading = false;
+	                          	app.dialog.close();
+	                          	app.dialog.alert(obj['message']);
+	                        }
+                      	},
+                      	error:function(data){
+	                        determinateLoading = false;
+	                        app.dialog.close();
+	                        var toastBottom = app.toast.create({
+	                          	text: ERRNC,
+	                          	closeTimeout: 2000,
+	                        });
+	                        toastBottom.open();
+	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                      	}
+	                    });
+		                });
 									}
 								}
 								app.dialog.close();
@@ -6938,24 +5681,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var category = page.router.currentRoute.params.category;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					var url = "digiflazz/price_list.php";
 					if(category == "Pascabayar") {
@@ -7045,24 +5771,7 @@ var app = new Framework7({
 					var category = page.router.currentRoute.params.category;
 					var brand = page.router.currentRoute.params.brand;
 					$$('#headerproductdetailmember').html(category.toUpperCase() + " " + brand.toUpperCase());
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					var url = "digiflazz/price_list.php";
 					if(category == "Pascabayar") {
@@ -7132,24 +5841,8 @@ var app = new Framework7({
 					var buyer_sku_code = page.router.currentRoute.params.buyer_sku_code;
 					$$('#btn_checkout').hide();
 					$$('#checkout_detail').hide();
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "GET",
 						url: database_connect + "digiflazz/price_list.php", data:{  },
@@ -7164,9 +5857,8 @@ var app = new Framework7({
 									if(x[i]['buyer_sku_code'] == buyer_sku_code) {
 										$$('#product_checkout').append(`
 											<div>
-											<span>` + x[i]['product_name'] + `</span><br>
-											<span>` + formatRupiah((parseInt(x[i]['price']) +
-												parseInt(x_profit[i]['profit_value']))) + `</span>
+												<span>` + x[i]['product_name'] + `</span><br>
+												<span>` + formatRupiah((parseInt(x[i]['price']) + parseInt(x_profit[i]['profit_value']))) + `</span>
 											</div>
 										`);
 										tagihan = parseInt(x[i]['price']) + parseInt(x_profit[i]['profit_value']);
@@ -7208,6 +5900,7 @@ var app = new Framework7({
 												$$('#saldo_checkout').html(formatRupiah(x_show_user[0]['user_balance_a']));
 												saldo = x_show_user[0]['user_balance_a'];
 											}
+
 											$$('#checkout_detail').show();
 											$$('#btn_checkout').show();
 											var total = saldo - tagihan;
@@ -7241,24 +5934,7 @@ var app = new Framework7({
 										app.dialog.alert("Nomor telepon atau token tidak boleh kosong!");
 									} else {
 										app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi ini?",function(){
-											showDeterminate(true);
-											determinateLoading = false;
-											function showDeterminate(inline)
-											{
-												determinateLoading = true;
-												var progressBarEl;
-												if (inline) {
-													progressBarEl = app.dialog.progress();
-												} else {
-													progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-												}
-												function simulateLoading() {
-													setTimeout(function () {
-													simulateLoading();
-													}, Math.random() * 300 + 300);
-												}
-												simulateLoading();
-											}
+											loading();
 
 											app.request({
 												method: "POST",
@@ -7327,24 +6003,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var buyer_sku_code = page.router.currentRoute.params.buyer_sku_code;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "GET",
@@ -7352,6 +6011,65 @@ var app = new Framework7({
 						success: function(data) {
 							determinateLoading = false;
 							app.dialog.close();
+
+							var obj = JSON.parse(data);
+							var x = obj['data']['data'];
+							var x_profit = obj['profit'];
+							var name = "";
+							var profit = 0;
+							if(x.length > 0) {
+								for(var i = 0; i < x.length; i++) {
+									if(x[i]['buyer_sku_code'] == buyer_sku_code) {
+										name = x[i]['product_name'];
+										profit = x_profit[i]['profit_value'];
+										$$('#product_checkout_pasca').append(`<div><span>` + name + `</span></div>`);
+										break;
+									}
+								}
+							}
+
+							$$('#btn_checkbill_pasca').on('click', function() {
+								var customer_code = $$('#customer_code_checkout_pasca').val();
+								if(customer_code == "") {
+									app.dialog.alert("Kode pelanggan tidak boleh kosong!");
+								} else {
+									loading();
+
+									app.request({
+										method: "POST",
+										url: database_connect + "digiflazz/insert_pascabayar.php",
+											data:{
+											username : localStorage.username,
+											customer_code : customer_code,
+											product_id : buyer_sku_code,
+											product_name : name
+										},
+										success: function(data) {
+											var obj = JSON.parse(data);
+											if(obj['status'] == true) {
+												determinateLoading = false;
+												app.dialog.close();
+												var x = obj['data'];
+												page.router.navigate('/checkout_pasca_detail/' + x);
+											} else {
+												determinateLoading = false;
+												app.dialog.close();
+												app.dialog.alert(obj['message']);
+											}
+										},
+										error: function(data) {
+											determinateLoading = false;
+											app.dialog.close();
+											var toastBottom = app.toast.create({
+												text: ERRNC,
+												closeTimeout: 2000,
+											});
+											toastBottom.open();
+											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										}
+									});
+								}
+							});
 						},
 						error: function(data) {
 							determinateLoading = false;
@@ -7367,6 +6085,124 @@ var app = new Framework7({
 				},
 			},
 		},
+		// CHECKOUT DETAIL PASCABAYAR
+		{
+			path: '/checkout_pasca_detail/:transaction_id',
+			url: 'pages/feature/checkout_pasca_detail.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					var transaction_id = page.router.currentRoute.params.transaction_id;
+					loading();
+
+					app.request({
+						method: "POST",
+						url: database_connect + "digiflazz/check_bill.php", data:{ transaction_id : transaction_id },
+						success: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+
+							var obj = JSON.parse(data);
+							console.log(obj);
+							var x = obj['data'];
+							var x_transaction = obj['transaction'];
+
+							if(x_transaction[0]['transaction_status'] == "Process") {
+								$$('#btn_back_show_checkout_detail').hide();
+								$$('#btn_yes_show_checkout_detail').show();
+								$$('#btn_no_show_checkout_detail').show();
+							} else {
+								$$('#btn_back_show_checkout_detail').show();
+								$$('#btn_yes_show_checkout_detail').hide();
+								$$('#btn_no_show_checkout_detail').hide();
+							}
+							console.log(x);
+						},
+						error: function(data) {
+							determinateLoading = false;
+							app.dialog.close();
+							var toastBottom = app.toast.create({
+								text: ERRNC,
+								closeTimeout: 2000,
+							});
+							toastBottom.open();
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						}
+					});
+
+					$$('#btn_back_show_checkout_detail').on('click', function() {
+						page.router.navigate('/home/');
+					});
+
+					// $$('#btn_yes_show_checkout_detail').on('click', function() {
+					// 	app.dialog.confirm("Apakah Anda yakin untuk memproses pembelian " + x[0]['request_pin_count'] + 
+					// 		" pin " + x[0]['request_pin_type'] + "?", function() {
+					// 		app.request({
+					// 			method: "POST",
+					// 			url: database_connect + "pin/member_accept_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
+					// 			success: function(data) {
+					// 				var obj = JSON.parse(data);
+					// 				if(obj['status'] == true) {
+					// 					var x = obj['data'];
+					// 					determinateLoading = false;
+					// 					app.dialog.close();
+					// 					app.dialog.alert("Transaksi diproses!");
+					// 				} else {
+					// 					determinateLoading = false;
+					// 					app.dialog.close();
+					// 					app.dialog.alert(obj['message']);
+					// 				}
+					// 			},
+					// 			error: function(data) {
+					// 				determinateLoading = false;
+					// 				app.dialog.close();
+					// 				var toastBottom = app.toast.create({
+					// 					text: ERRNC,
+					// 					closeTimeout: 2000,
+					// 				});
+					// 				toastBottom.open();
+					// 				page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+					// 			}
+					// 		});
+					// 		page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+					// 	});
+					// });
+
+					$$('#btn_no_show_checkout_detail').on('click', function() {
+						app.dialog.confirm("Apakah Anda yakin untuk membatalkan pembayaran ini?", function() {
+							app.request({
+								method: "POST",
+								url: database_connect + "digiflazz/delete_pascabayar.php", data:{ transaction_id : transaction_id },
+								success: function(data) {
+									var obj = JSON.parse(data);
+									if(obj['status'] == true) {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert("Transaksi dibatalkan!");
+									} else {
+										determinateLoading = false;
+										app.dialog.close();
+										app.dialog.alert(obj['message']);
+									}
+								},
+								error: function(data) {
+									determinateLoading = false;
+									app.dialog.close();
+									var toastBottom = app.toast.create({
+										text: ERRNC,
+										closeTimeout: 2000,
+									});
+									toastBottom.open();
+									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+								}
+							});
+							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+						});
+					});
+				},
+			},
+		},
 		// DEPOSIT PIN
 		{
 			path: '/deposit_pin/',
@@ -7375,24 +6211,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-								simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -7433,24 +6252,8 @@ var app = new Framework7({
 							if(count < 1 || count == "") {
 								app.dialog.alert("Minimum order pin adalah sebanyak 1 pin!");
 							} else {
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-									determinateLoading = true;
-									var progressBarEl;
-									if (inline) {
-										progressBarEl = app.dialog.progress();
-									} else {
-										progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-									}
-									function simulateLoading() {
-										setTimeout(function () {
-											simulateLoading();
-										}, Math.random() * 300 + 300);
-									}
-									simulateLoading();
-								}
+								loading();
+
 								app.request({
 									method: "POST",
 									url: database_connect + "pin/request_pin.php", data:{ username:localStorage.username, count:count, bank_id:bank_id, pin_type:pin_type },
@@ -7493,24 +6296,7 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var x = page.router.currentRoute.params.request_pin_id;
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-					  determinateLoading = true;
-					  var progressBarEl;
-					  if (inline) {
-					    progressBarEl = app.dialog.progress();
-					  } else {
-					    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-					  }
-					  function simulateLoading() {
-					    setTimeout(function () {
-					      simulateLoading();
-					    }, Math.random() * 300 + 300);
-					  }
-					  simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -7553,7 +6339,7 @@ var app = new Framework7({
 
 								$$('#btn_yes_show_deposit_pin').on('click', function() {
 									app.dialog.confirm("Apakah Anda yakin untuk memproses pembelian " + x[0]['request_pin_count'] + 
-										" pin " + x[0]['request_pin_type'] + "?",function(){
+										" pin " + x[0]['request_pin_type'] + "?", function() {
 										app.request({
 											method: "POST",
 											url: database_connect + "pin/member_accept_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
@@ -7587,7 +6373,7 @@ var app = new Framework7({
 
 								$$('#btn_no_show_deposit_pin').on('click', function() {
 									app.dialog.confirm("Apakah Anda yakin untuk membatalkan pembelian " + x[0]['request_pin_count'] + 
-										" pin " + x[0]['request_pin_type'] + "?",function(){
+										" pin " + x[0]['request_pin_type'] + "?", function() {
 										app.request({
 											method: "POST",
 											url: database_connect + "pin/member_decline_request_pin.php", data:{ request_pin_id : x[0]['request_pin_id'] },
@@ -7621,7 +6407,6 @@ var app = new Framework7({
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
-								//app.dialog.alert(obj['message']);
 							}
 						},
 						error: function(data) {
@@ -7646,24 +6431,7 @@ var app = new Framework7({
 			{
 		    pageInit:function(e,page)
 		    {
-		      showDeterminate(true);
-			  determinateLoading = false;
-			  function showDeterminate(inline)
-			  {
-				determinateLoading = true;
-				var progressBarEl;
-				if (inline) {
-					progressBarEl = app.dialog.progress();
-				} else {
-					progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-				}
-				function simulateLoading() {
-					setTimeout(function () {
-					simulateLoading();
-					}, Math.random() * 300 + 300);
-				}
-				simulateLoading();
-			  }
+		      loading();
 
 		      app.request({
 		        method:"POST",
@@ -7675,10 +6443,10 @@ var app = new Framework7({
 		            for(var i = 0; i < x.length; i++) {
 		              var total = "";
 		              if(x[0]['pin_type'] == "Basic") {
-						total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
-					  } else {
-						total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
-					  }
+										total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
+								  } else {
+										total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
+								  }
 
 		              if(x[i]['status'] == 0 || x[i]['status'] == 2) {
 		                $$('#history_pin').append(`
@@ -7723,26 +6491,9 @@ var app = new Framework7({
 		            $$('.sw-accepted').on('click', function () {
 		              var id = $$(this).data('id');
 		              var count = $$(this).data('count');
-		              showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-						}
-		              for(var i=0;i<count;i++)
-		              {
+		              loading();
+
+		              for(var i = 0; i < count; i++) {
 		                var suc = 0;
 		                app.request({
 		                  method: "POST",
@@ -7833,24 +6584,8 @@ var app = new Framework7({
 					if(localStorage.user_type == "Member") {
 						$$('#admin_generate_pin').hide();
 					}
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
+
 					app.request({
 						method: "POST",
 						url: database_connect + "pin/select_pin_by_user.php", data:{ username:localStorage.username },
@@ -7913,24 +6648,8 @@ var app = new Framework7({
 					});
 
 					$$('#btn_generate_pin_basic').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
+
 						app.request({
 							method: "POST",
 							url: database_connect + "pin/generate_pin_basic.php", data:{ username_sponsor:localStorage.username },
@@ -7961,24 +6680,8 @@ var app = new Framework7({
 					});
 
 					$$('#btn_generate_pin_premium').on('click', function() {
-						showDeterminate(true);
-						determinateLoading = false;
-						function showDeterminate(inline)
-						{
-							determinateLoading = true;
-							var progressBarEl;
-							if (inline) {
-								progressBarEl = app.dialog.progress();
-							} else {
-								progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-							}
-							function simulateLoading() {
-								setTimeout(function () {
-								simulateLoading();
-								}, Math.random() * 300 + 300);
-							}
-							simulateLoading();
-						}
+						loading();
+
 						app.request({
 							method: "POST",
 							url: database_connect + "pin/generate_pin_premium.php", data:{ username_sponsor:localStorage.username },
@@ -8018,24 +6721,7 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
 						method: "POST",
@@ -8043,14 +6729,12 @@ var app = new Framework7({
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
-								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
+								var x = obj['data'];
 								var tmphsl ='';
-								for(var i = 0; i < x.length; i++)
-								{
-									if(x[i]['username_member']==null || x[i]['username_member']== "")
-									{
+								for(var i = 0; i < x.length; i++) {
+									if(x[i]['username_member']==null || x[i]['username_member']== "") {
 										tmphsl += `
 											<tr>
 												<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8061,9 +6745,7 @@ var app = new Framework7({
 												</td>
 											</tr>
 										`;
-									}
-									else
-									{
+									} else {
 										tmphsl += `
 											<tr>
 												<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8094,61 +6776,45 @@ var app = new Framework7({
 								`);
 
 								$$('.delete_pin').on('click', function () {
-				                  var id = $$(this).data('id');
-				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
-				                    showDeterminate(true);
-									determinateLoading = false;
-									function showDeterminate(inline)
-									{
-										determinateLoading = true;
-										var progressBarEl;
-										if (inline) {
-											progressBarEl = app.dialog.progress();
-										} else {
-											progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-										}
-										function simulateLoading() {
-											setTimeout(function () {
-											simulateLoading();
-											}, Math.random() * 300 + 300);
-										}
-										simulateLoading();
-									}
-				                    app.request({
-				                      method:"POST",
-				                      url:database_connect + "pin/delete_pin.php",
-				                      data:{
-				                        pin_id : id
-				                      },
-				                      success:function(data){
-				                        var obj = JSON.parse(data);
-				                        if(obj['status'] == true) {
-				                          var x = obj['data'];
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(x,'Notifikasi',function(){
-				                            mainView.router.refreshPage();
-				                          });
-				                        }
-				                        else {
-				                          determinateLoading = false;
-				                          app.dialog.close();
-				                          app.dialog.alert(obj['message']);
-				                        }
-				                      },
-				                      error:function(data){
-				                        determinateLoading = false;
-				                        app.dialog.close();
-				                        var toastBottom = app.toast.create({
-				                          text: ERRNC,
-				                          closeTimeout: 2000,
-				                        });
-				                        toastBottom.open();
-				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-				                      }
-				                    });
-				                  });
-				                });
+                  var id = $$(this).data('id');
+                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
+                    loading();
+
+                    app.request({
+                      method:"POST",
+                      url:database_connect + "pin/delete_pin.php",
+                      data:{
+                        pin_id : id
+                      },
+                      success:function(data){
+                        var obj = JSON.parse(data);
+                        if(obj['status'] == true) {
+                          var x = obj['data'];
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(x,'Notifikasi',function(){
+                            mainView.router.refreshPage();
+                          });
+                        }
+                        else {
+                          determinateLoading = false;
+                          app.dialog.close();
+                          app.dialog.alert(obj['message']);
+                        }
+                      },
+                      error:function(data){
+                        determinateLoading = false;
+                        app.dialog.close();
+                        var toastBottom = app.toast.create({
+                          text: ERRNC,
+                          closeTimeout: 2000,
+                        });
+                        toastBottom.open();
+                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+                      }
+                    });
+                  });
+                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -8182,10 +6848,8 @@ var app = new Framework7({
 									determinateLoading = false;
 									app.dialog.close();
 									var tmphsl ='';
-									for(var i = 0; i < x.length; i++)
-									{
-										if(x[i]['username_member']==null || x[i]['username_member']== "")
-										{
+									for(var i = 0; i < x.length; i++) {
+										if(x[i]['username_member']==null || x[i]['username_member']== "") {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8196,9 +6860,7 @@ var app = new Framework7({
 													</td>
 												</tr>
 											`;
-										}
-										else
-										{
+										} else {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8231,57 +6893,37 @@ var app = new Framework7({
 									$$('.delete_pin').on('click', function () {
 									  var id = $$(this).data('id');
 									  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
-										showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
-										app.request({
-										  method:"POST",
-										  url:database_connect + "pin/delete_pin.php",
-										  data:{
-											pin_id : id
-										  },
-										  success:function(data){
-											var obj = JSON.parse(data);
-											if(obj['status'] == true) {
-											  var x = obj['data'];
-											  determinateLoading = false;
-											  app.dialog.close();
-											  app.dialog.alert(x,'Notifikasi',function(){
-												mainView.router.refreshPage();
-											  });
-											}
-											else {
-											  determinateLoading = false;
-											  app.dialog.close();
-											  app.dialog.alert(obj['message']);
-											}
-										  },
-										  error:function(data){
-											determinateLoading = false;
-											app.dialog.close();
-											var toastBottom = app.toast.create({
-											  text: ERRNC,
-											  closeTimeout: 2000,
+											loading();
+
+											app.request({
+											  method:"POST",
+											  url:database_connect + "pin/delete_pin.php", data:{ pin_id : id },
+											  success:function(data){
+													var obj = JSON.parse(data);
+													if(obj['status'] == true) {
+													  var x = obj['data'];
+													  determinateLoading = false;
+													  app.dialog.close();
+													  app.dialog.alert(x,'Notifikasi',function(){
+														mainView.router.refreshPage();
+													  });
+													} else {
+													  determinateLoading = false;
+													  app.dialog.close();
+													  app.dialog.alert(obj['message']);
+													}
+											  },
+											  error:function(data){
+													determinateLoading = false;
+													app.dialog.close();
+													var toastBottom = app.toast.create({
+													  text: ERRNC,
+													  closeTimeout: 2000,
+													});
+													toastBottom.open();
+													page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+											  }
 											});
-											toastBottom.open();
-											page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-										  }
-										});
 									  });
 									});
 								} else {
@@ -8318,10 +6960,8 @@ var app = new Framework7({
 									determinateLoading = false;
 									app.dialog.close();
 									var tmphsl ='';
-									for(var i = 0; i < x.length; i++)
-									{
-										if(x[i]['username_member']==null || x[i]['username_member']== "")
-										{
+									for(var i = 0; i < x.length; i++) {
+										if(x[i]['username_member']==null || x[i]['username_member']== "") {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8332,9 +6972,7 @@ var app = new Framework7({
 													</td>
 												</tr>
 											`;
-										}
-										else
-										{
+										} else {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -8365,61 +7003,45 @@ var app = new Framework7({
 									`);
 
 									$$('.delete_pin').on('click', function () {
-					                  var id = $$(this).data('id');
-					                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
-					                    showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
-					                    app.request({
-					                      method:"POST",
-					                      url:database_connect + "pin/delete_pin.php",
-					                      data:{
-					                        pin_id : id
-					                      },
-					                      success:function(data){
-					                        var obj = JSON.parse(data);
-					                        if(obj['status'] == true) {
-					                          var x = obj['data'];
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(x,'Notifikasi',function(){
-					                            mainView.router.refreshPage();
-					                          });
-					                        }
-					                        else {
-					                          determinateLoading = false;
-					                          app.dialog.close();
-					                          app.dialog.alert(obj['message']);
-					                        }
-					                      },
-					                      error:function(data){
-					                        determinateLoading = false;
-					                        app.dialog.close();
-					                        var toastBottom = app.toast.create({
-					                          text: ERRNC,
-					                          closeTimeout: 2000,
-					                        });
-					                        toastBottom.open();
-					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-					                      }
-					                    });
-					                  });
-					                });
+	                  var id = $$(this).data('id');
+	                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
+	                    loading();
+
+	                    app.request({
+	                      method:"POST",
+	                      url:database_connect + "pin/delete_pin.php",
+	                      data:{
+	                        pin_id : id
+	                      },
+	                      success:function(data){
+	                        var obj = JSON.parse(data);
+	                        if(obj['status'] == true) {
+	                          var x = obj['data'];
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(x,'Notifikasi',function(){
+	                            mainView.router.refreshPage();
+	                          });
+	                        }
+	                        else {
+	                          determinateLoading = false;
+	                          app.dialog.close();
+	                          app.dialog.alert(obj['message']);
+	                        }
+	                      },
+	                      error:function(data){
+	                        determinateLoading = false;
+	                        app.dialog.close();
+	                        var toastBottom = app.toast.create({
+	                          text: ERRNC,
+	                          closeTimeout: 2000,
+	                        });
+	                        toastBottom.open();
+	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+	                      }
+	                    });
+	                  });
+	                });
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
@@ -8451,36 +7073,18 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
-						method:"POST",
-						url:database_connect+"pin/select_request_pin.php",
-						data:{request_pin_type:'Basic'},
+						method: "POST",
+						url: database_connect + "pin/select_request_pin.php", data: { request_pin_type : 'Basic' },
 						success:function(data){
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
 								var x = obj['data'];
 								for(var i = 0;i < x.length; i++) {
 									var total = "";
-						            if(x[i]['pin_type'] == "Basic") {
+						      if(x[i]['pin_type'] == "Basic") {
 										total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
 									} else {
 										total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
@@ -8490,24 +7094,24 @@ var app = new Framework7({
 										$$('#confirm_pin').append(`
 										<li class="swipeout">
 											<div class="item-content swipeout-content">
-				                      		<a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
-												<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
-											</a>
-											<div class="item-inner">
-												<div class="item-title-row">
-												<div class="item-title" style="">`+x[i]['username']+`</div>
-												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
+				                <a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+													<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+												</a>
+												<div class="item-inner">
+													<div class="item-title-row">
+													<div class="item-title" style="">`+x[i]['username']+`</div>
+													<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark</i></span></div>
+													</div>
+													<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+													<div class="item-subtitle" style="">`+total+`</div>
+													<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 												</div>
-												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
-												<div class="item-subtitle" style="">`+total+`</div>
-												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
-											</div>
-											<div class="swipeout-actions-right">
-												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
-												`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">checkmark</i></a>
-												<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
-												`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">trash</i></a>
-											</div>
+												<div class="swipeout-actions-right">
+													<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+													`" data-type="`+x[i]['pin_type']+`" class="bg-color-green sw-accepted"><i class="f7-icons">checkmark</i></a>
+													<a href="#" data-id="`+x[i]['id']+`" data-username="`+x[i]['username']+`" data-count="`+x[i]['count']+
+													`" data-type="`+x[i]['pin_type']+`" class="bg-color-red sw-deleted"><i class="f7-icons">trash</i></a>
+												</div>
 											</div>
 										</li>
 										`);
@@ -8515,18 +7119,18 @@ var app = new Framework7({
 										$$('#confirm_pin').append(`
 										<li class="swipeout">
 											<div class="item-content swipeout-content">
-				                      		<a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
-												<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
-											</a>
-											<div class="item-inner">
-												<div class="item-title-row">
-												<div class="item-title" style="">`+x[i]['username']+`</div>
-												<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
+				                <a href="/show_deposit_pin/` + x[i]['id'] + `"class="item-media ">
+													<img src="img/user.png" style="height: 50px; width: 50px; border-radius:480%; alt="no image" class="skeleton-block lazy lazy-fade-in demo-lazy"/>
+												</a>
+												<div class="item-inner">
+													<div class="item-title-row">
+													<div class="item-title" style="">`+x[i]['username']+`</div>
+													<div class="item-after"> <span class=""><i class="f7-icons warna-back">bookmark_fill</i></span></div>
+													</div>
+													<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
+													<div class="item-subtitle" style="">`+total+`</div>
+													<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
 												</div>
-												<div class="item-subtitle" style="">`+x[i]['date_request']+`</div>
-												<div class="item-subtitle" style="">`+total+`</div>
-												<div class="item-subtitle" style="">Jumlah: `+x[i]['count']+` `+x[i]['pin_type']+`</div>
-											</div>
 											</div>
 										</li>
 										`);
@@ -8540,32 +7144,14 @@ var app = new Framework7({
 									var count = $$(this).data('count');
 
 									app.dialog.confirm("Apakah Anda yakin memberikan " + count + " pin " + type + 
-										" kepada " + username + "? Pastikan member telah membayar!",function(){
+										" kepada " + username + "? Pastikan member telah membayar!", function() {
 										var url = "";
 										if(type == "Basic") {
 											url = "pin/generate_pin_basic.php";
 										} else {
 											url = "pin/generate_pin_premium.php";
 										}
-
-										showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
+										loading();
 
 										for(var i = 0; i < count; i++) {
 											var suc = 0;
@@ -8633,25 +7219,7 @@ var app = new Framework7({
 									app.dialog.confirm("Apakah Anda yakin menghapus permintaan " + count + " pin " + type + 
 										" oleh " + username + "? Pastikan member belum membayar!",function(){
 										var url = "pin/delete_request_pin.php";
-
-										showDeterminate(true);
-										determinateLoading = false;
-										function showDeterminate(inline)
-										{
-											determinateLoading = true;
-											var progressBarEl;
-											if (inline) {
-												progressBarEl = app.dialog.progress();
-											} else {
-												progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-											}
-											function simulateLoading() {
-												setTimeout(function () {
-												simulateLoading();
-												}, Math.random() * 300 + 300);
-											}
-											simulateLoading();
-										}
+										loading();
 
 										app.request({
 											method: "POST",
@@ -8663,8 +7231,8 @@ var app = new Framework7({
 													determinateLoading = false;
 													app.dialog.close();
 													app.dialog.alert(x,'Notifikasi',function(){
-							                            mainView.router.refreshPage();
-							                        });
+	                          mainView.router.refreshPage();
+	                        });
 												}
 											},
 											error: function(data) {
@@ -8951,32 +7519,12 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					var type = page.router.currentRoute.params.type;
-
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-								simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
-
 					$$('#type_transfer_pin').val(type);
+					loading();
 
 					app.request({
 						method: "POST",
-						url: database_connect + "pin/select_pin_user_no_usage_by_type.php", 
-							data:{ type: type, username : localStorage.username },
+						url: database_connect + "pin/select_pin_user_no_usage_by_type.php", data: { type: type, username : localStorage.username },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -9009,19 +7557,14 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
-								// for(var i = 0; i < x.length; i++) {
-								// 	$$('#username_decrease').append(`<option value="` + x[i]['username'] + `">` + x[i]['user_name'] + `</option>`);
-								// }
 								var autocompleteDropdownAll = app.autocomplete.create({
 									inputEl: '#member_transfer_pin',
 									openIn: 'dropdown',
 									source: function (query, render) {
 									  var results = [];
-									  // Find matched items
 									  for (var i = 0; i < x.length; i++) {
-										if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
+											if (x[i]['username'].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(x[i]['username']);
 									  }
-									  // Render items by passing array with result items
 									  render(results);
 									}
 								});
@@ -9058,24 +7601,7 @@ var app = new Framework7({
 						} else {
 							app.dialog.confirm("Apakah Anda yakin melakukan transfer pin " + pin_type + " sebanyak " + 
 								pin_count + " buah kepada " + username + "?",function(){
-								showDeterminate(true);
-								determinateLoading = false;
-								function showDeterminate(inline)
-								{
-								  determinateLoading = true;
-								  var progressBarEl;
-								  if (inline) {
-								    progressBarEl = app.dialog.progress();
-								  } else {
-								    progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-								  }
-								  function simulateLoading() {
-								    setTimeout(function () {
-								      simulateLoading();
-								    }, Math.random() * 300 + 300);
-								  }
-								  simulateLoading();
-								}
+								loading();
 
 								app.request({
 									method: "POST",
@@ -9125,29 +7651,11 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
-						method:"POST",
-						url:database_connect+"pin/select_transfer_pin.php",
-						data:{pin_type:'Basic'},
+						method: "POST",
+						url: database_connect + "pin/select_transfer_pin.php", data: { pin_type : 'Basic' },
 						success:function(data){
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -9163,7 +7671,6 @@ var app = new Framework7({
 											</div>
 										</div>
 									`);
-
 								}
 
 								determinateLoading = false;
@@ -9191,9 +7698,8 @@ var app = new Framework7({
 					$$('#history_transfer_pin_selection').on('change', function () {
 						var search = $$('#history_transfer_pin_selection').val();
 						app.request({
-							method:"POST",
-							url:database_connect+"pin/select_transfer_pin.php",
-							data:{pin_type:search},
+							method: "POST",
+							url: database_connect+"pin/select_transfer_pin.php", data:{ pin_type : search },
 							success:function(data){
 								var obj = JSON.parse(data);
 								if(obj['status'] == true) {
@@ -9210,7 +7716,6 @@ var app = new Framework7({
 												</div>
 											</div>
 										`);
-	
 									}
 	
 									determinateLoading = false;
@@ -9246,29 +7751,11 @@ var app = new Framework7({
 			{
 				pageInit:function(e,page)
 				{
-					showDeterminate(true);
-					determinateLoading = false;
-					function showDeterminate(inline)
-					{
-						determinateLoading = true;
-						var progressBarEl;
-						if (inline) {
-							progressBarEl = app.dialog.progress();
-						} else {
-							progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
-						}
-						function simulateLoading() {
-							setTimeout(function () {
-							simulateLoading();
-							}, Math.random() * 300 + 300);
-						}
-						simulateLoading();
-					}
+					loading();
 
 					app.request({
-						method:"POST",
-						url:database_connect+"pin/select_transfer_pin_member.php",
-						data:{username:localStorage.username},
+						method: "POST",
+						url: database_connect + "pin/select_transfer_pin_member.php", data: { username : localStorage.username },
 						success:function(data){
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -9284,7 +7771,6 @@ var app = new Framework7({
 											</div>
 										</div>
 									`);
-
 								}
 
 								determinateLoading = false;
@@ -9326,6 +7812,27 @@ function onBackKeyDown() {
 			ignoreCache: true
 		});
 		return false;
+	}
+}
+
+function loading() {
+	showDeterminate(true);
+	determinateLoading = false;
+	function showDeterminate(inline)
+	{
+		determinateLoading = true;
+		var progressBarEl;
+		if (inline) {
+			progressBarEl = app.dialog.progress();
+		} else {
+			progressBarEl = app.progressbar.show(0, app.theme === 'md' ? 'yellow' : 'blue');
+		}
+		function simulateLoading() {
+			setTimeout(function () {
+			simulateLoading();
+			}, Math.random() * 300 + 300);
+		}
+		simulateLoading();
 	}
 }
 
