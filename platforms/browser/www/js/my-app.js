@@ -2835,7 +2835,7 @@ var app = new Framework7({
 													message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
 													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
 
-													price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+													price = (parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code']));
 												} else if(x[i]['transaction_type'] == "Withdraw") {
 													message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
 													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
@@ -2844,13 +2844,13 @@ var app = new Framework7({
 														x[i]['user_account_number'] + `</div>`;
 													adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
 														<div class="demo-facebook-price">Total WD : ` + formatRupiah((parseInt(x[i]['transaction_price']) - parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-													price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
+													price = (parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code']));
 												} if(x[i]['transaction_type'] == "Repeat Order") {
 													message_accept = "Apakah Anda telah selesai memproses repeat order ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
 													message_decline = "Apakah Anda yakin ini menolak repeat order ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
 
 													x[i]['transaction_message'] = x[i]['transaction_message'] + " buah";
-													price = formatRupiah(((parseInt(x[i]['transaction_price']) * (parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code']))));
+													price = ((parseInt(x[i]['transaction_price']) * (parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
 												}
 
 												$$('#listtransaction').append(`
@@ -2858,7 +2858,7 @@ var app = new Framework7({
 														<div class="card-header">
 															<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
 															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + x[i]['transaction_message'].toUpperCase() + `</div>
-															<div class="demo-facebook-price">` + price + `</div>` + adminfee + `
+															<div class="demo-facebook-price">` + formatRupiah(price) + `</div>` + adminfee + `
 															<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
 														</div>
 														<div class="card-footer">
@@ -2876,100 +2876,100 @@ var app = new Framework7({
 									}
 
 									$$('.accept_transaction').on('click', function () {
-	                  var id = $$(this).data('id');
-	                  var message_accept = $$(this).data('message_accept');
-	                  var user_balance = $$(this).data('balance');
-	                  var username = $$(this).data('username');
-	                  var transaction_message = $$(this).data('message');
-	                  var transaction_type = $$(this).data('type');
-	                  app.dialog.confirm(message_accept,function(){
-	                    loading();
-	                    app.request({
-	                      method:"POST",
-	                      url:database_connect + "transaction/accept_transaction.php",
-	                      data:{
-	                        transaction_id : id,
-	                        user_balance : user_balance,
-	                        username : username,
-	                        transaction_message : transaction_message,
-	                        transaction_type : transaction_type
-	                      },
-	                      success:function(data){
-	                        var obj = JSON.parse(data);
-	                        if(obj['status'] == true) {
-	                          var x = obj['data'];
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(x,'Notifikasi',function(){
-	                            mainView.router.refreshPage();
-	                          });
-	                        }
-	                        else {
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(obj['message']);
-	                        }
-	                      },
-	                      error:function(data){
-	                        determinateLoading = false;
-	                        app.dialog.close();
-	                        var toastBottom = app.toast.create({
-	                          text: ERRNC,
-	                          closeTimeout: 2000,
-	                        });
-	                        toastBottom.open();
-	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-	                      }
-	                    });
-	                  });
-	                });
+					                  var id = $$(this).data('id');
+					                  var message_accept = $$(this).data('message_accept');
+					                  var user_balance = $$(this).data('balance');
+					                  var username = $$(this).data('username');
+					                  var transaction_message = $$(this).data('message');
+					                  var transaction_type = $$(this).data('type');
+					                  app.dialog.confirm(message_accept,function(){
+					                    loading();
+					                    app.request({
+					                      method:"POST",
+					                      url:database_connect + "transaction/accept_transaction.php",
+					                      data:{
+					                        transaction_id : id,
+					                        user_balance : user_balance,
+					                        username : username,
+					                        transaction_message : transaction_message,
+					                        transaction_type : transaction_type
+					                      },
+					                      success:function(data){
+					                        var obj = JSON.parse(data);
+					                        if(obj['status'] == true) {
+					                          var x = obj['data'];
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(x,'Notifikasi',function(){
+					                            mainView.router.refreshPage();
+					                          });
+					                        }
+					                        else {
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(obj['message']);
+					                        }
+					                      },
+					                      error:function(data){
+					                        determinateLoading = false;
+					                        app.dialog.close();
+					                        var toastBottom = app.toast.create({
+					                          text: ERRNC,
+					                          closeTimeout: 2000,
+					                        });
+					                        toastBottom.open();
+					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+					                      }
+					                    });
+					                  });
+					                });
 
-	                $$('.decline_transaction').on('click', function () {
-	                  var id = $$(this).data('id');
-	                  var message_decline = $$(this).data('message_decline');
-	                  var user_balance = $$(this).data('balance');
-	                  var username = $$(this).data('username');
-	                  var transaction_type = $$(this).data('type');
-	                  app.dialog.confirm(message_decline,function(){
-	                    loading();
-	                    app.request({
-	                      method:"POST",
-	                      url:database_connect + "transaction/decline_transaction.php",
-	                      data:{
-	                        transaction_id : id,
-	                        user_balance : user_balance,
-	                        username : username,
-	                        transaction_type : transaction_type
-	                      },
-	                      success:function(data){
-	                        var obj = JSON.parse(data);
-	                        if(obj['status'] == true) {
-	                          var x = obj['data'];
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(x,'Notifikasi',function(){
-	                            mainView.router.refreshPage();
-	                          });
-	                        }
-	                        else {
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(obj['message']);
-	                        }
-	                      },
-	                      error:function(data){
-	                        determinateLoading = false;
-	                        app.dialog.close();
-	                        var toastBottom = app.toast.create({
-	                          text: ERRNC,
-	                          closeTimeout: 2000,
-	                        });
-	                        toastBottom.open();
-	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-	                      }
-	                    });
-	                  });
-	                });
+					                $$('.decline_transaction').on('click', function () {
+					                  var id = $$(this).data('id');
+					                  var message_decline = $$(this).data('message_decline');
+					                  var user_balance = $$(this).data('balance');
+					                  var username = $$(this).data('username');
+					                  var transaction_type = $$(this).data('type');
+					                  app.dialog.confirm(message_decline,function(){
+					                    loading();
+					                    app.request({
+					                      method:"POST",
+					                      url:database_connect + "transaction/decline_transaction.php",
+					                      data:{
+					                        transaction_id : id,
+					                        user_balance : user_balance,
+					                        username : username,
+					                        transaction_type : transaction_type
+					                      },
+					                      success:function(data){
+					                        var obj = JSON.parse(data);
+					                        if(obj['status'] == true) {
+					                          var x = obj['data'];
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(x,'Notifikasi',function(){
+					                            mainView.router.refreshPage();
+					                          });
+					                        }
+					                        else {
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(obj['message']);
+					                        }
+					                      },
+					                      error:function(data){
+					                        determinateLoading = false;
+					                        app.dialog.close();
+					                        var toastBottom = app.toast.create({
+					                          text: ERRNC,
+					                          closeTimeout: 2000,
+					                        });
+					                        toastBottom.open();
+					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+					                      }
+					                    });
+					                  });
+					                });
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
@@ -3000,18 +3000,18 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					app.calendar.create({
-            inputEl: '#start_date_check_transaction',
-            openIn: 'customModal',
-            header: true,
-            footer: true,
-         	});
+		            inputEl: '#start_date_check_transaction',
+		            openIn: 'customModal',
+		            header: true,
+		            footer: true,
+		         	});
 
-					app.calendar.create({
-            inputEl: '#end_date_check_transaction',
-            openIn: 'customModal',
-            header: true,
-            footer: true,
-        	});
+							app.calendar.create({
+		            inputEl: '#end_date_check_transaction',
+		            openIn: 'customModal',
+		            header: true,
+		            footer: true,
+		        	});
 
 					$$('#btnchecktransaction').on('click', function() {
 						var start_date = $$('#start_date_check_transaction').val();
