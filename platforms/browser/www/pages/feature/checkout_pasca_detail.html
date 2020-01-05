@@ -23,9 +23,27 @@
           </div>
         </div>
         <div class="card-content card-content-padding">
-          <a class="col button button-raised button-fill button-round" id="btn_back_show_checkout_detail">Kembali</a>
-          <a class="col button button-raised button-fill button-round" id="btn_yes_show_checkout_detail">Bayar</a>
-          <a class="col button button-raised button-fill button-round color-red" id="btn_no_show_checkout_detail">Batal</a>
+          <div class="list">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="password" id="password_checkout_detail" placeholder="Kata Sandi" required validate data-error-message="Harap mengisi data ini!">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <a class="col button button-raised button-fill button-round" id="btn_back_show_checkout_detail" style="margin-bottom: 10px;">Kembali</a>
+                    <a class="col button button-raised button-fill button-round" id="btn_yes_show_checkout_detail" style="margin-bottom: 10px;">Bayar</a>
+                    <a class="col button button-raised button-fill button-round color-red" id="btn_no_show_checkout_detail" style="margin-bottom: 10px;">Batal</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

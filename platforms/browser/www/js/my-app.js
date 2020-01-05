@@ -29,11 +29,11 @@ var app = new Framework7({
 				pageInit:function(e, page)
 				{
 					var captcha = '';
-			   	var characters = '0123456789';
-				  var charactersLength = characters.length;
-				  for (var i = 0; i < 6; i++) {
-				  	captcha += characters.charAt(Math.floor(Math.random() * charactersLength));
-				  }
+			   		var characters = '0123456789';
+				  	var charactersLength = characters.length;
+				  	for (var i = 0; i < 6; i++) {
+				  		captcha += characters.charAt(Math.floor(Math.random() * charactersLength));
+				  	}
 					$$('#captcha_text').html(captcha);
 
 					$$('#btnsignin').on('click', function() {
@@ -2791,10 +2791,13 @@ var app = new Framework7({
 												balance = formatRupiah(parseInt(x[i]['transaction_balance_left']));
 											}
 
+											var bank_name = "";
 											var adminfee = "";
 											if(x[i]['transaction_type'] == "Deposit") {
 												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan member Anda telah melakukan transfer ke rekening Anda!";
 												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
+
+												bank_name = " (" + x[i]['bank_name'].toUpperCase() + ")";
 											} else if(x[i]['transaction_type'] == "Withdraw") {
 												message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
 												message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
@@ -2818,7 +2821,7 @@ var app = new Framework7({
 												  <div class="card-header">
 													<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right; color: ` + 
 														color + `">` + x[i]['transaction_status'] + `</span></div>
-													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + 
+													<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + bank_name + 
 														`</b> <span style="float: right; color: orange;">` + balance + `<span></div>
 													<div class="demo-facebook-price">` + price + `</div>
 													<div class="demo-facebook-price">` +  x[i]['customer_number'] + `</div>
@@ -2829,6 +2832,7 @@ var app = new Framework7({
 											`);
 										} else {
 											if(x[i]['transaction_type'] != "Sell" && x[i]['transaction_type'] != "Pascabayar") {
+												var bank_name
 												var adminfee = "";
 												var price = 0;
 												if(x[i]['transaction_type'] == "Deposit") {
@@ -2836,6 +2840,7 @@ var app = new Framework7({
 													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan member Anda belum melakukan transfer ke rekening Anda!";
 
 													price = (parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code']));
+													bank_name = " (" + x[i]['bank_name'].toUpperCase() + ")";
 												} else if(x[i]['transaction_type'] == "Withdraw") {
 													message_accept = "Apakah Anda telah selesai memproses permintaan ini? Pastikan Anda telah melakukan transfer ke rekening member Anda!";
 													message_decline = "Apakah Anda yakin ini menolak permintaan ini? Pastikan Anda belum melakukan transfer ke rekening member Anda!";
@@ -2857,7 +2862,7 @@ var app = new Framework7({
 													<div class="card demo-facebook-card">
 														<div class="card-header">
 															<div class="demo-facebook-name">` + x[i]['username'] + `<span style="float: right;">` + x[i]['transaction_status'] + `</span></div>
-															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + `</b> ` + x[i]['transaction_message'].toUpperCase() + `</div>
+															<div class="demo-facebook-price"><b>` + x[i]['transaction_type'].toUpperCase() + bank_name + `</b> ` + x[i]['transaction_message'].toUpperCase() + `</div>
 															<div class="demo-facebook-price">` + formatRupiah(price) + `</div>` + adminfee + `
 															<div class="demo-facebook-date">` + formatDateTime(x[i]['transaction_date']) + `</div>` + withdraw + `
 														</div>
@@ -3225,7 +3230,7 @@ var app = new Framework7({
 							app.dialog.close();
 							app.dialog.alert("Minimum jumlah pengurangan saldo member adalah IDR 1!");
 						} else {
-							app.dialog.confirm("Apakah Anda yakin menambahkan saldo " + formatRupiah(transaction_price) + " kepada " + username + 
+							app.dialog.confirm("Apakah Anda yakin mengurangi saldo sejumlah " + formatRupiah(transaction_price) + " dari " + username + 
 								"?", function() {
 								loading();
 
@@ -5930,47 +5935,57 @@ var app = new Framework7({
 
 								$$('#btn_checkout').on('click', function() {
 									var customer_no = $$('#customer_no_checkout').val();
+									var user_password = $$('#password_checkout').val();
 									if(customer_no == "") {
 										app.dialog.alert("Nomor telepon atau token tidak boleh kosong!");
+									} else if(user_password == "") {
+										app.dialog.alert("Kata sandi tidak boleh kosong!");
 									} else {
-										app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi ini?",function(){
-											loading();
+										app.request.post(database_connect + "login.php", { username : localStorage.username, user_password : user_password }, function(data) {
+											var obj = JSON.parse(data);
+											if(obj['status'] == true) {
+												app.dialog.confirm("Apakah Anda yakin untuk memproses transaksi ini?",function(){
+													loading();
 
-											app.request({
-												method: "POST",
-												url: database_connect + "digiflazz/buy_product.php",
-													data:{
-													transaction_price : tagihan,
-													username : localStorage.username,
-													customer_no : customer_no,
-													product_id : buyer_sku_code
-												},
-												success: function(data) {
-													var obj = JSON.parse(data);
-													if(obj['status'] == true) {
-														var x = obj['data'];
-														determinateLoading = false;
-														app.dialog.close();
-														app.dialog.alert(x, 'Notifikasi', function(){
+													app.request({
+														method: "POST",
+														url: database_connect + "digiflazz/buy_product.php",
+															data:{
+															transaction_price : tagihan,
+															username : localStorage.username,
+															customer_no : customer_no,
+															product_id : buyer_sku_code
+														},
+														success: function(data) {
+															var obj = JSON.parse(data);
+															if(obj['status'] == true) {
+																var x = obj['data'];
+																determinateLoading = false;
+																app.dialog.close();
+																app.dialog.alert(x, 'Notifikasi', function(){
+																	page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+																});
+															} else {
+																determinateLoading = false;
+																app.dialog.close();
+																app.dialog.alert(obj['message']);
+															}
+														},
+														error: function(data) {
+															determinateLoading = false;
+															app.dialog.close();
+															var toastBottom = app.toast.create({
+																text: ERRNC,
+																closeTimeout: 2000,
+															});
+															toastBottom.open();
 															page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-														});
-													} else {
-														determinateLoading = false;
-														app.dialog.close();
-														app.dialog.alert(obj['message']);
-													}
-												},
-												error: function(data) {
-													determinateLoading = false;
-													app.dialog.close();
-													var toastBottom = app.toast.create({
-														text: ERRNC,
-														closeTimeout: 2000,
+														}
 													});
-													toastBottom.open();
-													page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-												}
-											});
+												});
+											} else {
+												app.dialog.alert("Kata sandi yang Anda masukkan salah!");
+											}
 										});
 									}
 								});
@@ -6233,44 +6248,56 @@ var app = new Framework7({
 							}
 
 							$$('#btn_yes_show_checkout_detail').on('click', function() {
-								app.dialog.confirm("Apakah Anda yakin untuk memproses pembayaran ini?", function() {
-									app.request({
-										method: "POST",
-										url: database_connect + "digiflazz/pay_pascabayar.php", 
-											data:{ 
-												buyer_sku_code : x['Buyer SKU Code'][0],
-												ref_id : x['Ref ID'][0],
-												customer_no : x['Kode Pelanggan'][0],
-												transaction_price : x['Total Tagihan'][0],
-												username : localStorage.username,
-												transaction_id : transaction_id
-											},
-										success: function(data) {
-											var obj = JSON.parse(data);
-											if(obj['status'] == true) {
-												var x = obj['data'];
-												determinateLoading = false;
-												app.dialog.close();
-												app.dialog.alert("Transaksi diproses!");
-											} else {
-												determinateLoading = false;
-												app.dialog.close();
-												app.dialog.alert(obj['message']);
-											}
-										},
-										error: function(data) {
-											determinateLoading = false;
-											app.dialog.close();
-											var toastBottom = app.toast.create({
-												text: ERRNC,
-												closeTimeout: 2000,
+								var user_password = $$('#password_checkout_detail').val();
+								if(user_password == "") {
+									app.dialog.alert("Kata sandi tidak boleh kosong!");
+								} else {
+									app.request.post(database_connect + "login.php", { username : localStorage.username, user_password : user_password }, function(data) {
+										var obj = JSON.parse(data);
+										if(obj['status'] == true) {
+											app.dialog.confirm("Apakah Anda yakin untuk memproses pembayaran ini?", function() {
+												app.request({
+													method: "POST",
+													url: database_connect + "digiflazz/pay_pascabayar.php", 
+														data:{ 
+															buyer_sku_code : x['Buyer SKU Code'][0],
+															ref_id : x['Ref ID'][0],
+															customer_no : x['Kode Pelanggan'][0],
+															transaction_price : x['Total Tagihan'][0],
+															username : localStorage.username,
+															transaction_id : transaction_id
+														},
+													success: function(data) {
+														var obj = JSON.parse(data);
+														if(obj['status'] == true) {
+															var x = obj['data'];
+															determinateLoading = false;
+															app.dialog.close();
+															app.dialog.alert("Transaksi diproses!");
+														} else {
+															determinateLoading = false;
+															app.dialog.close();
+															app.dialog.alert(obj['message']);
+														}
+													},
+													error: function(data) {
+														determinateLoading = false;
+														app.dialog.close();
+														var toastBottom = app.toast.create({
+															text: ERRNC,
+															closeTimeout: 2000,
+														});
+														toastBottom.open();
+														page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+													}
+												});
+												page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
 											});
-											toastBottom.open();
-											page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+										} else {
+											app.dialog.alert("Kata sandi yang Anda masukkan salah!");
 										}
 									});
-									page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-								});
+								}
 							});
 						},
 						error: function(data) {
@@ -6342,6 +6369,7 @@ var app = new Framework7({
 								var x = obj['data'];
 								determinateLoading = false;
 								app.dialog.close();
+								$$('#bank_id_deposit_pin').append(`<option value="">-- Pilih Bank --</option>`);
 								for(var i = 0; i < x.length; i++) {
 									$$('#bank_id_deposit_pin').append(`<option value="` + x[i]['bank_id'] + `">` + x[i]['bank_name'] + `</option>`);
 								}
@@ -6371,6 +6399,8 @@ var app = new Framework7({
 							var bank_id = $$('#bank_id_deposit_pin').val();
 							if(count < 1 || count == "") {
 								app.dialog.alert("Minimum order pin adalah sebanyak 1 pin!");
+							} else if(bank_id == "") {
+								app.dialog.alert("Silahkan pilih bank tujuan terlebih dahulu!");
 							} else {
 								loading();
 
@@ -6845,7 +6875,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "POST",
-						url: database_connect + "pin/select_pin.php", data:{ pin_type:'Basic' },
+						url: database_connect + "pin/find_pin.php", data:{ username : '', pin_type : 'Basic' },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
@@ -6896,45 +6926,45 @@ var app = new Framework7({
 								`);
 
 								$$('.delete_pin').on('click', function () {
-                  var id = $$(this).data('id');
-                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
-                    loading();
+				                  var id = $$(this).data('id');
+				                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
+				                    loading();
 
-                    app.request({
-                      method:"POST",
-                      url:database_connect + "pin/delete_pin.php",
-                      data:{
-                        pin_id : id
-                      },
-                      success:function(data){
-                        var obj = JSON.parse(data);
-                        if(obj['status'] == true) {
-                          var x = obj['data'];
-                          determinateLoading = false;
-                          app.dialog.close();
-                          app.dialog.alert(x,'Notifikasi',function(){
-                            mainView.router.refreshPage();
-                          });
-                        }
-                        else {
-                          determinateLoading = false;
-                          app.dialog.close();
-                          app.dialog.alert(obj['message']);
-                        }
-                      },
-                      error:function(data){
-                        determinateLoading = false;
-                        app.dialog.close();
-                        var toastBottom = app.toast.create({
-                          text: ERRNC,
-                          closeTimeout: 2000,
-                        });
-                        toastBottom.open();
-                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-                      }
-                    });
-                  });
-                });
+				                    app.request({
+				                      method:"POST",
+				                      url:database_connect + "pin/delete_pin.php",
+				                      data:{
+				                        pin_id : id
+				                      },
+				                      success:function(data){
+				                        var obj = JSON.parse(data);
+				                        if(obj['status'] == true) {
+				                          var x = obj['data'];
+				                          determinateLoading = false;
+				                          app.dialog.close();
+				                          app.dialog.alert(x,'Notifikasi',function(){
+				                            mainView.router.refreshPage();
+				                          });
+				                        }
+				                        else {
+				                          determinateLoading = false;
+				                          app.dialog.close();
+				                          app.dialog.alert(obj['message']);
+				                        }
+				                      },
+				                      error:function(data){
+				                        determinateLoading = false;
+				                        app.dialog.close();
+				                        var toastBottom = app.toast.create({
+				                          text: ERRNC,
+				                          closeTimeout: 2000,
+				                        });
+				                        toastBottom.open();
+				                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+				                      }
+				                    });
+				                  });
+				                });
 							} else {
 								determinateLoading = false;
 								app.dialog.close();
@@ -6956,10 +6986,11 @@ var app = new Framework7({
 					});
 
 					$$('#pin_type_overall_selection').on('change', function () {
+						var username = $$('#txtsearchpin').val();
 						var search = $$('#pin_type_overall_selection').val();
 						app.request({
 							method: "POST",
-							url: database_connect + "pin/select_pin.php", data:{ pin_type:search },
+							url: database_connect + "pin/find_pin.php", data:{ username : username, pin_type : search },
 							success: function(data) {
 								var obj = JSON.parse(data);
 								if(obj['status'] == true) {
@@ -6969,7 +7000,7 @@ var app = new Framework7({
 									app.dialog.close();
 									var tmphsl ='';
 									for(var i = 0; i < x.length; i++) {
-										if(x[i]['username_member']==null || x[i]['username_member']== "") {
+										if(x[i]['username_member'] == null || x[i]['username_member'] == "") {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -7019,29 +7050,29 @@ var app = new Framework7({
 											  method:"POST",
 											  url:database_connect + "pin/delete_pin.php", data:{ pin_id : id },
 											  success:function(data){
-													var obj = JSON.parse(data);
-													if(obj['status'] == true) {
-													  var x = obj['data'];
-													  determinateLoading = false;
-													  app.dialog.close();
-													  app.dialog.alert(x,'Notifikasi',function(){
-														mainView.router.refreshPage();
-													  });
-													} else {
-													  determinateLoading = false;
-													  app.dialog.close();
-													  app.dialog.alert(obj['message']);
-													}
+												var obj = JSON.parse(data);
+												if(obj['status'] == true) {
+												  var x = obj['data'];
+												  determinateLoading = false;
+												  app.dialog.close();
+												  app.dialog.alert(x,'Notifikasi',function(){
+													mainView.router.refreshPage();
+												  });
+												} else {
+												  determinateLoading = false;
+												  app.dialog.close();
+												  app.dialog.alert(obj['message']);
+												}
 											  },
 											  error:function(data){
-													determinateLoading = false;
-													app.dialog.close();
-													var toastBottom = app.toast.create({
-													  text: ERRNC,
-													  closeTimeout: 2000,
-													});
-													toastBottom.open();
-													page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+												determinateLoading = false;
+												app.dialog.close();
+												var toastBottom = app.toast.create({
+												  text: ERRNC,
+												  closeTimeout: 2000,
+												});
+												toastBottom.open();
+												page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
 											  }
 											});
 									  });
@@ -7068,20 +7099,21 @@ var app = new Framework7({
 					});
 
 					$$('#txtsearchpin').on('keyup', function() {
-						$$('#list_all_pin_user').html(``);
 						var username = $$('#txtsearchpin').val();
+						var search = $$('#pin_type_overall_selection').val();
 						app.request({
 							method: "POST",
-							url: database_connect + "pin/find_pin.php", data:{ username : username },
+							url: database_connect + "pin/find_pin.php", data:{ username : username, pin_type : search },
 							success: function(data) {
 								var obj = JSON.parse(data);
 								if(obj['status'] == true) {
-									var x = obj['data'];
 									determinateLoading = false;
 									app.dialog.close();
+									$$('#list_all_pin_user').html(``);
+									var x = obj['data'];
 									var tmphsl ='';
 									for(var i = 0; i < x.length; i++) {
-										if(x[i]['username_member']==null || x[i]['username_member']== "") {
+										if(x[i]['username_member'] == null || x[i]['username_member'] == "") {
 											tmphsl += `
 												<tr>
 													<td class="label-cell">` +x[i]['username_sponsor']+ `</td>
@@ -7123,45 +7155,45 @@ var app = new Framework7({
 									`);
 
 									$$('.delete_pin').on('click', function () {
-	                  var id = $$(this).data('id');
-	                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
-	                    loading();
+					                  var id = $$(this).data('id');
+					                  app.dialog.confirm("Apakah Anda yakin untuk menghapus pin ini?",function(){
+					                    loading();
 
-	                    app.request({
-	                      method:"POST",
-	                      url:database_connect + "pin/delete_pin.php",
-	                      data:{
-	                        pin_id : id
-	                      },
-	                      success:function(data){
-	                        var obj = JSON.parse(data);
-	                        if(obj['status'] == true) {
-	                          var x = obj['data'];
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(x,'Notifikasi',function(){
-	                            mainView.router.refreshPage();
-	                          });
-	                        }
-	                        else {
-	                          determinateLoading = false;
-	                          app.dialog.close();
-	                          app.dialog.alert(obj['message']);
-	                        }
-	                      },
-	                      error:function(data){
-	                        determinateLoading = false;
-	                        app.dialog.close();
-	                        var toastBottom = app.toast.create({
-	                          text: ERRNC,
-	                          closeTimeout: 2000,
-	                        });
-	                        toastBottom.open();
-	                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
-	                      }
-	                    });
-	                  });
-	                });
+					                    app.request({
+					                      method:"POST",
+					                      url:database_connect + "pin/delete_pin.php",
+					                      data:{
+					                        pin_id : id
+					                      },
+					                      success:function(data){
+					                        var obj = JSON.parse(data);
+					                        if(obj['status'] == true) {
+					                          var x = obj['data'];
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(x,'Notifikasi',function(){
+					                            mainView.router.refreshPage();
+					                          });
+					                        }
+					                        else {
+					                          determinateLoading = false;
+					                          app.dialog.close();
+					                          app.dialog.alert(obj['message']);
+					                        }
+					                      },
+					                      error:function(data){
+					                        determinateLoading = false;
+					                        app.dialog.close();
+					                        var toastBottom = app.toast.create({
+					                          text: ERRNC,
+					                          closeTimeout: 2000,
+					                        });
+					                        toastBottom.open();
+					                        page.router.navigate('/home/',{ animate:false, reloadAll:true, force: true, ignoreCache: true });
+					                      }
+					                    });
+					                  });
+					                });
 								} else {
 									determinateLoading = false;
 									app.dialog.close();
