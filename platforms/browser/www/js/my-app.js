@@ -851,7 +851,7 @@ var app = new Framework7({
 
 					app.request({
 						method: "GET",
-						url: database_connect + "users/select_users_premium.php", data:{  },
+						url: database_connect + "users/select_users.php", data:{  },
 						success: function(data) {
 							var obj = JSON.parse(data);
 							if(obj['status'] == true) {
