@@ -909,9 +909,8 @@ var app = new Framework7({
 									var count = $$('#count_transfer_ecash').val();
 									if(username_receiver == "") {
 										app.dialog.alert("Silahkan masukkan member tujuan terlebih dahulu!");
-									} else if(parseInt(count) <= (parseInt(x[38]['bonus_value']) + 1) || count == "") {
-										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[38]['bonus_value']) + 1)) 
-											+ "!");
+									} else if(parseInt(count) < 50000 || count == "") {
+										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah("50000") + "!");
 									} else if((parseInt(count) + parseInt(x[52]['bonus_value'])) > parseInt(localStorage.user_balance_a)) {
 										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer! Minimum saldo Anda yang harus tersisa adalah " + 
 											formatRupiah(x[52]['bonus_value'])) + ".";
@@ -998,9 +997,8 @@ var app = new Framework7({
 									app.dialog.close();
 
 									var count = $$('#count_transfer_bonus').val();
-									if(parseInt(count) <= (parseInt(x[50]['bonus_value']) + 1) || count == "") {
-										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah((parseInt(x[50]['bonus_value']) + 1)) 
-											+ "!");
+									if(parseInt(count) < 50000 || count == "") {
+										app.dialog.alert("Minimum jumlah transfer adalah " + formatRupiah("50000") + "!");
 									} else if((parseInt(count) + parseInt(x[53]['bonus_value'])) > parseInt(localStorage.user_balance_c)) {
 										app.dialog.alert("Saldo Anda tidak cukup untuk melakukan transfer! Minimum saldo Anda yang harus tersisa adalah " + 
 											formatRupiah(x[53]['bonus_value'])) + ".";
@@ -2244,8 +2242,8 @@ var app = new Framework7({
 								determinateLoading = false;
 								app.dialog.close();
 								app.dialog.alert(obj['message'],'Notifikasi',function(){
-                  app.views.main.router.back();
-                });
+				                  app.views.main.router.back();
+				                });
 							}
 						},
 						error: function(data) {
@@ -2262,14 +2260,14 @@ var app = new Framework7({
 
 					$$('#category_bonus_selection').on('change', function () {
 						var category = $$('#category_bonus_selection').val();
-						$$('#listhistorybonusall').html('');
 
 						app.request({
 							method: "POST",
-							url: database_connect + "history_bonus/select_history_bonus_all.php", data:{ category : category },
+							url: database_connect + "history_bonus/select_history_bonus_all.php", data:{ category : category, username : "" },
 							success: function(data) {
 								var obj = JSON.parse(data);
 								if(obj['status'] == true) {
+									$$('#listhistorybonusall').html('');
 									var x = obj['data'];
 									determinateLoading = false;
 									app.dialog.close();
@@ -2289,8 +2287,55 @@ var app = new Framework7({
 									determinateLoading = false;
 									app.dialog.close();
 									app.dialog.alert(obj['message'],'Notifikasi',function(){
-                    app.views.main.router.back();
-                  });
+					                    app.views.main.router.back();
+					                });
+								}
+							},
+							error: function(data) {
+								determinateLoading = false;
+								app.dialog.close();
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					});
+
+					$$('#txtsearchuserhistorybonus').on('keyup', function() {
+						var username = $$('#txtsearchuserhistorybonus').val();
+						var category = $$('#category_bonus_selection').val();
+
+						app.request({
+							method: "POST",
+							url: database_connect + "history_bonus/select_history_bonus_all.php", data:{ category : category, username : username },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								if(obj['status'] == true) {
+									$$('#listhistorybonusall').html('');
+									var x = obj['data'];
+									determinateLoading = false;
+									app.dialog.close();
+									for(var i = 0; i < x.length; i++) {
+										$$('#listhistorybonusall').append(`
+											<div class="card demo-facebook-card">
+											  <div class="card-header">
+											    <div class="demo-facebook-name">` + x[i]['history_bonus_username'] + `<span></div>
+											    <div class="demo-facebook-name">` + x[i]['history_bonus_message'] + `<span></div>
+											    <div class="demo-facebook-price">` + formatRupiah(x[i]['history_bonus_price']) + `</div>
+											    <div class="demo-facebook-date">` + formatDateTime(x[i]['history_bonus_date']) + `</div>
+											  </div>
+											</div>
+										`);
+									}
+								} else {
+									determinateLoading = false;
+									app.dialog.close();
+									app.dialog.alert(obj['message'],'Notifikasi',function(){
+					                    app.views.main.router.back();
+					                });
 								}
 							},
 							error: function(data) {
@@ -6120,6 +6165,17 @@ var app = new Framework7({
 					$$('#btn_checkout').hide();
 					$$('#checkout_detail').hide();
 					loading();
+
+					$$('#btncontact').on('click', function() {
+						navigator.contacts.pickContact(function(contact){
+							var c = JSON.stringify(contact);
+							console.log(c);
+							var x = JSON.parse(c);
+							$$('#customer_no_checkout').val(x['phoneNumbers'][0]['value'].replace(" ", ""));
+					    },function(err){
+					        console.log('Error: ' + err);
+					    });
+					});
 
 					app.request({
 						method: "GET",
