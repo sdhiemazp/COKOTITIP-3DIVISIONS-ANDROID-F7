@@ -1,0 +1,44 @@
+<div class="page" data-name="list_pin">
+    <div class="navbar">
+      <div class="navbar-inner">  
+        <div class="left" style="margin-left: 5%;">
+          <a href="#" class="back">
+            <i class="icon icon-back"></i>
+          </a>
+        </div>
+        <div class="title">
+          <font>Daftar Pin</font>
+        </div>
+        <div class="right" style="margin-right: 5%;">
+          <a href="/history_transfer_pin/" class="button">
+            Riwayat
+          </a>
+        </div>
+        <div class="subnavbar">
+          &nbsp;&nbsp;<i class="f7-icons">search</i>&nbsp;&nbsp;
+          <input type="search" id="txtsearchpin" style="width: 100%;" placeholder="Cari member..">
+        </div>
+      </div>
+    </div>
+  
+    <div class="page-content background-body">
+      <div class="list">
+        <ul>
+          <li class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <!-- <div class="item-title">Tipe Pin</div> -->
+              <div class="item-input-wrap">
+                <select id="pin_type_overall_selection">
+                  <option value="Basic" selected>Basic</option>
+                  <option value="Premium">Premium</option>
+                </select>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="block">
+          <div id="list_all_pin_user"></div>
+      </div>
+    </div>
+  </div>

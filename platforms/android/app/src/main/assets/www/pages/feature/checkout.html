@@ -1,0 +1,86 @@
+<div class="page" data-name="checkout">
+  <div class="navbar">
+    <div class="navbar-inner">  
+      <div class="left" style="margin-left: 5%;">
+        <a href="#" class="back">
+          <i class="icon icon-back"></i>
+        </a>
+      </div>
+      <div class="title">
+        <font>Checkout</font>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content background-body">
+    <div id="checkout_detail">
+      <div class="card card-outline">
+        <div class="card-body border_card">
+          <div class="block">
+            <div class="row">
+              <div id="product_checkout"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-outline">
+        <div class="card-body border_card">
+          <div class="list">
+            <ul>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <button class="button button-raised button-fill button-round" id="btncontact">Pilih Kontak</button>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="text" id="customer_no_checkout" placeholder="Nomor Telepon/Token" required validate data-error-message="Harap mengisi data ini!">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="password" id="password_checkout" placeholder="Kata Sandi" required validate data-error-message="Harap mengisi data ini!">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card card-outline">
+        <div class="card-body border_card">
+          <div class="block">
+            <div class="row">
+              <div class="col-50">
+                <b>Saldo</b>
+              </div>
+              <div class="col-50" style="text-align: right;">
+                <div id="saldo_checkout"></div>
+              </div>
+              <div class="col-50">
+                <b>Tagihan</b>
+              </div>
+              <div class="col-50" style="text-align: right;">
+                <div id="tagihan_checkout"></div>
+              </div>
+              <br>
+              <div class="col-100" style="text-align: right;">
+                <div id="total_checkout"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-content card-content-padding">
+          <a class="col button button-raised button-fill button-round disabled" id="btn_checkout">BELI</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

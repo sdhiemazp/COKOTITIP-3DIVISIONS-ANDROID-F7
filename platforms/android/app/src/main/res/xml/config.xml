@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.tigadsaja.tigadvisions" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="https://3dsaja.com/">
+    <name>DVisions</name>
+    <description>
+        Aplikasi PPOB
+    </description>
+    <author email="cokotitip@gmail.com" href="https://cokotitip.com">
+        Cokotitip Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <icon density="ldpi" src="www/res/icon/android/logo.png" />
+    <icon density="mdpi" src="www/res/icon/android/logo.png" />
+    <icon density="hdpi" src="www/res/icon/android/logo.png" />
+    <icon density="xhdpi" src="www/res/icon/android/logo.png" />
+    <icon density="xxhdpi" src="www/res/icon/android/logo.png" />
+    <icon density="xxxhdpi" src="www/res/icon/android/logo.png" />
+    <splash density="land-ldpi" src="www/res/screen/android/logo.png" />
+    <splash density="land-mdpi" src="www/res/screen/android/logo.png" />
+    <splash density="land-hdpi" src="www/res/screen/android/logo.png" />
+    <splash density="land-xhdpi" src="www/res/screen/android/logo.png" />
+    <splash density="land-xxhdpi" src="www/res/screen/android/logo.png" />
+    <splash density="land-xxxhdpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-ldpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-mdpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-hdpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-xhdpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-xxhdpi" src="www/res/screen/android/logo.png" />
+    <splash density="port-xxxhdpi" src="www/res/screen/android/logo.png" />
+    <allow-intent href="market:*" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="android-minSdkVersion" value="19" />
+    <preference name="android-targetSdkVersion" value="28" />
+</widget>
