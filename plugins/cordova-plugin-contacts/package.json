@@ -1,33 +1,33 @@
 {
-  "_from": "cordova-plugin-contacts@3.0.1",
-  "_id": "cordova-plugin-contacts@3.0.1",
+  "_from": "cordova-plugin-contacts@2.0.0",
+  "_id": "cordova-plugin-contacts@2.0.0",
   "_inBundle": false,
-  "_integrity": "sha1-N6ravsk8mCwEo9zaDk8c+glqhKs=",
+  "_integrity": "sha1-F3UtxkkBI5eCl8AnWSuHnLo4F1c=",
   "_location": "/cordova-plugin-contacts",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "cordova-plugin-contacts@3.0.1",
+    "raw": "cordova-plugin-contacts@2.0.0",
     "name": "cordova-plugin-contacts",
     "escapedName": "cordova-plugin-contacts",
-    "rawSpec": "3.0.1",
+    "rawSpec": "2.0.0",
     "saveSpec": null,
-    "fetchSpec": "3.0.1"
+    "fetchSpec": "2.0.0"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-contacts/-/cordova-plugin-contacts-3.0.1.tgz",
-  "_shasum": "37aadabec93c982c04a3dcda0e4f1cfa096a84ab",
-  "_spec": "cordova-plugin-contacts@3.0.1",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-contacts/-/cordova-plugin-contacts-2.0.0.tgz",
+  "_shasum": "17752dc6490123978297c027592b879cba381757",
+  "_spec": "cordova-plugin-contacts@2.0.0",
   "_where": "C:\\xampp\\htdocs\\3dvisions",
   "author": {
     "name": "Apache Software Foundation"
   },
   "bugs": {
-    "url": "https://issues.apache.org/jira/browse/CB"
+    "url": "https://github.com/apache/cordova-plugin-contacts/issues"
   },
   "bundleDependencies": false,
   "cordova": {
@@ -44,21 +44,8 @@
       "windows"
     ]
   },
-  "deprecated": "This plugin has been deprecated",
+  "deprecated": false,
   "description": "Cordova Contacts Plugin",
-  "devDependencies": {
-    "jshint": "^2.6.0"
-  },
-  "engines": {
-    "cordovaDependencies": {
-      "3.0.0": {
-        "cordova-android": ">=6.3.0"
-      },
-      "4.0.0": {
-        "cordova": ">100"
-      }
-    }
-  },
   "homepage": "https://github.com/apache/cordova-plugin-contacts#readme",
   "keywords": [
     "cordova",
@@ -75,16 +62,11 @@
     "cordova-windows8",
     "cordova-windows"
   ],
-  "license": "Apache-2.0",
+  "license": "Apache 2.0",
   "name": "cordova-plugin-contacts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apache/cordova-plugin-contacts.git"
   },
-  "scripts": {
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
-    "test": "npm run jshint"
-  },
-  "types": "./types/index.d.ts",
-  "version": "3.0.1"
+  "version": "2.0.0"
 }

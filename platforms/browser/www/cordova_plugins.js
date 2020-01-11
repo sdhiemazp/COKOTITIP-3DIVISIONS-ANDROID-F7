@@ -91,11 +91,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-contacts/www/convertUtils.js",
-        "id": "cordova-plugin-contacts.convertUtils",
-        "pluginId": "cordova-plugin-contacts"
-    },
-    {
         "file": "plugins/cordova-plugin-contacts/www/ContactAddress.js",
         "id": "cordova-plugin-contacts.ContactAddress",
         "pluginId": "cordova-plugin-contacts",
@@ -150,14 +145,6 @@ module.exports = [
         "merges": [
             ""
         ]
-    },
-    {
-        "file": "plugins/cordova-plugin-contacts/src/browser/ContactsProxy.js",
-        "id": "cordova-plugin-contacts.ContactsProxy",
-        "pluginId": "cordova-plugin-contacts",
-        "merges": [
-            "navigator.contacts"
-        ]
     }
 ];
 module.exports.metadata = 
@@ -168,7 +155,7 @@ module.exports.metadata =
     "cordova-plugin-camera": "2.4.1",
     "cordova-plugin-device": "1.1.7",
     "cordova-plugin-dialogs": "1.3.4",
-    "cordova-plugin-contacts": "3.0.1"
+    "cordova-plugin-contacts": "2.0.0"
 }
 // BOTTOM OF METADATA
 });

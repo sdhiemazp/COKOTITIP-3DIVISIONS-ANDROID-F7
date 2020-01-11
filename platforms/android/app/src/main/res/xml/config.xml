@@ -1,6 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tigadsaja.tigadvisions" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="https://3dsaja.com/">
-    <name>DVisions</name>
+<widget id="com.tigadsaja.tigadvisions" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/3.1.0">
+    <feature name="Battery">
+        <param name="android-package" value="org.apache.cordova.batterystatus.BatteryListener" />
+    </feature>
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="Notification">
+        <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="Contacts">
+        <param name="android-package" value="org.apache.cordova.contacts.ContactManager" />
+    </feature>
+    <name>3DVisions</name>
     <description>
         Aplikasi PPOB
     </description>

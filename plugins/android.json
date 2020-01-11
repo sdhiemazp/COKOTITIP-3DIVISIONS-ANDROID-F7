@@ -1,0 +1,30 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-battery-status": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    },
+    "cordova-plugin-contacts": {
+      "PACKAGE_NAME": "com.tigadsaja.tigadvisions"
+    }
+  },
+  "dependent_plugins": {}
+}
