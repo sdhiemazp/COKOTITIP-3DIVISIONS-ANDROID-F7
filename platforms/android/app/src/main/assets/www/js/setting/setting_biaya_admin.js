@@ -16,6 +16,7 @@ function load_setting_biaya_admin(page) {
         $$('#transfer_bonus_setting').val(x[50]['bonus_value']);
         $$('#minimum_ecash_setting').val(x[52]['bonus_value']);
         $$('#minimum_bonus_setting').val(x[53]['bonus_value']);
+        $$('#transfer_bank_setting').val(x[54]['bonus_value']);
       } else {
         determinateLoading = false;
         app.dialog.close();
@@ -43,6 +44,7 @@ function load_setting_biaya_admin(page) {
     var transfer_bonus = $$('#transfer_bonus_setting').val();
     var minimum_ecash = $$('#minimum_ecash_setting').val();
     var minimum_bonus = $$('#minimum_bonus_setting').val();
+    var transfer_bank = $$('#transfer_bank_setting').val();
 
     if(wd_sponsor == "") {
       app.dialog.alert("Minimum biaya admin WD saldo bonus sponsor adalah 0!");
@@ -56,6 +58,8 @@ function load_setting_biaya_admin(page) {
       app.dialog.alert("Minimum saldo ecash minimum adalah 0!");
     } else if(minimum_bonus == "") {
       app.dialog.alert("Minimum saldo bonus pasti minimum adalah 0!");
+    } else if(transfer_bank == "") {
+      app.dialog.alert("Minimum biaya admin transfer bank adalah 0!");
     } else {
       app.request({
         method: "POST",
@@ -67,7 +71,8 @@ function load_setting_biaya_admin(page) {
             transfer_ecash : transfer_ecash,
             transfer_bonus : transfer_bonus,
             minimum_ecash : minimum_ecash,
-            minimum_bonus : minimum_bonus
+            minimum_bonus : minimum_bonus,
+            transfer_bank : transfer_bank
           },
         success: function(data) {
           var obj = JSON.parse(data);

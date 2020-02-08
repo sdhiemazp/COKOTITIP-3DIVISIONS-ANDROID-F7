@@ -77,17 +77,25 @@ function load_home(page) {
 	$$('#edit_profile').on('click', function(e) {
 		page.router.navigate('/edit_member/' + localStorage.username);
 	});
+
 	$$('#edit_profile_password').on('click', function(e) {
 		page.router.navigate('/edit_member/' + localStorage.username);
 	});
+
 	$$('.show_profile').on('click', function(e) {
 		page.router.navigate('/show_member/' + localStorage.username);
 	});
+
 	$$('#transfer_balance_a').on('click', function(e) {
 		page.router.navigate('/transfer_balance_a/');
 	});
+
 	$$('#transfer_balance_c').on('click', function(e) {
 		page.router.navigate('/transfer_balance_c/');
+	});
+
+	$$('#transfer_to_bank').on('click', function(e) {
+		page.router.navigate('/transfer_bank/');
 	});
 
 	$$('#logout').on('click', function(e) {

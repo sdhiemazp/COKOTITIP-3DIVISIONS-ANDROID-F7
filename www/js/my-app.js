@@ -300,6 +300,18 @@ var app = new Framework7({
 				},
 			},
 		},
+		// TRANSFER BANK
+		{
+			path: '/transfer_bank/',
+			url: 'pages/transfer/transfer_bank.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					load_transfer_bank(page);
+				},
+			},
+		},
 		// PROFIT
 		{
 			path: '/profit/',
