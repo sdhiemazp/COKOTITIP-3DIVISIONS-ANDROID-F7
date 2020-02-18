@@ -96,11 +96,11 @@ function load_profit(page) {
   $$('#btn_setting_bonus_pasangan').on('click', function() {
     page.router.navigate('/setting_bonus_pasangan/');
   });
-  $$('#btn_setting_bonus_titik').on('click', function() {
-    page.router.navigate('/setting_bonus_titik/');
-  });
   $$('#btn_setting_bonus_generasi_mlm').on('click', function() {
     page.router.navigate('/setting_bonus_generasi_mlm/');
+  });
+  $$('#btn_setting_bonus_titik_ppob').on('click', function() {
+    page.router.navigate('/setting_bonus_titik_ppob/');
   });
   $$('#btn_setting_bonus_generasi_ppob').on('click', function() {
     page.router.navigate('/setting_bonus_generasi_ppob/');

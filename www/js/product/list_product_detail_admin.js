@@ -18,7 +18,7 @@ function load_list_product_detail_admin(page) {
       var x_profit = obj['profit'];
       if(x_price_list.length > 0) {
         for(var i = 0; i < x_price_list.length; i++) {
-          if(x_price_list[i]['category'] == category && x_price_list[i]['brand'] == brand) {
+          if((x_price_list[i]['category'] == category || (category == "E-Money" && x_price_list[i]['category'] == "Games")) && x_price_list[i]['brand'] == brand) {
             var status = "Ditampilkan";
             if(x_price_list[i]['buyer_product_status'] == false) {
               status = "Disembunyikan";

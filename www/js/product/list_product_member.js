@@ -17,7 +17,7 @@ function load_list_product_member(page) {
         app.dialog.close();
         var arrProduct = new Array();
         for(var i = 0; i < x.length; i++) {
-          if(x[i]['category'] == category) {
+          if(x[i]['category'] == category || (category == "E-Money" && x[i]['category'] == "Games")) {
             if(arrProduct.length == 0) {
               arrProduct.push(x[i]['brand']);
               $$('#listproductmember').append(`

@@ -348,18 +348,6 @@ var app = new Framework7({
 				},
 			},
 		},
-		// SETTING BONUS TITIK
-		{
-			path: '/setting_bonus_titik/',
-			url: 'pages/setting/setting_bonus_titik.html',
-			on:
-			{
-				pageInit:function(e,page)
-				{
-					load_setting_bonus_titik(page);
-				},
-			},
-		},
 		// SETTING BONUS GENERASI MLM
 		{
 			path: '/setting_bonus_generasi_mlm/',
@@ -369,6 +357,18 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					load_setting_bonus_generasi_mlm(page);
+				},
+			},
+		},
+		// SETTING BONUS TITIK PPOB
+		{
+			path: '/setting_bonus_titik_ppob/',
+			url: 'pages/setting/setting_bonus_titik_ppob.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					load_setting_bonus_titik_ppob(page);
 				},
 			},
 		},

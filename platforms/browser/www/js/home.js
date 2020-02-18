@@ -18,50 +18,56 @@ function load_home(page) {
 			var obj = JSON.parse(data);
 			if(obj['status'] == true) {
 				var x = obj['data'];
-				$$('#user_name_home').html("Hai, " + x[0]['user_name']);
-				if(x[0]['user_level'] == "Basic") {
-					$$('#user_loading').hide();
-					$$('#basic').show();
+				console.log(x[0]['selisih']);
+				if(parseInt(x[0]['selisih']) != 0 && localStorage.user_type != "Admin") {
+					localStorage.clear();
+					page.router.navigate('/login/');
 				} else {
-					$$('#user_loading').hide();
-					$$('#premium').show();
-				}
+					$$('#user_name_home').html("Hai, " + x[0]['user_name']);
+					if(x[0]['user_level'] == "Basic") {
+						$$('#user_loading').hide();
+						$$('#basic').show();
+					} else {
+						$$('#user_loading').hide();
+						$$('#premium').show();
+					}
 
-				if(x[0]['user_pascabayar'] == "Y") {
-					$$('#pascabayar').show();
-				} else {
-					$$('#pascabayar').hide();
-				}
+					if(x[0]['user_pascabayar'] == "Y") {
+						$$('#pascabayar').show();
+					} else {
+						$$('#pascabayar').hide();
+					}
 
-				if(localStorage.user_type == "Admin") {
-					app.request({
-						method: "GET",
-						url: database_connect + "digiflazz/cek_saldo.php", data:{  },
-						success: function(data) {
-							var obj = JSON.parse(data);
-							$$('#user_balance_digiflazz').html("Saldo Digiflazz : " + formatRupiah(obj['data']['deposit']));
-							$$('#user_balance_a_home').html("Saldo E-Cash : " + formatRupiah(x[0]['user_balance_a']));
-							$$('#user_balance_b_home').html("Bonus Sponsor : " + formatRupiah(x[0]['user_balance_b']));
-							$$('#user_balance_c_home').html("Bonus Pasti : " + formatRupiah(x[0]['user_balance_c']));
-						},
-						error: function(data) {
-							var toastBottom = app.toast.create({
-								text: ERRNC,
-								closeTimeout: 2000,
-							});
-							toastBottom.open();
-							page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
-						}
-					});
-				} else {
-					$$('#user_balance_a_home').html("Saldo E-Cash : " + formatRupiah(x[0]['user_balance_a']));
-					$$('#user_balance_b_home').html("Bonus Sponsor : " + formatRupiah(x[0]['user_balance_b']));
-					$$('#user_balance_c_home').html("Bonus Pasti : " + formatRupiah(x[0]['user_balance_c']));
-				}
+					if(localStorage.user_type == "Admin") {
+						app.request({
+							method: "GET",
+							url: database_connect + "digiflazz/cek_saldo.php", data:{  },
+							success: function(data) {
+								var obj = JSON.parse(data);
+								$$('#user_balance_digiflazz').html("Saldo Digiflazz : " + formatRupiah(obj['data']['deposit']));
+								$$('#user_balance_a_home').html("Saldo E-Cash : " + formatRupiah(x[0]['user_balance_a']));
+								$$('#user_balance_b_home').html("Bonus Sponsor : " + formatRupiah(x[0]['user_balance_b']));
+								$$('#user_balance_c_home').html("Bonus Pasti : " + formatRupiah(x[0]['user_balance_c']));
+							},
+							error: function(data) {
+								var toastBottom = app.toast.create({
+									text: ERRNC,
+									closeTimeout: 2000,
+								});
+								toastBottom.open();
+								page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+							}
+						});
+					} else {
+						$$('#user_balance_a_home').html("Saldo E-Cash : " + formatRupiah(x[0]['user_balance_a']));
+						$$('#user_balance_b_home').html("Bonus Sponsor : " + formatRupiah(x[0]['user_balance_b']));
+						$$('#user_balance_c_home').html("Bonus Pasti : " + formatRupiah(x[0]['user_balance_c']));
+					}
 
-				localStorage.user_balance_a = x[0]['user_balance_a'];
-				localStorage.user_balance_b = x[0]['user_balance_b'];
-				localStorage.user_balance_c = x[0]['user_balance_c'];
+					localStorage.user_balance_a = x[0]['user_balance_a'];
+					localStorage.user_balance_b = x[0]['user_balance_b'];
+					localStorage.user_balance_c = x[0]['user_balance_c'];
+				}
 			}
 		},
 		error: function(data) {

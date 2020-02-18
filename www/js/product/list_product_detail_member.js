@@ -20,7 +20,7 @@ function load_list_product_detail_member(page) {
         determinateLoading = false;
         app.dialog.close();
         for(var i = 0; i < x.length; i++) {
-          if(x[i]['category'] == category && x[i]['brand'] == brand) {
+          if((x[i]['category'] == category || (category == "E-Money" && x[i]['category'] == "Games")) && x[i]['brand'] == brand) {
             var harga = "";
             var url_checkout = "/checkout_pasca/";
             if(category != "Pascabayar") {
