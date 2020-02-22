@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.tigadsaja.tigadvisions;
+package com.tigadsaja.adamcell;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

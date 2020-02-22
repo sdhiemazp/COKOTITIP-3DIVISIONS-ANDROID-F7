@@ -1,8 +1,10 @@
 var $$ = Dom7;
-var database_connect = "https://3dsaja.com/";
-var lokasifoto = "https://3dsaja.com/image/";
+// var database_connect = "https://3dsaja.com/";
+// var lokasifoto = "https://3dsaja.com/image/";
 // var database_connect = "https://adamcell.cokotitip.com/";
 // var lokasifoto = "https://adamcell.cokotitip.com/image/";
+var database_connect = "https://adamcell.3dsaja.com/";
+var lokasifoto = "https://adamcell.3dsaja.com/image/";
 var ERRNC = "Koneksi Anda terputus!";
 var PHOTO_ERR = "Foto tidak berhasil diunggah!";
 
