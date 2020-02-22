@@ -34,103 +34,155 @@ function load_checkout_pasca_detail(page) {
       }
 
       if(x['Nama Pelanggan'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Nama Pelanggan'][0] != "") {
+          data = x['Nama Pelanggan'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Nama Pelanggan </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Nama Pelanggan'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Tarif'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Tarif'][0] != "") {
+          data = x['Tarif'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Tarif </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Tarif'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Daya'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Daya'][0] != "") {
+          data = x['Daya'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Daya </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Daya'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Alamat'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Alamat'][0] != "") {
+          data = x['Alamat'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Alamat </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Alamat'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Jatuh Tempo'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Jatuh Tempo'][0] != "") {
+          data = x['Jatuh Tempo'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Jatuh Tempo </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Jatuh Tempo'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Jumlah Peserta'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Jumlah Peserta'][0] != "") {
+          data = x['Jumlah Peserta'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Jumlah Peserta </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Jumlah Peserta'][0] + ` ORANG</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + ` ORANG</div>`);
       }
 
       if(x['Nama Barang'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Nama Barang'][0] != "") {
+          data = x['Nama Barang'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Nama Barang </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Nama Barang'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['No Rangka'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['No Rangka'][0] != "") {
+          data = x['No Rangka'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> No Rangka </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['No Rangka'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['No Pol'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['No Pol'][0] != "") {
+          data = x['No Pol'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> No Pol </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['No Pol'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       if(x['Tenor'] !== undefined) {
+        var data = "<i>tidak ditemukan</i>";
+        if(x['Tenor'][0] != "") {
+          data = x['Tenor'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Tenor </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + x['Tenor'][0] + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + data + `</div>`);
       }
 
       $$('#contentcheckoutdetail').append(`<br><br>`);
-      for(var i = 0; i < parseInt(x['Lembar Tagihan'][0]); i++) {
-        if(x['Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Periode </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + x['Periode'][0] + `</div>`);
-        }
+      if(x['Lembar Tagihan'] !== undefined) {
+        for(var i = 0; i < parseInt(x['Lembar Tagihan'][0]); i++) {
+          if(x['Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Periode </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + x['Periode'][0] + `</div>`);
+          }
 
-        if(x['Nilai Tagihan Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Nilai Tagihan </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Nilai Tagihan Periode'][0]) + `</div>`);
-        }
+          if(x['Nilai Tagihan Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Nilai Tagihan </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Nilai Tagihan Periode'][0]) + `</div>`);
+          }
 
-        if(x['Meter Awal Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Meter Awal </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + x['Meter Awal Periode'][0] + `</div>`);
-        }
+          if(x['Meter Awal Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Meter Awal </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + x['Meter Awal Periode'][0] + `</div>`);
+          }
 
-        if(x['Meter Akhir Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Meter Akhir </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + x['Meter Akhir Periode'][0] + `</div>`);
-        }
+          if(x['Meter Akhir Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Meter Akhir </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + x['Meter Akhir Periode'][0] + `</div>`);
+          }
 
-        if(x['Denda Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Denda </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Denda Periode'][0]) + `</div>`);
-        }
+          if(x['Denda Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Denda </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Denda Periode'][0]) + `</div>`);
+          }
 
-        if(x['Biaya Admin Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Biaya Admin </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Biaya Admin Periode'][0]) + `</div>`);
-        }
+          if(x['Biaya Admin Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Biaya Admin </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Biaya Admin Periode'][0]) + `</div>`);
+          }
 
-        if(x['Biaya Lain Periode'] !== undefined) {
-          $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Biaya Lain Periode </b></div>` +
-            `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Biaya Lain Periode'][0]) + `</div>`);
-        }
+          if(x['Biaya Lain Periode'] !== undefined) {
+            $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Biaya Lain Periode </b></div>` +
+              `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Biaya Lain Periode'][0]) + `</div>`);
+          }
 
-        $$('#contentcheckoutdetail').append(`<br><br>`);
+          $$('#contentcheckoutdetail').append(`<br><br>`);
+        }
+      } else {
+        $$('#btn_yes_show_checkout_detail').hide();
       }
 
       if(x['Total Biaya Admin'] !== undefined) {
+        var harga = 0;
+        if(x['Total Biaya Admin'][0] != "") {
+          harga = x['Total Biaya Admin'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Total Biaya Admin </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Total Biaya Admin'][0]) + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + formatRupiah(harga) + `</div>`);
       }
 
       if(x['Total Tagihan'] !== undefined) {
+        var harga = 0;
+        if(x['Total Tagihan'][0] != "") {
+          harga = x['Total Tagihan'][0];
+        }
         $$('#contentcheckoutdetail').append(`<div class="col-50"><b> Total Tagihan </b></div>` +
-          `<div class="col-50" style="text-align: right;">` + formatRupiah(x['Total Tagihan'][0]) + `</div>`);
+          `<div class="col-50" style="text-align: right;">` + formatRupiah(harga) + `</div>`);
       }
 
       if(parseInt(x['Total Tagihan'][0]) > parseInt(localStorage.user_balance_a)) {
