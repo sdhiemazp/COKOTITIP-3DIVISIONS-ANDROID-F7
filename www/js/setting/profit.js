@@ -90,11 +90,17 @@ function load_profit(page) {
     }
   });
 
+  $$('#btn_setting_on_off_bonus').on('click', function() {
+    page.router.navigate('/setting_on_off_bonus/');
+  });
   $$('#btn_setting_bonus_sponsor').on('click', function() {
     page.router.navigate('/setting_bonus_sponsor/');
   });
   $$('#btn_setting_bonus_pasangan').on('click', function() {
     page.router.navigate('/setting_bonus_pasangan/');
+  });
+  $$('#btn_setting_bonus_titik_mlm').on('click', function() {
+    page.router.navigate('/setting_bonus_titik_mlm/');
   });
   $$('#btn_setting_bonus_generasi_mlm').on('click', function() {
     page.router.navigate('/setting_bonus_generasi_mlm/');

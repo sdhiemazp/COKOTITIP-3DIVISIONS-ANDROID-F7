@@ -1,10 +1,10 @@
 var $$ = Dom7;
 // var database_connect = "https://3dsaja.com/";
 // var lokasifoto = "https://3dsaja.com/image/";
-// var database_connect = "https://adamcell.cokotitip.com/";
-// var lokasifoto = "https://adamcell.cokotitip.com/image/";
-var database_connect = "https://adamcell.3dsaja.com/";
-var lokasifoto = "https://adamcell.3dsaja.com/image/";
+// var database_connect = "https://adamcell.3dsaja.com/";
+// var lokasifoto = "https://adamcell.3dsaja.com/image/";
+var database_connect = "https://adamcell.cokotitip.com/";
+var lokasifoto = "https://adamcell.cokotitip.com/image/";
 var ERRNC = "Koneksi Anda terputus!";
 var PHOTO_ERR = "Foto tidak berhasil diunggah!";
 
@@ -326,6 +326,18 @@ var app = new Framework7({
 				},
 			},
 		},
+		// SETTING ON/OFF BONUS
+		{
+			path: '/setting_on_off_bonus/',
+			url: 'pages/setting/setting_on_off_bonus.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					load_setting_on_off_bonus(page);
+				},
+			},
+		},
 		// SETTING BONUS SPONSOR
 		{
 			path: '/setting_bonus_sponsor/',
@@ -347,6 +359,18 @@ var app = new Framework7({
 				pageInit:function(e,page)
 				{
 					load_setting_bonus_pasangan(page);
+				},
+			},
+		},
+		// SETTING BONUS TITIK MLM
+		{
+			path: '/setting_bonus_titik_mlm/',
+			url: 'pages/setting/setting_bonus_titik_mlm.html',
+			on:
+			{
+				pageInit:function(e,page)
+				{
+					load_setting_bonus_titik_mlm(page);
 				},
 			},
 		},

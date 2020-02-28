@@ -18,7 +18,6 @@ function load_home(page) {
 			var obj = JSON.parse(data);
 			if(obj['status'] == true) {
 				var x = obj['data'];
-				console.log(x[0]['selisih']);
 				if(parseInt(x[0]['selisih']) != 0 && localStorage.user_type != "Admin") {
 					localStorage.clear();
 					page.router.navigate('/login/');
