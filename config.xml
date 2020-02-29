@@ -1,8 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.tigadsaja.tigadvisions" version="1.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/3.1.0">
-<!-- <widget id="com.tigadsaja.adamcell" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/3.1.0"> -->
     <name>3DVisions</name>
-    <!-- <name>Adam Cell</name> -->
     <description>
         Aplikasi PPOB
     </description>
@@ -11,8 +9,7 @@
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
-    <!-- <preference name="android-minSdkVersion" value="19" /> -->
-    <preference name="android-minSdkVersion" value="6" />
+    <preference name="android-minSdkVersion" value="19" />
     <preference name="android-targetSdkVersion" value="28" />
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/logo.png" />
