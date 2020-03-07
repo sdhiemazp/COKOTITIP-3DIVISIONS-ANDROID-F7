@@ -1,12 +1,22 @@
 function load_list_transaction_all(page) {
   loading();
 
+  app.calendar.create({
+    inputEl: '#txtsearchusertransaction',
+    openIn: 'customModal',
+    header: true,
+    footer: true,
+  });
+
   app.request({
     method: "POST",
     url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type: 'Decrease' },
     success: function(data) {
       var obj = JSON.parse(data);
       if(obj['status'] == true) {
+        var total = formatRupiah(obj['total']);
+        $$('#total_transaction').val(total);
+
         var x = obj['data'];
         determinateLoading = false;
         app.dialog.close();
@@ -38,10 +48,12 @@ function load_list_transaction_all(page) {
           } 
         }
       } else {
+        var total = formatRupiah(obj['total']);
+        $$('#total_transaction').val(total);
+
         determinateLoading = false;
         app.dialog.close();
-        $$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + 
-          obj['message'] + `</p></center>`);
+        $$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
       }
     },
     error: function(data) {
@@ -57,16 +69,20 @@ function load_list_transaction_all(page) {
   });
 
   $$('#category_transaction_selection').on('change', function () {
+    var username = $$('#txtsearchusertransaction').val();
     var category = $$('#category_transaction_selection').val();
     $$('#listtransaction').html('');
     loading();
 
     app.request({
       method: "POST",
-      url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type : category, username : "" },
-      success: function(data) {
+      url: database_connect + "transaction/select_transaction_all.php", data:{ transaction_type : category, username : username },
+      success: function(data) {        
         var obj = JSON.parse(data);
         if(obj['status'] == true) {
+          var total = formatRupiah(obj['total']);
+          $$('#total_transaction').val(total);
+
           var x = obj['data'];
           determinateLoading = false;
           app.dialog.close();
@@ -98,6 +114,8 @@ function load_list_transaction_all(page) {
               } else if(x[i]['transaction_type'] == "Repeat Order") {
                 price = formatRupiah(((parseInt(x[i]['transaction_price']) * parseInt(x[i]['transaction_message'])) + parseInt(x[i]['transaction_unique_code'])));
                 x[i]['transaction_message'] = "Jumlah : " + x[i]['transaction_message'] + " buah";
+              } else if(x[i]['transaction_type'] == "Pascabayar") {
+                price = formatRupiah((parseInt(x[i]['transaction_price'])));
               } else {
                 price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
               }
@@ -317,6 +335,9 @@ function load_list_transaction_all(page) {
             });
           });
         } else {
+          var total = formatRupiah(obj['total']);
+          $$('#total_transaction').val(total);
+
           determinateLoading = false;
           app.dialog.close();
           $$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);
@@ -335,7 +356,7 @@ function load_list_transaction_all(page) {
     });
   });
 
-  $$('#txtsearchusertransaction').on('keyup', function() {
+  $$('#txtsearchusertransaction').on('change', function() {
     var username = $$('#txtsearchusertransaction').val();
     var category = $$('#category_transaction_selection').val();
 
@@ -345,6 +366,9 @@ function load_list_transaction_all(page) {
       success: function(data) {
         var obj = JSON.parse(data);
         if(obj['status'] == true) {
+          var total = formatRupiah(obj['total']);
+          $$('#total_transaction').val(total);
+
           $$('#listtransaction').html('');
           var x = obj['data'];
           determinateLoading = false;
@@ -595,6 +619,9 @@ function load_list_transaction_all(page) {
             });
           });
         } else {
+          var total = formatRupiah(obj['total']);
+          $$('#total_transaction').val(total);
+
           determinateLoading = false;
           app.dialog.close();
           $$('#listtransaction').html(`<center><p style="margin-top: 40%; text-align: center;">` + obj['message'] + `</p></center>`);

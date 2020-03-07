@@ -1,5 +1,34 @@
 function load_history_pin(page) {
   loading();
+  
+  app.request({
+    method: "GET",
+    url: database_connect + "bonus/select_bonus.php", data:{  },
+    success: function(data) {
+      var obj_bonus = JSON.parse(data);
+      if(obj_bonus['status'] == true) {
+        var x_bonus = obj_bonus['data'];
+        localStorage.harga_premium = x_bonus[65]['bonus_value'];
+        localStorage.harga_basic = x_bonus[66]['bonus_value'];
+        determinateLoading = false;
+        app.dialog.close();
+      } else {
+        determinateLoading = false;
+        app.dialog.close();
+        app.dialog.alert(obj_bonus['message']);
+      }
+    },
+    error: function(data) {
+      determinateLoading = false;
+      app.dialog.close();
+      var toastBottom = app.toast.create({
+        text: ERRNC,
+        closeTimeout: 2000,
+      });
+      toastBottom.open();
+      page.router.navigate('/home/',{ animate:false, reloadAll:true , force: true, ignoreCache: true});
+    }
+  });
 
   app.request({
     method:"POST",
@@ -10,10 +39,10 @@ function load_history_pin(page) {
         var x = obj['data'];
         for(var i = 0; i < x.length; i++) {
           var total = "";
-          if(x[0]['pin_type'] == "Basic") {
-            total = formatRupiah(((parseInt(x[i]['count']) * 50000)) + parseInt(x[i]['unique']));
+          if(x[i]['pin_type'] == "Basic") {
+            total = formatRupiah(((parseInt(x[i]['count']) * parseInt(localStorage.harga_basic))) + parseInt(x[i]['unique']));
           } else {
-            total = formatRupiah(((parseInt(x[i]['count']) * 300000)) + parseInt(x[i]['unique']));
+            total = formatRupiah(((parseInt(x[i]['count']) * parseInt(localStorage.harga_premium))) + parseInt(x[i]['unique']));
           }
 
           if(x[i]['status'] == 0 || x[i]['status'] == 2) {

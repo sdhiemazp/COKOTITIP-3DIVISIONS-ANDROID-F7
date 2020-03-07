@@ -94,7 +94,7 @@ function load_list_transaction_admin(page) {
               adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
                 <div class="demo-facebook-price">Total Transfer : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
                 parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
-            }  else if(x[i]['transaction_type'] == "Transfer Masuk") {
+            } else if(x[i]['transaction_type'] == "Transfer Masuk") {
               adminfee = `<div class="demo-facebook-price">Biaya Admin : ` + formatRupiah(x[i]['transaction_admin_fee']) + `</div>
                 <div class="demo-facebook-price">Total Penerimaan : ` + formatRupiah((parseInt(x[i]['transaction_price']) - 
                 parseInt(x[i]['transaction_admin_fee']))) + `</div>`;
@@ -128,7 +128,7 @@ function load_list_transaction_admin(page) {
                 x[i]['transaction_status'] = "Waiting Confirmation";
               }
             } else if(x[i]['transaction_type'] == "Pascabayar") {
-              
+              price = formatRupiah((parseInt(x[i]['transaction_price'])));
             } else {
               price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
             }

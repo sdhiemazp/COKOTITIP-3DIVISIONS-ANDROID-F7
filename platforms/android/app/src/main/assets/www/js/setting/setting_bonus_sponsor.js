@@ -13,6 +13,8 @@ function load_setting_bonus_sponsor(page) {
         $$('#sponsor_premium_setting').val(x[0]['bonus_value']);
         $$('#sponsor_basic_setting').val(x[1]['bonus_value']);
         $$('#saldo_ecash_member_setting').val(x[37]['bonus_value']);
+        $$('#harga_premium_setting').val(x[65]['bonus_value']);
+        $$('#harga_basic_setting').val(x[66]['bonus_value']);
       } else {
         determinateLoading = false;
         app.dialog.close();
@@ -37,6 +39,8 @@ function load_setting_bonus_sponsor(page) {
     var sponsor_premium = $$('#sponsor_premium_setting').val();
     var sponsor_basic = $$('#sponsor_basic_setting').val();
     var saldo_ecash_member = $$('#saldo_ecash_member_setting').val();
+    var harga_premium = $$('#harga_premium_setting').val();
+    var harga_basic = $$('#harga_basic_setting').val();
 
     if(sponsor_premium == "") {
       app.dialog.alert("Minimum bonus sponsor premium adalah 0!");
@@ -44,6 +48,10 @@ function load_setting_bonus_sponsor(page) {
       app.dialog.alert("Minimum bonus sponsor basic adalah 0!");
     } else if(saldo_ecash_member == "") {
       app.dialog.alert("Minimum saldo e-cash member adalah 0!");
+    } else if(harga_premium == "") {
+      app.dialog.alert("Minimum harga premium adalah 0!");
+    } else if(harga_basic == "") {
+      app.dialog.alert("Minimum harga basic adalah 0!");
     } else {
       app.request({
         method: "POST",
@@ -53,6 +61,8 @@ function load_setting_bonus_sponsor(page) {
             sponsor_premium : sponsor_premium,
             sponsor_basic : sponsor_basic,
             saldo_ecash_member : saldo_ecash_member,
+            harga_premium : harga_premium,
+            harga_basic : harga_basic,
           },
         success: function(data) {
           var obj = JSON.parse(data);

@@ -128,7 +128,7 @@ function load_list_transaction_member(page) {
                 x[i]['transaction_status'] = "Waiting Confirmation";
               }
             } else if(x[i]['transaction_type'] == "Pascabayar") {
-              
+              price = formatRupiah((parseInt(x[i]['transaction_price'])));
             } else {
               price = formatRupiah((parseInt(x[i]['transaction_price']) + parseInt(x[i]['transaction_unique_code'])));
             }
