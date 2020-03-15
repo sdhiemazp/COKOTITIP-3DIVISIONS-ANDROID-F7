@@ -5,6 +5,15 @@ function load_create_member(page) {
   $$('#pin_id_no_usage_basic').hide();
   loading();
 
+  $$(".toggle-password").click(function() {
+    var input = $$($$(this).attr("toggle"));
+    if (input.attr("type") == "password") {
+      input.attr("type", "text");
+    } else {
+      input.attr("type", "password");
+    }
+  });
+
   $$('#user_name_sponsor_create_member').val(localStorage.user_name);
   $$('#position_create_member').val(position);
   app.request({

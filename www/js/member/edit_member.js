@@ -2,6 +2,15 @@ function load_edit_member(page) {
   var x = page.router.currentRoute.params.username;
   loading();
 
+  $$(".toggle-password").click(function() {
+    var input = $$($$(this).attr("toggle"));
+    if (input.attr("type") == "password") {
+      input.attr("type", "text");
+    } else {
+      input.attr("type", "password");
+    }
+  });
+
   app.request({
     method: "POST",
     url: database_connect + "users/show_users.php", data:{ username : x },
