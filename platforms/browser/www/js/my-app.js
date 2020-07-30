@@ -1,6 +1,8 @@
 var $$ = Dom7;
-var database_connect = "https://3dsaja.com/";
-var lokasifoto = "https://3dsaja.com/image/";
+var database_connect = "https://3dvisions.adampay.online/";
+var lokasifoto = "https://3dvisions.adampay.online/image/";
+// var database_connect = "https://3dsaja.com/";
+// var lokasifoto = "https://3dsaja.com/image/";
 // var database_connect = "https://adamcell.cokotitip.com/";
 // var lokasifoto = "https://adamcell.cokotitip.com/image/";
 var ERRNC = "Koneksi Anda terputus!";
